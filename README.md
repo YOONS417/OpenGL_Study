@@ -1,8 +1,23 @@
-Workspace fot OpenGL study
+# 🎮 OpenGL Rendering Project
 
+C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프로젝트 및 학습.
+외부 설정 없이 바로 빌드하여 실행할 수 있도록 정적 라이브러리 구조로 설계.
 
-구분,내용
-OS,Windows 11
-IDE,Visual Studio 2022 / 2026
-Language,C++ 17
-Libraries,"GLFW, Glad, GLM"
+## 📺 실행 화면
+![실행 결과](./images/result.png) 
+*(이곳에 실행 화면 캡처본을 넣어주세요!)* -> 따로 정리 예정
+
+## ✨ 주요 기능
+- **GLFW/Glad**를 이용한 OpenGL 컨텍스트 설정
+- **정적 라이브러리(.lib)** 포함을 통한 이식성 확보
+- **Commons/Libraries/Projects** 구조화를 통한 깔끔한 프로젝트 관리
+
+## 🛠 빌드 방법
+1. 이 저장소를 복제합니다. `git clone https://github.com/YOONS417/OpenGL_Study.git`
+2. `OpenGL_Study.sln` 파일을 Visual Studio로 엽니다.
+3. `x64 / Debug` 또는 `Release` 모드에서 `F5`를 눌러 실행합니다.
+
+## 📚 학습 내용
+- OpenGL 파이프라인 이해
+- 버퍼 객체(VBO, VAO) 관리 방법 학습
+- 깃허브를 활용한 협업 및 버전 관리 기초 습득

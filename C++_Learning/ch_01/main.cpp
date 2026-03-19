@@ -1,8 +1,28 @@
 #include <iostream>
-#include "NameSpace.h"
+#include "NameSpace.h" 
+//"" 직접 만든 프로젝트 폴더 내의 헤더를 가져올 때
 
 int main() {
-	std::cout <<  "hey" << ns::Num << std::endl;  // std = namespace , cout/endl = iostream의 stddp 저장
+	std::cout <<  "hey"  << ns::Num << std::endl;  // std = namespace , cout/endl = iostream의 stddp 저장
+	
+	int user_input;
+	
+	while (1) {
+		std::cout << "password : ";
+		std::cin >> user_input;
+
+		if (ns::Password == user_input) {
+			std::cout << "Welcome" << std::endl;
+			break;
+		}
+		else {
+			std::cout << "Please try again" << std::endl;
+
+		}
+	}
+	
+	
+	
 	return 0;   // ex) std::cout << output << output
 }
 

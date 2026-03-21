@@ -17,7 +17,7 @@ int main() {
 		}
 		else {
 			std::cout << "Please try again" << std::endl;
-
+			 
 		}
 	}
 	
@@ -29,3 +29,4 @@ int main() {
 
 //This is first day of c++ 
 //Creating headerfile and use it on main.cpp
+//변수 선언 및 구조문은 C와 동일

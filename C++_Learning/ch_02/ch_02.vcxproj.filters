@@ -10,7 +10,10 @@
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
-      <UniqueIdentifier>{68d8e222-a9a3-4d3f-b2f8-d9fbb72e8ed1}</UniqueIdentifier>
+      <UniqueIdentifier>{22cfdcb4-b8d5-47cb-a7b1-9e693473df5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{b8bbe8a6-77be-4d50-b36c-5cae2ac348a6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

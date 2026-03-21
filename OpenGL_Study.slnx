@@ -4,6 +4,7 @@
     <Platform Name="x86" />
   </Configurations>
   <Project Path="C++_Learning/ch_01/ch_01.vcxproj" Id="58db8f06-3de7-490c-aa27-366f39da735a" />
+  <Project Path="C++_Learning/ch_02/ch_02.vcxproj" Id="94a7c3fb-81b9-460e-acac-dbf7e19c9b05" />
   <Project Path="Projects/Testing/Testing.vcxproj" Id="54525f58-8d94-4a67-8cb4-58d0afaa29cf" />
   <Project Path="Projects/Triangle/Triangle.vcxproj" Id="c8637ed1-eab5-49a9-9b8d-e730e0b22bcc" />
 </Solution>

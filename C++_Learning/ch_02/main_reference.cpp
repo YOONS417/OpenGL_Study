@@ -3,7 +3,7 @@
 
 int change_value(int* p) {  //int& p = Num
 	*p = 320;       //C 방식
-
+	  
 	return 0;	
 }
 
@@ -26,6 +26,10 @@ int main() {
 	another_a = b;			//&another_a = b; -> X
 	std::cout << " another_a : " << another_a << std::endl;
 
+
+
+	int arr[3] = { 1, 2, 3 };
+	int(&ref)[3] = arr;
 
 	return 0;
 }

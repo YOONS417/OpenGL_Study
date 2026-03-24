@@ -5,9 +5,10 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 
 ## 📺 실행 화면
 ![실행 결과](./images/result.png) 
-<img width="827" height="1295" alt="image" src="https://github.com/user-attachments/assets/2d4244bc-0b9f-4166-9b87-260114f89f2f" />
+<img width="2560" height="1600" alt="image" src="https://github.com/user-attachments/assets/c2e4c2a1-0274-4b89-a0b3-2b2b068d5c2a" />
 
-*(이곳에 실행 화면 캡처본을 넣어주세요!)* -> 따로 정리 예정
+
+*(이곳에 실행 화면 캡처본을 넣어주세요!)* 
 
 ## ✨ 주요 기능
 - **GLFW/Glad**를 이용한 OpenGL 컨텍스트 설정

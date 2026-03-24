@@ -3,9 +3,14 @@
 C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프로젝트 및 학습.
 외부 설정 없이 바로 빌드하여 실행할 수 있도록 정적 라이브러리 구조로 설계.
 
+
 ## 📺 실행 화면
-![실행 결과](./images/result.png) 
-<img width="2560" height="1600" alt="image" src="https://github.com/user-attachments/assets/c2e4c2a1-0274-4b89-a0b3-2b2b068d5c2a" />
+
+| 프로젝트명 | 실행 결과 | 설명 |
+| :--- | :---: | :--- |
+| **01. Testing** | ![Testing](./images/01_Testing_result.png) | 프로젝트 설정 및 라이브러리 로드 테스트, OpenGL Window 생성 |
+| **02. Triangle** | --------- | 기본적인 VAO/VBO를 이용한 삼각형 렌더링 |
+
 
 
 *(이곳에 실행 화면 캡처본을 넣어주세요!)* 

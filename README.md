@@ -5,6 +5,8 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 
 ## 📺 실행 화면
 ![실행 결과](./images/result.png) 
+<img width="827" height="1295" alt="image" src="https://github.com/user-attachments/assets/2d4244bc-0b9f-4166-9b87-260114f89f2f" />
+
 *(이곳에 실행 화면 캡처본을 넣어주세요!)* -> 따로 정리 예정
 
 ## ✨ 주요 기능

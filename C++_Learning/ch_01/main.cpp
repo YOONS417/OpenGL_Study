@@ -9,7 +9,7 @@ int main() {
 	
 	while (1) {
 		std::cout << "password : ";
-		std::cin >> user_input;
+		std::cin >> user_input;  //사용자로 부터 입력 받기, 
 
 		if (ns::Password == user_input) {
 			std::cout << "Welcome" << std::endl;
@@ -23,7 +23,7 @@ int main() {
 	
 	
 	
-	return 0;   // ex) std::cout << output << output
+	return 0;   // ex) std::cout << output << output ...
 }
 
 

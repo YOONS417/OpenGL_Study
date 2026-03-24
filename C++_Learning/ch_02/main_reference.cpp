@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include "func_header.h"
 
 int change_value(int* p) {  //int& p = Num
 	*p = 320;       //C 방식
@@ -27,10 +27,23 @@ int main() {
 	std::cout << " another_a : " << another_a << std::endl;
 
 
+	int arr[3] = { 1, 2, 3 }; //배열들의 레퍼런스(참조하기 위해 반드시 크기를 명시)
+	int(&ref)[3] = arr; //ref가 arr를 참조
 
-	int arr[3] = { 1, 2, 3 };
-	int(&ref)[3] = arr;
+	ref[0] = 5; 
+	ref[1] = 6;
+	ref[2] = 7;
+	std::cout << arr[0] << arr[1] << arr[2] << std::endl << std::endl;
 
+	//Function.cpp -> func_header.h -> main_referenec.cpp
+	int c = function_01(); //function 안에 a의 값이 c에 복사
+						// 함수가 종료되면 a는 메모리에서 사라짐 -> 지역 변수의 레퍼런스를 리턴하지 않게 조심
+	std::cout << c << std::endl << std::endl;
+
+	int d = 9;
+	int g = function_02(d);//함수2의 f2는 main의 d를 참조, 레퍼런스를 리턴
+	std::cout << g << std::endl; //인자로 받은 레퍼런스를 그대로 리턴
+	//g에 d의 24를 대입하는 것과 동일
 	return 0;
 }
 

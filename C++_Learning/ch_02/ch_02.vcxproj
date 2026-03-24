@@ -132,7 +132,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Commons\glad.c" />
+    <ClCompile Include="Function.cpp" />
     <ClCompile Include="main_reference.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="func_header.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

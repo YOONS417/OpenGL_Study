@@ -7,6 +7,9 @@
     <ClCompile Include="main_reference.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Function.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -15,5 +18,10 @@
     <Filter Include="헤더 파일">
       <UniqueIdentifier>{b8bbe8a6-77be-4d50-b36c-5cae2ac348a6}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="func_header.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

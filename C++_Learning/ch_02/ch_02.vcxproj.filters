@@ -4,10 +4,10 @@
     <ClCompile Include="..\..\Commons\glad.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="main_reference.cpp">
+    <ClCompile Include="Function.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Function.cpp">
+    <ClCompile Include="main_reference.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

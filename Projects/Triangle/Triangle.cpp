@@ -1,4 +1,4 @@
-#include <glad/glad.h>  //3D 좌표 -> 2D 좌표
+#include <glad/glad.h>  
 #include <GLFW/glfw3.h>
 #include <iostream>
 //삼각형 그리기 
@@ -12,6 +12,14 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void proccessInput(GLFWwindow* window);
+
+const char* vertexShaderSource = "#version 330 core\n"
+    "layout (lacation = 0 ) in vec3 aPos;\n"
+    "void main() { gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\0";
+const char* fragmentShaderSource = "version 330 core\n"
+"out vec4 FragColor;\n"
+"void main() { FragColor = vec4{1.0f, 0.5f, 0.2f, 1.0f); } \0"; 
+
 
 int main() {
     glfwInit();
@@ -32,6 +40,64 @@ int main() {
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << " Failed to initialze GLAD" << std::endl;  
     }
+
+    // Compiling a shader
+    unsigned int vertexShader;    
+    vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+    glCompileShader(vertexShader);
+
+    int success;
+    char infoLog[512];
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        std::cout << " ERROR::SHADER::VERTEX::OCMPILATION_FAILED\n" << infoLog<<std::endl;
+    }
+
+    //Fragment shader
+    unsigned int fragmentShader;
+    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+    glCompileShader(fragmentShader);
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER""FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+    }
+
+    //Shader program
+    unsigned int shaderProgram;
+    shaderProgram = glCreateProgram();
+    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, fragmentShader);
+    glLinkProgram(shaderProgram);
+    glGetShaderiv(vertexShader, GL_LINK_STATUS, &success);
+    if (!success) {
+        glGetShaderInfoLog(shaderProgram, 512, NULL, infoLog);
+        std::cout << " ERROR::SHADER::PROGRAM::OCMPILATION_FAILED\n" << infoLog << std::endl;
+    }
+  
+
+
+    // --vertex Input--
+    float vertices[] = {    //set NDC( Normalized Device Coordinates)
+    -0.5f, -0.5f, 0.0f,
+    0.5f, -0.5f, 0.0f,
+    0.0f, 0.5f, 0.0f
+    };
+
+    unsigned int VBO;  //vertex buffer object : gpu 메모리 내에 생성되는 버퍼, cup에 잇는 데이터를 gpu로 한번에 전송
+    glGenBuffers(1, &VBO); //버퍼 객체의 ID를 요청, 개수와 ID를 저장할 변수의 주소
+    glBindBuffer(GL_ARRAY_BUFFER, VBO); //ID를 가진 버퍼를 target에 연결, 용도와 바인딩할 버퍼의 ID
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    //  cpu에 있던 vertices 데이터를 gpu 메모리로 복사,  GL_STATIC_DRAW : 데이터가 얼마나 자주 변경될지 힌트(static,dynamic,stream)
+    
+
+   
+
+
+   
 
     while (!glfwWindowShouldClose(window))
     {

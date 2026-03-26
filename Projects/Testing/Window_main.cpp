@@ -2,7 +2,7 @@
 #include <GLFW/glfw3.h> //include GLAD before GLFW
 #include <iostream>
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void framebuffer_size_callback(GLFWwindow* window, int width, int height); //함수 정의
 void processInput(GLFWwindow* window);
 
 
@@ -12,10 +12,9 @@ int main() {
 	//glfwWindowHint(int hint, int value);  창의 옵션
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); // OpendlGL 3.3 버전을 사용
-	glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	// core profile을 사용 -> 오래된 기능들을 제거, 최신방식의 기능만 사용
+	glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GLFW_OPENGL_CORE_PROFILE); // core profile을 사용 -> 오래된 기능들을 제거, 최신방식의 기능만 사용
 	
-	GLFWwindow* window = glfwCreateWindow(1000, 600, "OpenGL_Windoe", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(1000, 600, "OpenGL_Windoe", NULL, NULL); //window 생성
 	if (window == NULL) {
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
@@ -25,9 +24,9 @@ int main() {
 	
 	//GLAD 라이브러리를 사용하여 OpenGL 함수 포인터를 초기화
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-		// glfwGetProcAddress : OS와 GPU에 맞는 OpenGL함수의 실제 메모리 주소를 찾는 역학
+		// glfwGetProcAddress : OS와 GPU에 맞는 OpenGL함수의 실제 메모리 주소를 찾는 역할
 		// GLADloadproc : glfwGetProcAddress가 반화하는 함수 타입을 GLAD에 맞는 타입으로 변화(Casting)
-		// gladLoadGLLoader : 찾아낸 ㅏㅎㅁ수 주소들을 GLAD라이브러리에 전달(OpenGl명령어를 호출시 GLAD가 찾아둔 주소를 통해 GPU 명령으로 연결)
+		// gladLoadGLLoader : 찾아낸 함수 주소들을 GLAD라이브러리에 전달 (OpenGl명령어를 호출시 GLAD가 찾아둔 주소를 통해 GPU 명령으로 연결)
 		std::cout << "Failed to initialze GLAD" << std::endl;
 		return -1;
 	}
@@ -47,7 +46,7 @@ int main() {
 		glfwSwapBuffers(window);   //Double buffering기술을 사용하여 버퍼를 교체 : 깜빡거리는 현상(Flickergin)현상 방지
 		//Front buffer : 현재 모니터에 출려괴고 있는 이미지
 		//Back buffer : 프로그램이 다음 프레임에 보여주기 위해 그리고 있는 뒷면
-		glfwPollEvents();	//발생한 event들을 확인 ( glfwSetFramebufferSizeCallback같은 합수들이 실행되는 시점)
+		glfwPollEvents();	//발생한 event들을 확인 ( glfwSetFramebufferSizeCallback같은 함수들이 실행되는 시점)
 	}
 
 	glfwTerminate();
@@ -59,7 +58,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 	//OpenGL 위도우의 크기가 변경될 때 호출하는 콜백 함수
 	//윈도우의 크기를 조절하면 그리는 영역을 새 크기에 맞게 업데이트하기 위해
-	//main안에서 GLFW에게 창 크기가 변하면 이 함수를 실행해줘 라고 알려야 함
+	//main안에서 GLFW에게 창 크기가 변하면 이 함수를 실행해줘 라고 알려야 함( L.35)
 }
 
 void processInput(GLFWwindow* window) //키보드 입력 감지 후 프로그램 종료

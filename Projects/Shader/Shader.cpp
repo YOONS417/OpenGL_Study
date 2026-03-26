@@ -1,14 +1,6 @@
-#include <glad/glad.h>  //3D 좌표 -> 2D 좌표
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-//삼각형 그리기 
-/*   --실제 코드를 작석하는 부분은 2,5--
-    1. vertex data : 삼각형의 세 꼭짓점 좌표를 정의
-    2. vertex shader : 각 꼭짓점의 위치를 처리(3D 좌표를 화면의 2D좌표로 바꾸는계산)
-    3. primirive assembly : 점들을 연결해 삼각형 현태를 만듦
-    4. rasterization : 수학적 삼감형을 화면상의 픽셀(fragment)로 쪼갬
-    5. fragment shader : 각 픽셀의 색상을 결정
-    6. blending/testing : 깊이 테스트나 투명도 처리를 거쳐 최종 화면에 출력     */
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void proccessInput(GLFWwindow* window);
@@ -36,7 +28,7 @@ int main() {
     while (!glfwWindowShouldClose(window))
     {
         proccessInput(window);
-        glClearColor(0.1f, 1.0f, 1.0f, 1.0f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glfwSwapBuffers(window);

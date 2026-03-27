@@ -17,8 +17,8 @@ const char* vertexShaderSource = "#version 330 core\n"
     "layout (lacation = 0 ) in vec3 aPos;\n"
     "void main() { gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\0";
 const char* fragmentShaderSource = "version 330 core\n"
-"out vec4 FragColor;\n"
-"void main() { FragColor = vec4{1.0f, 0.5f, 0.2f, 1.0f); } \0"; 
+    "out vec4 FragColor;\n"
+    "void main() { FragColor = vec4{ 0.3f, 0.4f, 0.7f, 1.0f); } \0"; 
 
 
 int main() {
@@ -41,13 +41,13 @@ int main() {
         std::cout << " Failed to initialze GLAD" << std::endl;  
     }
 
-    // Compiling a shader
+    // --Vertex shader--  Compiling a shader/ 프로그램 가능한 shader
     unsigned int vertexShader;    
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
     glCompileShader(vertexShader);
 
-    int success;
+    int success;        // chsek fot shader compile errors
     char infoLog[512];
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
     if (!success) {
@@ -77,8 +77,9 @@ int main() {
         glGetShaderInfoLog(shaderProgram, 512, NULL, infoLog);
         std::cout << " ERROR::SHADER::PROGRAM::OCMPILATION_FAILED\n" << infoLog << std::endl;
     }
-  
-
+    glUseProgram(shaderProgram);
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader); 
 
     // --vertex Input--
     float vertices[] = {    //set NDC( Normalized Device Coordinates)

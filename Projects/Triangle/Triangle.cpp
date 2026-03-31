@@ -10,6 +10,7 @@
     5. fragment shader : 각 픽셀의 색상을 결정
     6. blending/testing : 깊이 테스트나 투명도 처리를 거쳐 최종 화면에 출력     */
 
+// --Setting--
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void proccessInput(GLFWwindow* window);
 
@@ -21,14 +22,13 @@ const char* fragmentShaderSource = "#version 330 core\n"
     "out vec4 FragColor;\n"
     "void main() { FragColor = vec4(0.2f, 1.0f, 1.0f, 1.0f); }\0"; // 삼각형 색
 
-
 int main() {
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwInit();     //glfw : initialize & configure
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);  //V3.3
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Project_Triangle", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(800, 600, "Project_Triangle", NULL, NULL);    //glfw window creation
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -37,7 +37,7 @@ int main() {
 
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
+    // glad : load all OpenGL function pointers
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << " Failed to initialze GLAD" << std::endl;  
     }
@@ -48,7 +48,7 @@ int main() {
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);  // shader객체에 실제 프로그래밍 코드 (GLSL)를 넣음
     glCompileShader(vertexShader);      // shader 코드를 기계어로 컴파일
 
-    int success;        // chsek fot shader compile errors
+    int success;        // check for shader compile errors
     char infoLog[512];
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
     if (!success) {
@@ -68,7 +68,7 @@ int main() {
     }
 
     //Shader program  ,  vertex shader와 fragment shader를 하나로 묶어서 실제로 렌더링하는 과정
-    unsigned int shaderProgram;
+    unsigned int shaderProgram;     //link shaders
     shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);    //shaderProgram에 컴파일된 셰이더들을 부착
     glAttachShader(shaderProgram, fragmentShader);  //프로그램 하나에느 반드시 vertex,fragment가 각각 하나씩 있어햐 함
@@ -81,11 +81,11 @@ int main() {
     glDeleteShader(vertexShader);   //개별 객체를 유지할 필요가 없으므로 삭제
     glDeleteShader(fragmentShader); 
 
-    // --vertex Input--
+    // --vertex Input--  
     float vertices[] = {    //set NDC( Normalized Device Coordinates)
-        -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.0f, 0.5f, 0.0f
+        -0.5f, -0.5f, 0.0f,     //left
+        0.5f, -0.5f, 0.0f,      //right
+        0.0f, 0.5f, 0.0f        //top
     };
 
     //VBO(실제 데이터) : cpu에서 GPU로 데이터를 매 프레임마다 하나씩 보내는 것은 매우 느림, VBO를 사용하여 데이터를 gpu메모리에 박아두고 필요할 떄 즉시 꺼내씀
@@ -93,38 +93,42 @@ int main() {
     glGenBuffers(1, &VBO); //버퍼 객체의 ID를 요청, 개수와 ID를 저장할 변수의 주소
     glGenVertexArrays(1, &VAO);     //VAO : 데이터를 어떻게 읽어야 하는지 정의하는 상태 저장 객체
 
-    glBindVertexArray(VAO);
+    glBindVertexArray(VAO); //초기 설정, VBO와 속성 설정
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO); //ID를 가진 버퍼를 target에 연결, 용도와 바인딩할 버퍼의 ID
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     //  cpu에 있던 vertices 데이터를 gpu 메모리로 복사,  GL_STATIC_DRAW : 데이터가 얼마나 자주 변경될지 힌트(static,dynamic,stream)
     
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     //location = 0이어야 함 , size of vertex attribute(vec3), type, normalized = false, stride, Offset(시작점)
     glEnableVertexAttribArray(0);   //위에 방법대로 데이터가 흐를 수 있게 통로를 개방, 0은 location=0과 같게 설정
     //OpenGL은 최적화를 위해 정점 속성의 통로를 닫아둔 상태로 시작 -> 따로 명시 필요
+    glBindBuffer(GL_ARRAY_BUFFER, 0);   //Unbinding , 덮어씌워짐 방지
+    // !!! VBO를 0으로 언바인딩헤도 VAO에 저장한 설정은 유지
+    glBindVertexArray(0);     // 실수 방지, VAO를 해제하지 않고 다른 물체의 설정을 건드리면 내용이 덮어씌워 질 수 있음
 
-   
-   
-
+    // --Render Loop--
     while (!glfwWindowShouldClose(window))
     {
         proccessInput(window);
         glClearColor(1.0f, 0.7f, 0.2f, 1.0f); //배경색
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shaderProgram);
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glUseProgram(shaderProgram);    //shaderProgram사용 선언
+        glBindVertexArray(VAO);         // 설정된 VAO를 다시 바인딩(그리기 전 필수)
+        glDrawArrays(GL_TRIANGLES, 0, 3);   //그리기 명령(도형 종류, 시작 인덱스, 정점 개수)
 
        // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+    // --cleanup--
+    glDeleteVertexArrays(1, &VAO);      //VAO를 지운다고 VBO까지 자동으로 지워지지 않음
+    glDeleteBuffers(1, &VBO);           //VBO를 비우고 GPU메모리를 반환
+    glDeleteProgram(shaderProgram);     //셰이더 실행 파일 삭제
+    //개별(vertex/fragment)을 지웠어도 program은 따로 지워야 완전히 사라짐
+
 
     glfwTerminate();
     return 0;

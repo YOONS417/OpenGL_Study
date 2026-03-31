@@ -9,7 +9,7 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | 프로젝트명 | 실행 결과 | 설명 |
 | :--- | :---: | :--- |
 | **01. Testing** | ![Testing](./images/01_Testing_result.png) | 프로젝트 설정 및 라이브러리 로드 테스트, OpenGL Window 생성 |
-| **02. Triangle** | --------- | 기본적인 VAO/VBO를 이용한 삼각형 렌더링 |
+| **02. Triangle** | ![Triangle](./images/02_Triangle_result.png) | 기본적인 VAO/VBO를 이용한 삼각형 렌더링(EBO X) |
 
 
 

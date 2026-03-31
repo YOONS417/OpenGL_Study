@@ -15,11 +15,11 @@ void proccessInput(GLFWwindow* window);
 
 const char* vertexShaderSource = "#version 330 core\n"  //가장 첫 줄(필수)
     "layout (location = 0 ) in vec3 aPos;\n"            // VAO 설정 시 glVertexAttribPointer의 0번 인덱스와 이 변수를 연결              
-    "void main() { gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\0";
+    "void main() { gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0); }\0";
 // 0번 입구로 들어오는 숫자(x,y,z)를 받아, 끝에 1.0을 붙여 4차원 좌료로 전화 후 gl_Position으로 전달
-const char* fragmentShaderSource = "version 330 core\n"
+const char* fragmentShaderSource = "#version 330 core\n"
     "out vec4 FragColor;\n"
-    "void main() { FragColor = vec4{ 0.3f, 0.4f, 0.7f, 1.0f); } \0"; 
+    "void main() { FragColor = vec4(0.2f, 1.0f, 1.0f, 1.0f); }\0"; // 삼각형 색
 
 
 int main() {
@@ -64,7 +64,7 @@ int main() {
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);   //shader가 에러 없이 컴파일되었는지 확인
     if (!success) {     //
         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER""FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
 
     //Shader program  ,  vertex shader와 fragment shader를 하나로 묶어서 실제로 렌더링하는 과정
@@ -72,41 +72,55 @@ int main() {
     shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);    //shaderProgram에 컴파일된 셰이더들을 부착
     glAttachShader(shaderProgram, fragmentShader);  //프로그램 하나에느 반드시 vertex,fragment가 각각 하나씩 있어햐 함
-    glLinkProgram(shaderProgram);
-    glGetShaderiv(shaderProgram, GL_LINK_STATUS, &success);
+    glLinkProgram(shaderProgram);                   //부착된 shader 둘을 서로 연결( vertex의 출력과 fragment의 입력이 서로 이름과 타입이 맞는지 확인 )
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);    //링크 과정이 성공했는지 확인
     if (!success) {
         glGetShaderInfoLog(shaderProgram, 512, NULL, infoLog);
         std::cout << " ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
     }
-    glDeleteShader(vertexShader);
+    glDeleteShader(vertexShader);   //개별 객체를 유지할 필요가 없으므로 삭제
     glDeleteShader(fragmentShader); 
 
     // --vertex Input--
     float vertices[] = {    //set NDC( Normalized Device Coordinates)
-    -0.5f, -0.5f, 0.0f,
-    0.5f, -0.5f, 0.0f,
-    0.0f, 0.5f, 0.0f
+        -0.5f, -0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f,
+        0.0f, 0.5f, 0.0f
     };
 
-    unsigned int VBO;  //vertex buffer object : gpu 메모리 내에 생성되는 버퍼, cup에 잇는 데이터를 gpu로 한번에 전송
+    //VBO(실제 데이터) : cpu에서 GPU로 데이터를 매 프레임마다 하나씩 보내는 것은 매우 느림, VBO를 사용하여 데이터를 gpu메모리에 박아두고 필요할 떄 즉시 꺼내씀
+    unsigned int VBO, VAO;  //vertex buffer object : gpu 메모리 내에 생성되는 버퍼, cup에 있는 정점데이터를 gpu로 한번에 전송
     glGenBuffers(1, &VBO); //버퍼 객체의 ID를 요청, 개수와 ID를 저장할 변수의 주소
+    glGenVertexArrays(1, &VAO);     //VAO : 데이터를 어떻게 읽어야 하는지 정의하는 상태 저장 객체
+
+    glBindVertexArray(VAO);
+
     glBindBuffer(GL_ARRAY_BUFFER, VBO); //ID를 가진 버퍼를 target에 연결, 용도와 바인딩할 버퍼의 ID
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     //  cpu에 있던 vertices 데이터를 gpu 메모리로 복사,  GL_STATIC_DRAW : 데이터가 얼마나 자주 변경될지 힌트(static,dynamic,stream)
     
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    //location = 0이어야 함 , size of vertex attribute(vec3), type, normalized = false, stride, Offset(시작점)
+    glEnableVertexAttribArray(0);   //위에 방법대로 데이터가 흐를 수 있게 통로를 개방, 0은 location=0과 같게 설정
+    //OpenGL은 최적화를 위해 정점 속성의 통로를 닫아둔 상태로 시작 -> 따로 명시 필요
 
    
-
-
    
 
     while (!glfwWindowShouldClose(window))
     {
         proccessInput(window);
-        glClearColor(0.1f, 1.0f, 1.0f, 1.0f);
+        glClearColor(1.0f, 0.7f, 0.2f, 1.0f); //배경색
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
+        glBindVertexArray(VAO);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+       // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

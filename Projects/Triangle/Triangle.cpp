@@ -13,9 +13,10 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void proccessInput(GLFWwindow* window);
 
-const char* vertexShaderSource = "#version 330 core\n"
-    "layout (lacation = 0 ) in vec3 aPos;\n"
+const char* vertexShaderSource = "#version 330 core\n"  //가장 첫 줄(필수)
+    "layout (location = 0 ) in vec3 aPos;\n"            // VAO 설정 시 glVertexAttribPointer의 0번 인덱스와 이 변수를 연결              
     "void main() { gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\0";
+// 0번 입구로 들어오는 숫자(x,y,z)를 받아, 끝에 1.0을 붙여 4차원 좌료로 전화 후 gl_Position으로 전달
 const char* fragmentShaderSource = "version 330 core\n"
     "out vec4 FragColor;\n"
     "void main() { FragColor = vec4{ 0.3f, 0.4f, 0.7f, 1.0f); } \0"; 
@@ -43,41 +44,40 @@ int main() {
 
     // --Vertex shader--  Compiling a shader/ 프로그램 가능한 shader
     unsigned int vertexShader;    
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
+    vertexShader = glCreateShader(GL_VERTEX_SHADER);    // shader 객체 생성, GL_VERTEX_SHADER : 점의 위치를 계산  => vertexShader에 생선된 객체의 ID가 저장
+    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);  // shader객체에 실제 프로그래밍 코드 (GLSL)를 넣음
+    glCompileShader(vertexShader);      // shader 코드를 기계어로 컴파일
 
     int success;        // chsek fot shader compile errors
     char infoLog[512];
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
     if (!success) {
         glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << " ERROR::SHADER::VERTEX::OCMPILATION_FAILED\n" << infoLog<<std::endl;
+        std::cout << " ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog<<std::endl;
     }
 
     //Fragment shader
     unsigned int fragmentShader;
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);    //객체 생성
+    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL); //색상 결정 로직의 문자열을 객체에 주입
     glCompileShader(fragmentShader);
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success) {
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);   //shader가 에러 없이 컴파일되었는지 확인
+    if (!success) {     //
         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
         std::cout << "ERROR::SHADER""FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
 
-    //Shader program
+    //Shader program  ,  vertex shader와 fragment shader를 하나로 묶어서 실제로 렌더링하는 과정
     unsigned int shaderProgram;
     shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
+    glAttachShader(shaderProgram, vertexShader);    //shaderProgram에 컴파일된 셰이더들을 부착
+    glAttachShader(shaderProgram, fragmentShader);  //프로그램 하나에느 반드시 vertex,fragment가 각각 하나씩 있어햐 함
     glLinkProgram(shaderProgram);
-    glGetShaderiv(vertexShader, GL_LINK_STATUS, &success);
+    glGetShaderiv(shaderProgram, GL_LINK_STATUS, &success);
     if (!success) {
         glGetShaderInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cout << " ERROR::SHADER::PROGRAM::OCMPILATION_FAILED\n" << infoLog << std::endl;
+        std::cout << " ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
     }
-    glUseProgram(shaderProgram);
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader); 
 
@@ -105,6 +105,8 @@ int main() {
         proccessInput(window);
         glClearColor(0.1f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        glUseProgram(shaderProgram);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

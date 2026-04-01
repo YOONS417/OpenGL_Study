@@ -2,6 +2,16 @@
 
 C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프로젝트 및 학습.
 외부 설정 없이 바로 빌드하여 실행할 수 있도록 정적 라이브러리 구조로 설계.
+* Vertex Data -> Buffer -> Shader -> Draw
+
+## 🪜 학습 루트
+1. 기본 렌더링
+2. Shader + 색
+3. Transform
+4. Texture
+5. Camera
+6. Lighting
+7. Shadow,Post Processing
 
 
 ## 📺 실행 화면

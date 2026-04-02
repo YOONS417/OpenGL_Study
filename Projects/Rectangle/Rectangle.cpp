@@ -86,7 +86,8 @@ int main() {
         0, 3, 2         // 두번째 삼각형
     };
 
-    float ver2[] = {
+    // Creat Cube with trianle *2 *6 : creat two triangle to make rectrangle for six surface
+    float ver2[] = {   
     0.0f, 0.0f, 0.0f,       // 0
     0.5f, 0.0f, 0.0f,       // 1
     0.5f, 0.5f, 0.0f,       // 2
@@ -114,10 +115,10 @@ int main() {
     glBindVertexArray(VAO); 
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO); 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(ver2), ver2, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO); //VBO와 유사하게 EBO는 인덱스들을 버퍼에 복사
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ind2), ind2, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);   
@@ -130,14 +131,14 @@ int main() {
     while (!glfwWindowShouldClose(window))
     {
         proccessInput(window);
-        glClearColor(1.0f, 0.7f, 0.2f, 1.0f); //배경색
+        glClearColor(0.9f, 0.7f, 0.2f, 1.0f); //배경색
         glClear(GL_COLOR_BUFFER_BIT);
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)   // WireFrame Mode
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);      // w : line, F : fill
         if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
+        
         glUseProgram(shaderProgram);   
         glBindVertexArray(VAO);         // 설정된 VAO를 다시 바인딩(그리기 전 필수)
         //glDrawArrays(GL_TRIANGLES, 0, 3);   //그리기 명령(도형 종류, 시작 인덱스, 정점 개수)

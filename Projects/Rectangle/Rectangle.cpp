@@ -8,7 +8,7 @@ void proccessInput(GLFWwindow* window);
 
 const char* vertexShaderSource = "#version 330 core\n"  //가장 첫 줄(필수)
 "layout (location = 0 ) in vec3 aPos;\n"                        
-"void main() { gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0); }\0";
+"void main() { gl_Position = vec4(aPos.x , aPos.y , aPos.z , 1.0); }\0";
 const char* fragmentShaderSource = "#version 330 core\n"
 "out vec4 FragColor;\n"
 "void main() { FragColor = vec4(0.0f, 0.0f, 0.0f, 1.0f); }\0"; // 삼각형 색
@@ -86,6 +86,26 @@ int main() {
         0, 3, 2         // 두번째 삼각형
     };
 
+    float ver2[] = {
+    0.0f, 0.0f, 0.0f,       // 0
+    0.5f, 0.0f, 0.0f,       // 1
+    0.5f, 0.5f, 0.0f,       // 2
+    0.0f, 0.5f, 0.0f,       // 3
+    0.0f, 0.0f, 0.5f,       // 4
+    0.5f, 0.0f, 0.5f,       // 5
+    0.5f, 0.5f, 0.5f,       // 6
+    0.0f, 0.5f, 0.5f        // 7
+    };
+
+    unsigned int ind2[] = {
+        0, 1, 2,  0, 2, 3,      //bottom
+        1, 2, 6,  1, 6, 5,      //front
+        0, 3, 4,  3, 4, 7,      //back
+        2, 3, 6,  3, 6, 7,      //right
+        0, 1, 5,  0, 5, 4,      //left
+        4, 5, 6,  4, 6, 7       //top      
+    };
+
     unsigned int VBO, VAO, EBO;  
     glGenBuffers(1, &VBO); 
     glGenBuffers(1, &EBO);  //EBO생성
@@ -94,10 +114,10 @@ int main() {
     glBindVertexArray(VAO); 
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO); 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(ver2), ver2, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO); //VBO와 유사하게 EBO는 인덱스들을 버퍼에 복사
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(ind2), ind2, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);   

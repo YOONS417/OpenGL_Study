@@ -30,6 +30,5 @@ int main() {
 	animl.increase_food(50);
 
 	animl.view_state();
-
 	return 0;
 }

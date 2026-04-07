@@ -14,7 +14,7 @@ const char* fragmentShaderSource = "#version 330 core\n"
 "void main() { FragColor = vec4(0.0f, 0.0f, 0.0f, 1.0f); }\0"; // 삼각형 색
 
 
-int main() {
+int main() {     
     glfwInit();     //glfw : initialize & configure
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);  //V3.3
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);

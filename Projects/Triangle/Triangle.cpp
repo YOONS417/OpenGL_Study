@@ -2,7 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 //삼각형 그리기 
-/*   --실제 코드를 작석하는 부분은 2,5--
+/*   --실제 코드를 작석하는 부분은 2,5-- 
     1. Vertex data : 삼각형의 세 꼭짓점 좌표를 정의
     2. Vertex shader : 각 꼭짓점의 위치를 처리(3D 좌표를 화면의 2D좌표로 바꾸는계산)
     3. Primitive assembly : 점들을 연결해 삼각형 현태를 만듦
@@ -57,12 +57,12 @@ int main() {
     }
 
     //Fragment shader
-    unsigned int fragmentShader;
+    unsigned int fragmentShader; 
     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);    //객체 생성
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL); //색상 결정 로직의 문자열을 객체에 주입
+    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL); //색상 결정 로직의 문자열을 객체에 주입  
     glCompileShader(fragmentShader);
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);   //shader가 에러 없이 컴파일되었는지 확인
-    if (!success) {     //
+    if (!success) {     
         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
         std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
@@ -71,7 +71,7 @@ int main() {
     unsigned int shaderProgram;     //link shaders
     shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);    //shaderProgram에 컴파일된 셰이더들을 부착
-    glAttachShader(shaderProgram, fragmentShader);  //프로그램 하나에느 반드시 vertex,fragment가 각각 하나씩 있어햐 함
+    glAttachShader(shaderProgram, fragmentShader);  //프로그램 하나에는  반드시 vertex,fragment가 각각 하나씩 있어햐 함
     glLinkProgram(shaderProgram);                   //부착된 shader 둘을 서로 연결( vertex의 출력과 fragment의 입력이 서로 이름과 타입이 맞는지 확인 )
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);    //링크 과정이 성공했는지 확인
     if (!success) {
@@ -91,7 +91,7 @@ int main() {
     //VBO(실제 데이터) : cpu에서 GPU로 데이터를 매 프레임마다 하나씩 보내는 것은 매우 느림, VBO를 사용하여 데이터를 gpu메모리에 박아두고 필요할 떄 즉시 꺼내씀
     unsigned int VBO, VAO;  //vertex buffer object : gpu 메모리 내에 생성되는 버퍼, cup에 있는 정점데이터를 gpu로 한번에 전송
     glGenBuffers(1, &VBO); //버퍼 객체의 ID를 요청, 개수와 ID를 저장할 변수의 주소
-    glGenVertexArrays(1, &VAO);     //VAO : 데이터를 어떻게 읽어야 하는지 정의하는 상태 저장 객체
+    glGenVertexArrays(1, &  VAO );     //VAO : 데이터를 어떻게 읽어야 하는지 정의하는 상태 저장 객체
 
     glBindVertexArray(VAO); //초기 설정, VBO와 속성 설정
 

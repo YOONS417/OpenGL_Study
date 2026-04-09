@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <cmath>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void proccessInput(GLFWwindow* window);
@@ -10,14 +11,17 @@ const unsigned int Screen_Height = 600;
 
 const char* vertexShaderSource = "#version 330 core\n" //vec4 type vertexColor
 "layout (location = 0) in vec3 aPos;\n"
-"out vec4 vertexColor;"         //vertexColor 전달
-"void main() { gl_Position = vec4(aPos, 1.0);\n "   //gl_Position은 내장 변수
-"vertexColor = vec4(0.5, 0.0, 0.0, 1.0); }";
+"void main() { gl_Position = vec4(aPos, 1.0); }\n";  //gl_Position은 내장 변수
+//"out vec4 vertexColor;"         //vertexColor 전달
+//"vertexColor = vec4(0.5, 0.0, 0.0, 1.0); }";
 // 타입과 변수이름이 같아 fragmentshader의 vertexColor이 vertexshader의 vertexColor와 자동으로 연결
-const char* fragmentShaderSource = "#version 330 core\n"    // smae vertexColor in vertexShaderSource
+const char* fragmentShaderSource = "#version 330 core\n"   
 "out vec4 FragColor;\n"                                    
-"in vec4 vertexColor; \n"
-"void main () { FragColor = vertexColor; } \n";
+//"in vec4 vertexColor; \n"     // smae vertexColor in vertexShaderSource
+//"void main () { FragColor = vertexColor; } \n";
+"uniform vec4 OurColor;"     //uniform은 전역 변수, vertexshader를 거칠 필요 X
+"void main () { FragColor = OurColor; } \n";        
+
 
    
 int main() {
@@ -98,14 +102,21 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
+
     // --Render Loop--
     while (!glfwWindowShouldClose(window))
     {
         proccessInput(window);
-        glClearColor(0.1f, 0.1f, 0.4f, 1.0f);   //BG Color
+        glClearColor(0.2f, 0.2f, 0.6f, 1.0f);   //BG Color
         glClear(GL_COLOR_BUFFER_BIT);
-
         glUseProgram(shaderProgram);
+
+        // 
+        float TimeValue = glfwGetTime();  //실행시간으초 단위로
+        float GreenValue = (sin(TimeValue * 1.5f) / 2.0f ) + 0.5f;  //sin으로 색을 변화 (0~1)
+        int vertexColorLocation = glGetUniformLocation(shaderProgram, "OurColor"); //OurColor의 주소값을 찾아옴
+        glUniform4f(vertexColorLocation, 0.0f, GreenValue, 0.0f, 1.0f);  //찾은 주소에 GreenValue를 보냄 ,   glUseProgram(shaderProgram)을 반드시 호출 후에 실시
+
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 

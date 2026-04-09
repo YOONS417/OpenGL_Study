@@ -8,12 +8,16 @@ void proccessInput(GLFWwindow* window);
 const unsigned int Screen_Wdith = 800;
 const unsigned int Screen_Height = 600;
 
-const char* vertexShaderSource = "#version 330 core\n"
+const char* vertexShaderSource = "#version 330 core\n" //vec4 type vertexColor
 "layout (location = 0) in vec3 aPos;\n"
-"void main() { gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0); }";
-const char* fragmentShaderSource = "#version 330 core\n"
-"out vec4 FragColor;\n"
-"void main () { FragColor = vec4(  0.9f, 0.5f, 0.3f, 1.0f); } \0";
+"out vec4 vertexColor;"
+"void main() { gl_Position = vec4(aPos, 1.0);\n "
+"vertexColor = vec4(0.5, 0.0, 0.0, 1.0); }";
+// 타입과 변수이름이 같아 fragmentshader의 vertexColor이 vertexshader의 vertexColor와 자동으로 연결
+const char* fragmentShaderSource = "#version 330 core\n"    //vec4 type vertexColor
+"out vec4 FragColor;\n"                                    
+"in vec4 vertexColor; \n"
+"void main () { FragColor = vertexColor; } \n";
 
    
 int main() {
@@ -49,7 +53,7 @@ int main() {
         glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
         std::cout << " ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
-
+    // --FragmentShader--
     unsigned int fragmentShader;
     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
@@ -59,7 +63,7 @@ int main() {
         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
         std::cout << " ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
-
+    // --ShaderProgram--
     unsigned int shaderProgram;
     shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
@@ -94,11 +98,11 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-
+    // --Render Loop--
     while (!glfwWindowShouldClose(window))
     {
         proccessInput(window);
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);   //BG Color
+        glClearColor(0.1f, 0.1f, 0.5f, 1.0f);   //BG Color
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgram);

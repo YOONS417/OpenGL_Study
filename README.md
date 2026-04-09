@@ -22,7 +22,9 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | **02. Triangle** | ![Triangle](./images/02_Triangle_result.png) | 기본적인 VAO/VBO를 이용한 삼각형 렌더링(EBO X) |
 | **02-1. Rectangle** | ![Rectangle](./images/02_Rectangle_result.png) | 기본적인 VAO/VBO/EBO를 이용한 사각형 렌더링 |
 | **02-2. Wireframe Mode** | ![Wireframe Mode](./images/02_Rectangle_Wireframe_result.png) | glPolygonMode를 사용한 Wireframe Mode |
-| **03. Shader_GLSL** | ![Shader_GLSL(in&out)](./images/03_Shader_GLSL_in&out_result.png) | GLSL에서 in&out을 사용해 shader에서 shader로 데이터 전당  |
+| **03. Shader_GLSL** | ![Shader_GLSL(in&out)](./images/03_Shader_GLSL_in&out_result.png) | GLSL에서 in&out을 사용해 shader에서 shader로 데이터 전달  |
+| **03-1. Shader_uniform** | ![Shader_uniform](./images/03_Shader_uniform_blinkingtriangle_result.gif) | GLSL에서 uniform을 사용해 GPU shader로 데이터 전달 & 삼각형의 밝기 조절  |
+
 
 
 

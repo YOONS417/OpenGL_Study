@@ -10,11 +10,11 @@ const unsigned int Screen_Height = 600;
 
 const char* vertexShaderSource = "#version 330 core\n" //vec4 type vertexColor
 "layout (location = 0) in vec3 aPos;\n"
-"out vec4 vertexColor;"
-"void main() { gl_Position = vec4(aPos, 1.0);\n "
+"out vec4 vertexColor;"         //vertexColor 전달
+"void main() { gl_Position = vec4(aPos, 1.0);\n "   //gl_Position은 내장 변수
 "vertexColor = vec4(0.5, 0.0, 0.0, 1.0); }";
 // 타입과 변수이름이 같아 fragmentshader의 vertexColor이 vertexshader의 vertexColor와 자동으로 연결
-const char* fragmentShaderSource = "#version 330 core\n"    //vec4 type vertexColor
+const char* fragmentShaderSource = "#version 330 core\n"    // smae vertexColor in vertexShaderSource
 "out vec4 FragColor;\n"                                    
 "in vec4 vertexColor; \n"
 "void main () { FragColor = vertexColor; } \n";
@@ -102,7 +102,7 @@ int main() {
     while (!glfwWindowShouldClose(window))
     {
         proccessInput(window);
-        glClearColor(0.1f, 0.1f, 0.5f, 1.0f);   //BG Color
+        glClearColor(0.1f, 0.1f, 0.4f, 1.0f);   //BG Color
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgram);

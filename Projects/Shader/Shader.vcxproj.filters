@@ -16,4 +16,13 @@
       <UniqueIdentifier>{e4071c23-5f07-41c8-ba4c-c8ebdbdbc2e4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Shader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Triangle\shader.frag" />
+    <None Include="..\Triangle\shader.vert" />
+  </ItemGroup>
 </Project>

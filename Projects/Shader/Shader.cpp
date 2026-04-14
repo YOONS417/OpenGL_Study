@@ -2,6 +2,9 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <cmath>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void proccessInput(GLFWwindow* window);
@@ -9,7 +12,7 @@ void proccessInput(GLFWwindow* window);
 const unsigned int Screen_Wdith = 800;
 const unsigned int Screen_Height = 600;
 
-const char* vertexShaderSource = "#version 330 core\n" //vec4 type vertexColor
+/*const char* vertexShaderSource = "#version 330 core\n" //vec4 type vertexColor
 "layout (location = 0) in vec3 aPos;\n"
 "void main() { gl_Position = vec4(aPos, 1.0); }\n";  //gl_Position은 내장 변수
 //"out vec4 vertexColor;"         //vertexColor 전달
@@ -20,10 +23,24 @@ const char* fragmentShaderSource = "#version 330 core\n"
 //"in vec4 vertexColor; \n"     // smae vertexColor in vertexShaderSource
 //"void main () { FragColor = vertexColor; } \n";
 "uniform vec4 OurColor;"     //uniform은 전역 변수, vertexshader를 거칠 필요 X
-"void main () { FragColor = OurColor; } \n";        
+"void main () { FragColor = OurColor; } \n";      */   
+ 
+std::string loadShaderSource(const char* filePath) {
+    std::string content;
+    std::ifstream fileStream(filePath, std::ios::in);
 
+    if (!fileStream.is_open()) {
+        std::cerr << " File could not be found " << filePath << std::endl;
+        return "";
+    }
 
-   
+    std::stringstream sstr;
+    sstr << fileStream.rdbuf();
+    content = sstr.str();
+    fileStream.close();
+    return content;
+}
+
 int main() {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);   
@@ -44,10 +61,17 @@ int main() {
         glfwTerminate();
         return -1;
     } 
+
+    std::string vertexCode = loadShaderSource("shader.vert");
+    std::string fragmnetCode = loadShaderSource("shader.frag");
+
+    const char* vSahderSource = vertexCode.c_str();
+    const char* fShaderSource = fragmnetCode.c_str();
+
     // --Vertex Shader--
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+    glShaderSource(vertexShader, 1, &vSahderSource, NULL);
     glCompileShader(vertexShader);
 
     int success;
@@ -60,7 +84,7 @@ int main() {
     // --FragmentShader--
     unsigned int fragmentShader;
     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+    glShaderSource(fragmentShader, 1, &fShaderSource, NULL);
     glCompileShader(fragmentShader);
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
     if (!success) {
@@ -107,7 +131,7 @@ int main() {
     while (!glfwWindowShouldClose(window))
     {
         proccessInput(window);
-        glClearColor(0.2f, 0.2f, 0.6f, 1.0f);   //BG Color
+        glClearColor(0.1f, 0.2f, 0.6f, 1.0f);   //BG Color
         glClear(GL_COLOR_BUFFER_BIT);
         glUseProgram(shaderProgram);
 

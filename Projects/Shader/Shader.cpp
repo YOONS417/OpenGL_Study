@@ -25,7 +25,7 @@ const char* fragmentShaderSource = "#version 330 core\n"
 "uniform vec4 OurColor;"     //uniform은 전역 변수, vertexshader를 거칠 필요 X
 "void main () { FragColor = OurColor; } \n";      */   
  
-std::string loadShaderSource(const char* filePath) {
+static std::string loadShaderSource(const char* filePath) {
     std::string content;
     std::ifstream fileStream(filePath, std::ios::in);
 
@@ -33,7 +33,6 @@ std::string loadShaderSource(const char* filePath) {
         std::cerr << " File could not be found " << filePath << std::endl;
         return "";
     }
-
     std::stringstream sstr;
     sstr << fileStream.rdbuf();
     content = sstr.str();

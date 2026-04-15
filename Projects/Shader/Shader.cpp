@@ -2,9 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <cmath>
-#include <fstream>
-#include <sstream>
-#include <string>
+#include "ShaderLoader.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void proccessInput(GLFWwindow* window);
@@ -23,22 +21,8 @@ const char* fragmentShaderSource = "#version 330 core\n"
 //"in vec4 vertexColor; \n"     // smae vertexColor in vertexShaderSource
 //"void main () { FragColor = vertexColor; } \n";
 "uniform vec4 OurColor;"     //uniform은 전역 변수, vertexshader를 거칠 필요 X
-"void main () { FragColor = OurColor; } \n";      */   
- 
-static std::string loadShaderSource(const char* filePath) {
-    std::string content;
-    std::ifstream fileStream(filePath, std::ios::in);
-
-    if (!fileStream.is_open()) {
-        std::cerr << " File could not be found " << filePath << std::endl;
-        return "";
-    }
-    std::stringstream sstr;
-    sstr << fileStream.rdbuf();
-    content = sstr.str();
-    fileStream.close();
-    return content;
-}
+"void main () { FragColo
+r = OurColor; } \n";      */   
 
 int main() {
     glfwInit();

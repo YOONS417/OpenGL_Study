@@ -44,17 +44,21 @@ int main() {
         glfwTerminate();
         return -1;
     } 
-
-    std::string vertexCode = loadShaderSource("shader.vert");
-    std::string fragmnetCode = loadShaderSource("shader.frag");
+    // --include headerfile & separate class / call GLSL 
+    std::string vertexCode = loadShaderSource("Shaders/InOut.vert");   // read file from shader.vert 
+    std::string fragmnetCode = loadShaderSource("Shaders/InOut.frag");     // read file from shader.frag
+    std::string  vUniformCode= loadShaderSource("Shaders/Uniform.vert");
+    std::string fUniformCode= loadShaderSource("Shaders/Uniform.frag");
 
     const char* vSahderSource = vertexCode.c_str();
     const char* fShaderSource = fragmnetCode.c_str();
+    const char* v_uniformSource = vUniformCode.c_str();
+    const char* f_uniformSource = fUniformCode.c_str();
 
     // --Vertex Shader--
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vSahderSource, NULL);
+    glShaderSource(vertexShader, 1, &v_uniformSource, NULL);
     glCompileShader(vertexShader);
 
     int success;
@@ -67,7 +71,7 @@ int main() {
     // --FragmentShader--
     unsigned int fragmentShader;
     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fShaderSource, NULL);
+    glShaderSource(fragmentShader, 1, &f_uniformSource, NULL);
     glCompileShader(fragmentShader);
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
     if (!success) {

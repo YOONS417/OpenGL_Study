@@ -20,12 +20,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.frag">
+    <None Include="InOut.frag">
       <Filter>소스 파일</Filter>
     </None>
-    <None Include="shader.vert">
+    <None Include="InOut.vert">
       <Filter>소스 파일</Filter>
     </None>
+    <None Include="Uniform.vert" />
+    <None Include="Uniform.frag" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ShaderLoader.h">

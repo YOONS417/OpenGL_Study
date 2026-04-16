@@ -18,4 +18,4 @@ std::string loadShaderSource(const char* filePath) {
     content = sstr.str();
     fileStream.close();
     return content;
-}
+} 

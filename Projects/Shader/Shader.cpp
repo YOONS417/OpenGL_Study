@@ -10,19 +10,6 @@ void proccessInput(GLFWwindow* window);
 const unsigned int Screen_Wdith = 800;
 const unsigned int Screen_Height = 600;
 
-/*const char* vertexShaderSource = "#version 330 core\n" //vec4 type vertexColor
-"layout (location = 0) in vec3 aPos;\n"
-"void main() { gl_Position = vec4(aPos, 1.0); }\n";  //gl_Position은 내장 변수
-//"out vec4 vertexColor;"         //vertexColor 전달
-//"vertexColor = vec4(0.5, 0.0, 0.0, 1.0); }";
-// 타입과 변수이름이 같아 fragmentshader의 vertexColor이 vertexshader의 vertexColor와 자동으로 연결
-const char* fragmentShaderSource = "#version 330 core\n"   
-"out vec4 FragColor;\n"                                    
-//"in vec4 vertexColor; \n"     // smae vertexColor in vertexShaderSource
-//"void main () { FragColor = vertexColor; } \n";
-"uniform vec4 OurColor;"     //uniform은 전역 변수, vertexshader를 거칠 필요 X
-"void main () { FragColo
-r = OurColor; } \n";      */   
 
 int main() {
     glfwInit();
@@ -58,7 +45,7 @@ int main() {
     // --Vertex Shader--
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &v_uniformSource, NULL);
+    glShaderSource(vertexShader, 1, &v_uniformSource, NULL);  //sourcecode from file
     glCompileShader(vertexShader);
 
     int success;
@@ -71,7 +58,7 @@ int main() {
     // --FragmentShader--
     unsigned int fragmentShader;
     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &f_uniformSource, NULL);
+    glShaderSource(fragmentShader, 1, &f_uniformSource, NULL);  //sourcecode from file
     glCompileShader(fragmentShader);
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
     if (!success) {
@@ -92,11 +79,11 @@ int main() {
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    // -- Input Vertex Data
-    float vertices[] = {
-        -0.5f, -0.5f, 0.0f,        //left
-        0.5f, -0.5f, 0.0f,         //right
-        0.0f, 0.5f, 0.0f           //top 
+    // -- Input Vertex Data -- 
+    float vertices[] = { 
+        -0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,     //left + R
+         0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,      //right + G
+         0.0f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f       //top  + B 
     };
 
     unsigned int VBO, VAO  ;
@@ -107,9 +94,14 @@ int main() {
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    // position atttibute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0); // 3 -> 6
     glEnableVertexAttribArray(0);
+
+    // color attribute                nomalize = false / stride(6 : 점 3개, 색 3개)   /  offset(시작위치 : 4번째 부터)     
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 

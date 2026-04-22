@@ -136,10 +136,10 @@
     <ClCompile Include="ShaderClass.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="InOut.frag" />
-    <None Include="InOut.vert" />
-    <None Include="Uniform.frag" />
-    <None Include="Uniform.vert" />
+    <None Include="Shaders\InOut.frag" />
+    <None Include="Shaders\InOut.vert" />
+    <None Include="Shaders\Uniform.frag" />
+    <None Include="Shaders\Uniform.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ShaderLoader.h" />

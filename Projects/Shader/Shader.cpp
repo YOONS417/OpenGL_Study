@@ -110,7 +110,7 @@ int main() {
     while (!glfwWindowShouldClose(window))
     {
         proccessInput(window);
-        glClearColor(0.1f, 0.2f, 0.6f, 1.0f);   //BG Color
+        glClearColor(0.3f, 0.3f, 0.3f, 1.0f);   //BG Color
         glClear(GL_COLOR_BUFFER_BIT);
         glUseProgram(shaderProgram);
 

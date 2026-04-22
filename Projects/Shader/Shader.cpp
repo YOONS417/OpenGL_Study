@@ -114,12 +114,12 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
         glUseProgram(shaderProgram);
 
-        // 
+        /*  // make color blink using uniformshader
         float TimeValue = glfwGetTime();  //실행시간으초 단위로
         float GreenValue = (sin(TimeValue * 1.5f) / 2.0f ) + 0.5f;  //sin으로 색을 변화 (0~1)
         int vertexColorLocation = glGetUniformLocation(shaderProgram, "OurColor"); //OurColor의 주소값을 찾아옴
         glUniform4f(vertexColorLocation, 0.0f, GreenValue, 0.0f, 1.0f);  //찾은 주소에 GreenValue를 보냄 ,   glUseProgram(shaderProgram)을 반드시 호출 후에 실시
-
+        */
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 

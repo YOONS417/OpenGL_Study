@@ -37,15 +37,15 @@ int main() {
     std::string  vUniformCode= loadShaderSource("Shaders/Uniform.vert");
     std::string fUniformCode= loadShaderSource("Shaders/Uniform.frag");
 
-    const char* vSahderSource = vertexCode.c_str();
-    const char* fShaderSource = fragmnetCode.c_str();
+    const char* v_InOutSource = vertexCode.c_str();
+    const char* f_InOutSource = fragmnetCode.c_str();
     const char* v_uniformSource = vUniformCode.c_str();
     const char* f_uniformSource = fUniformCode.c_str();
 
     // --Vertex Shader--
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &v_uniformSource, NULL);  //sourcecode from file
+    glShaderSource(vertexShader, 1, &v_InOutSource, NULL);  //sourcecode from file
     glCompileShader(vertexShader);
 
     int success;
@@ -58,7 +58,7 @@ int main() {
     // --FragmentShader--
     unsigned int fragmentShader;
     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &f_uniformSource, NULL);  //sourcecode from file
+    glShaderSource(fragmentShader, 1, &f_InOutSource, NULL);  //sourcecode from file
     glCompileShader(fragmentShader);
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
     if (!success) {

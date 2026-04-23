@@ -4,7 +4,7 @@
     <ClCompile Include="..\..\Commons\glad.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Rectangle.cpp">
+    <ClCompile Include="Rectangle_main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

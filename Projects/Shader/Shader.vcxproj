@@ -132,8 +132,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Commons\glad.c" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="ShaderClass.cpp" />
+    <ClCompile Include="Shader_main.cpp" />
+    <ClCompile Include="ShaderClass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\InOut.frag" />

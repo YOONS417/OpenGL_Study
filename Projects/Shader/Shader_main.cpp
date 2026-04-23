@@ -2,7 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <cmath>
-#include "ShaderLoader.h"
+#include "ShaderClass.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void proccessInput(GLFWwindow* window);
@@ -31,53 +31,8 @@ int main() {
         glfwTerminate();
         return -1;
     } 
-    // --include headerfile & separate class / call GLSL 
-    std::string vertexCode = loadShaderSource("Shaders/InOut.vert");   // read file from shader.vert 
-    std::string fragmnetCode = loadShaderSource("Shaders/InOut.frag");     // read file from shader.frag
-    std::string  vUniformCode= loadShaderSource("Shaders/Uniform.vert");
-    std::string fUniformCode= loadShaderSource("Shaders/Uniform.frag");
-
-    const char* v_InOutSource = vertexCode.c_str();
-    const char* f_InOutSource = fragmnetCode.c_str();
-    const char* v_uniformSource = vUniformCode.c_str();
-    const char* f_uniformSource = fUniformCode.c_str();
-
-    // --Vertex Shader--
-    unsigned int vertexShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &v_InOutSource, NULL);  //sourcecode from file
-    glCompileShader(vertexShader);
-
-    int success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << " ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-    // --FragmentShader--
-    unsigned int fragmentShader;
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &f_InOutSource, NULL);  //sourcecode from file
-    glCompileShader(fragmentShader);
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << " ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-    }
-    // --ShaderProgram--
-    unsigned int shaderProgram;
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    glGetShaderiv(shaderProgram, GL_LINK_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cout <<" ERROR::SHADER::SHADERPROGRAM::COMPILATION_FAILED\n" << infoLog <<std::endl;
-    }
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    
+    Shader Shaders("Shaders/InOut.vert", "Shaders/InOut.frag");
 
     // -- Input Vertex Data -- 
     float vertices[] = { 
@@ -112,7 +67,6 @@ int main() {
         proccessInput(window);
         glClearColor(0.3f, 0.3f, 0.3f, 1.0f);   //BG Color
         glClear(GL_COLOR_BUFFER_BIT);
-        glUseProgram(shaderProgram);
 
         /*  // make color blink using uniformshader
         float TimeValue = glfwGetTime();  //실행시간으초 단위로
@@ -120,6 +74,7 @@ int main() {
         int vertexColorLocation = glGetUniformLocation(shaderProgram, "OurColor"); //OurColor의 주소값을 찾아옴
         glUniform4f(vertexColorLocation, 0.0f, GreenValue, 0.0f, 1.0f);  //찾은 주소에 GreenValue를 보냄 ,   glUseProgram(shaderProgram)을 반드시 호출 후에 실시
         */
+        Shaders.use();
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -128,7 +83,6 @@ int main() {
     }
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    glDeleteProgram(shaderProgram);
 
     glfwTerminate();
     return 0;   

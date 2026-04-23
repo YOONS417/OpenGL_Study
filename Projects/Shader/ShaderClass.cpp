@@ -1,8 +1,27 @@
+#ifndef SHADER_H
+#define SHADER_H
+
+#include <glad/glad.h>
+
 #include <iostream>
 #include <fstream>
-#include < sstream>
-#include  <string>
+#include <sstream>
+#include <string>
 #include "ShaderLoader.h"
+
+class Shader {
+public:
+    unsigned  int ID;
+
+    Shader(const char* vertexPath, const char* fragmnetPath);
+
+    void use();
+
+    void setBool(const std::string &name, bool value) const;
+    void setInt(const std::string& name, int value) const;
+    void setFloat(const std::string& name, float value) const;
+
+};
 
 std::string loadShaderSource(const char* filePath) { //읽어올 파일의 경로를 받고, 모든 텍스트들을 하나의 긴 문자열로 변환
     std::string content;
@@ -18,3 +37,4 @@ std::string loadShaderSource(const char* filePath) { //읽어올 파일의 경�
     fileStream.close();
     return content;
 } 
+#endif 

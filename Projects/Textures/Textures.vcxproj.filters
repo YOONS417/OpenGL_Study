@@ -4,7 +4,7 @@
     <ClCompile Include="..\..\Commons\glad.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Shader_main.cpp">
+    <ClCompile Include="Texture_main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="ShaderClass.h">
@@ -18,22 +18,5 @@
     <Filter Include="헤더 파일">
       <UniqueIdentifier>{e4071c23-5f07-41c8-ba4c-c8ebdbdbc2e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{42694e24-343b-4468-aa3e-ac70b5c52a7e}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Shaders\InOut.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\InOut.vert">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\Uniform.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\Uniform.vert">
-      <Filter>Shaders</Filter>
-    </None>
   </ItemGroup>
 </Project>

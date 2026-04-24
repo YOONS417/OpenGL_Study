@@ -13,12 +13,12 @@ const unsigned int Screen_Height = 600;
 
 int main() {
     glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);   
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);  
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     GLFWwindow* window = glfwCreateWindow(Screen_Wdith, Screen_Height, "Project_Triangle", NULL, NULL);
-    if (window == NULL) {  
+    if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return  -1;
@@ -26,43 +26,37 @@ int main() {
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {   
-        std::cout << " Failed to initialze GLAD" << std::endl;  
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        std::cout << " Failed to initialze GLAD" << std::endl;
         glfwTerminate();
         return -1;
-    } 
-    
-    //Shader InOut_shader("Shaders/InOut.vert", "Shaders/InOut.frag");
-    Shader Uniform_shader("Shaders/Uniform.vert", "Shaders/Uniform.frag");
+    }
+
+    Shader InOut_shader("Shaders/InOut.vert", "Shaders/InOut.frag");
+    //Shader Uniform_shader("Shaders/Uniform/vert", "Shaders/Uniform.frag");
 
     // -- Input Vertex Data -- 
-    float vertices_1[] = { 
+    float vertices[] = {
         -0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,     // left + R
          0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,     // right + G
          0.0f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f      // top  + B 
     };
 
-    float vertices_2[] = {
-        -0.5f, -0.5f, 0.0f,      // left 
-         0.5f, -0.5f, 0.0f,      // right 
-         0.0f, 0.5f, 0.0f        // top  
-    };
-
-    unsigned int VBO, VAO  ;
+    unsigned int VBO, VAO;
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);
 
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices_2), vertices_2, GL_STATIC_DRAW);
-    // Position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0); // 3 -> 6
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    // position atttibute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0); // 3 -> 6
     glEnableVertexAttribArray(0);
 
-    // Color attribute                nomalize = false / stride(6 : 점 3개, 색 3개)   /  offset(시작위치 : 4번째 부터)     
-    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    //glEnableVertexAttribArray(1);
+    // color attribute                nomalize = false / stride(6 : 점 3개, 색 3개)   /  offset(시작위치 : 4번째 부터)     
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -75,15 +69,15 @@ int main() {
         glClearColor(0.3f, 0.3f, 0.3f, 1.0f);   //BG Color
         glClear(GL_COLOR_BUFFER_BIT);
 
-         // make color blink using uniformshader
-        float TimeValue = glfwGetTime();  //실행시간으초 단위로
-        float GreenValue = (sin(TimeValue * 1.5f) / 2.0f ) + 0.5f;  //sin으로 색을 변화 (0~1)
-        int vertexColorLocation = glGetUniformLocation(Uniform_shader.ID, "OurColor"); //OurColor의 주소값을 찾아옴
-        glUniform4f(vertexColorLocation, 0.0f, GreenValue, 0.0f, 1.0f);  //찾은 주소에 GreenValue를 보냄 ,   glUseProgram(shaderProgram)을 반드시 호출 후에 실시
-       
+        /*   // make color blink using uniformshader
+         float TimeValue = glfwGetTime();  //실행시간으초 단위로
+         float GreenValue = (sin(TimeValue * 1.5f) / 2.0f ) + 0.5f;  //sin으로 색을 변화 (0~1)
+         int vertexColorLocation = glGetUniformLocation(Uniform_shader.ID, "OurColor"); //OurColor의 주소값을 찾아옴
+         glUniform4f(vertexColorLocation, 0.0f, GreenValue, 0.0f, 1.0f);  //찾은 주소에 GreenValue를 보냄 ,   glUseProgram(shaderProgram)을 반드시 호출 후에 실시
+         */
 
-        //InOut_shader.use();
-        Uniform_shader.use();
+        InOut_shader.use();
+        //Uniform_shader.use();
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -94,7 +88,7 @@ int main() {
     glDeleteBuffers(1, &VBO);
 
     glfwTerminate();
-    return 0;   
+    return 0;
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)

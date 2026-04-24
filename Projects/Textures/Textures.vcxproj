@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{1342bb37-3225-4c92-abf7-b65292991142}</ProjectGuid>
-    <RootNamespace>Shader</RootNamespace>
+    <ProjectGuid>{56087ddb-4723-444d-8437-6b0c75a882ef}</ProjectGuid>
+    <RootNamespace>Textures</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -132,14 +132,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Commons\glad.c" />
-    <ClCompile Include="Shader_main.cpp" />
     <ClCompile Include="ShaderClass.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Shaders\InOut.frag" />
-    <None Include="Shaders\InOut.vert" />
-    <None Include="Shaders\Uniform.frag" />
-    <None Include="Shaders\Uniform.vert" />
+    <ClCompile Include="Texture_main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

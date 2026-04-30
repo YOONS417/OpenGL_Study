@@ -1,0 +1,13 @@
+#version 330 core
+
+out vec4 FragColor;
+
+in vec3 Shape_Color;
+in vec2 Tex_Coord;
+
+uniform sampler2D Shape_Texture;
+
+void main() {
+	FragColor = texture(Shape_Texture,Tex_Coord);
+	// texture 함수는 ( 샘플러 , 좌표) 인자가 필요
+}

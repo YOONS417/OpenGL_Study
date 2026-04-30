@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cmath>
 #include "ShaderClass.h"
+
 #include "stb_image.h"
 
 
@@ -61,14 +62,14 @@ int main() {
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
     // --Position attribute--
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0); // 3 -> 8
     glEnableVertexAttribArray(0);
-
     // --Color attribute--        * nomalize = false / stride(6 : 점 3개, 색 3개)   /  offset(시작위치 : 4번째 부터)     
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-
+    // --Texture Coordinate arrtibute--
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
@@ -79,9 +80,10 @@ int main() {
     unsigned int texture;
     glGenTextures(1, &texture);   // ( 생성할 텍스처의 개수 , 텍스처 ID 
     glBindTexture(GL_TEXTURE_2D, texture);  // 바인딩해야 이후의 텍스처 관련 명령어들이 현재 바인딩된 텍스처를 설정
-
+    // texture wrapping
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // texture filtering
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -93,7 +95,7 @@ int main() {
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else {
-        std::cout << "Failed to loat texture" << std::endl;
+        std::cout << "Failed to load texture" << std::endl;
     }
     stbi_image_free(data);
 
@@ -104,8 +106,9 @@ int main() {
         glClearColor(0.3f, 0.3f, 0.3f, 1.0f);   //BG Color
         glClear(GL_COLOR_BUFFER_BIT);
 
-        TEXTURE_Shader.use();
         glBindTexture(GL_TEXTURE_2D, texture);
+
+        TEXTURE_Shader.use();
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         

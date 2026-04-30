@@ -36,13 +36,14 @@ int main() {
     Shader Uniform_shader("Shaders/Uniform.vert", "Shaders/Uniform.frag");
 
     // -- Input Vertex Data -- 
-    float vertices_1[] = { 
+    float InOut_vertices[] = { 
         -0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,     // left + R
          0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,     // right + G
          0.0f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f      // top  + B 
     };
 
-    float vertices_2[] = {
+    // vertices for uniform shader
+    float Uniform_vertices[] = {
         -0.5f, -0.5f, 0.0f,      // left 
          0.5f, -0.5f, 0.0f,      // right 
          0.0f, 0.5f, 0.0f        // top  
@@ -55,7 +56,7 @@ int main() {
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices_2), vertices_2, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Uniform_vertices), Uniform_vertices , GL_STATIC_DRAW);
     // Position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0); // 3 -> 6
     glEnableVertexAttribArray(0);
@@ -77,10 +78,10 @@ int main() {
 
          // make color blink using uniformshader
         float TimeValue = glfwGetTime();  //실행시간으초 단위로
-        float GreenValue = (sin(TimeValue * 1.5f) / 2.0f ) + 0.5f;  //sin으로 색을 변화 (0~1)
+        float BlueValue = (sin(TimeValue * 1.5f) / 2.0f ) + 0.5f;  //sin으로 색을 변화 (0~1)
         int vertexColorLocation = glGetUniformLocation(Uniform_shader.ID, "OurColor"); //OurColor의 주소값을 찾아옴
-        glUniform4f(vertexColorLocation, 0.0f, GreenValue, 0.0f, 1.0f);  //찾은 주소에 GreenValue를 보냄 ,   glUseProgram(shaderProgram)을 반드시 호출 후에 실시
-       
+        glUniform4f(vertexColorLocation, 0.0f, 0.0f, BlueValue,  1.0f);  //찾은 주소에 GreenValue를 보냄 ,   glUseProgram(shaderProgram)을 반드시 호출 후에 실시
+                                      //  R ,   G  ,   B
 
         //InOut_shader.use();
         Uniform_shader.use();

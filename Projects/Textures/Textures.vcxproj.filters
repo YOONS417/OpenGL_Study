@@ -10,6 +10,9 @@
     <ClCompile Include="ShaderClass.h">
       <Filter>헤더 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Texture_images.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -18,5 +21,21 @@
     <Filter Include="헤더 파일">
       <UniqueIdentifier>{e4071c23-5f07-41c8-ba4c-c8ebdbdbc2e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{55bb57aa-dae2-4eb1-822c-a5b708084aa8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\Users\yooon\Downloads\stb_image.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="texture.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="texture.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

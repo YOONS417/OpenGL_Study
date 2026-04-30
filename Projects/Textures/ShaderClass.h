@@ -43,16 +43,19 @@ public:
         const char* f_ShaderCode = fragmentCode.c_str();
 
         unsigned int VertexShader, FragmentShdaer;
+
         // --Vertex Shader--
         VertexShader = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(VertexShader, 1, &v_ShaderCode, NULL);
         glCompileShader(VertexShader);
         CheckCompileError(VertexShader, "Vertex"); // ID, string
+
         // --Fragment Shader--
         FragmentShdaer = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(FragmentShdaer, 1, &f_ShaderCode, NULL);
         glCompileShader(FragmentShdaer);
         CheckCompileError(FragmentShdaer, "Fragment");
+
         // --Shader Program--
         ID = glCreateProgram();
         glAttachShader(ID, VertexShader);
@@ -62,7 +65,6 @@ public:
 
         glDeleteShader(VertexShader);
         glDeleteShader(FragmentShdaer);
-
     }
 
     void use() {         // 내부적으로 glUserProgram(ID)를 실행(활성화)

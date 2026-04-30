@@ -3,6 +3,8 @@
 #include <iostream>
 #include <cmath>
 #include "ShaderClass.h"
+#include "stb_image.h"
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void proccessInput(GLFWwindow* window);
@@ -32,35 +34,68 @@ int main() {
         return -1;
     }
 
-    Shader InOut_shader("Shaders/InOut.vert", "Shaders/InOut.frag");
-    //Shader Uniform_shader("Shaders/Uniform/vert", "Shaders/Uniform.frag");
+    Shader TEXTURE_Shader("Shaders/texture.vert", "Shaders/texture.frag");
 
     // -- Input Vertex Data -- 
-    float vertices[] = {
-        -0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,     // left + R
-         0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,     // right + G
-         0.0f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f      // top  + B 
+    float vertices[] = {                        // texture coordinate
+        -0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  0.0f, 0.0f, // left bottom     =0
+         0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f, // right bottom    =1
+         0.5f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f,  1.0f, 1.0f, // right  top      =2
+        -0.5f, 0.5f, 0.0f,   0.0f, 0.5f, 0.5f,  0.0f, 1.0f  // left top        =3
     };
 
-    unsigned int VBO, VAO;
+    unsigned int indices[] = {
+        0, 1, 2,
+        0, 2 ,3
+    };
+
+    unsigned int VBO, VAO, EBO;
     glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
     glGenVertexArrays(1, &VAO);
 
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    // position atttibute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0); // 3 -> 6
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    // --Position attribute--
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0); // 3 -> 8
     glEnableVertexAttribArray(0);
 
-    // color attribute                nomalize = false / stride(6 : 점 3개, 색 3개)   /  offset(시작위치 : 4번째 부터)     
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    // --Color attribute--        * nomalize = false / stride(6 : 점 3개, 색 3개)   /  offset(시작위치 : 4번째 부터)     
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
+    // --Generating Texture--
+    unsigned int texture;
+    glGenTextures(1, &texture);   // ( 생성할 텍스처의 개수 , 텍스처 ID 
+    glBindTexture(GL_TEXTURE_2D, texture);  // 바인딩해야 이후의 텍스처 관련 명령어들이 현재 바인딩된 텍스처를 설정
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    int width, height, nrChannels;
+    unsigned char* data = stbi_load("Metal.png", &width, &height, &nrChannels, 0);
+    if (data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        // 텍스처 유형 , 밉맵 레벨 , 이미지를 어떤 포멧으로 저장할지 결정(RGB), border(항상 0), data가 어떤 구성으로 되었는지, 데이터 타입 , 실제 이미지 픽셀정보가 담긴 주소)
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else {
+        std::cout << "Failed to loat texture" << std::endl;
+    }
+    stbi_image_free(data);
 
     // --Render Loop--
     while (!glfwWindowShouldClose(window))
@@ -69,22 +104,16 @@ int main() {
         glClearColor(0.3f, 0.3f, 0.3f, 1.0f);   //BG Color
         glClear(GL_COLOR_BUFFER_BIT);
 
-        /*   // make color blink using uniformshader
-         float TimeValue = glfwGetTime();  //실행시간으초 단위로
-         float GreenValue = (sin(TimeValue * 1.5f) / 2.0f ) + 0.5f;  //sin으로 색을 변화 (0~1)
-         int vertexColorLocation = glGetUniformLocation(Uniform_shader.ID, "OurColor"); //OurColor의 주소값을 찾아옴
-         glUniform4f(vertexColorLocation, 0.0f, GreenValue, 0.0f, 1.0f);  //찾은 주소에 GreenValue를 보냄 ,   glUseProgram(shaderProgram)을 반드시 호출 후에 실시
-         */
-
-        InOut_shader.use();
-        //Uniform_shader.use();
+        TEXTURE_Shader.use();
+        glBindTexture(GL_TEXTURE_2D, texture);
         glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
     glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &EBO);
     glDeleteBuffers(1, &VBO);
 
     glfwTerminate();

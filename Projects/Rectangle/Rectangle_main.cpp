@@ -97,7 +97,7 @@ int main() {
     0.5f, 0.5f, 0.5f,       // 6
     0.0f, 0.5f, 0.5f        // 7
     };
-
+    //  -- surface--
     unsigned int ind2[] = {
         0, 1, 2,  0, 2, 3,      //bottom
         1, 2, 6,  1, 6, 5,      //front

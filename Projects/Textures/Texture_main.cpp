@@ -90,7 +90,7 @@ int main() {
     int width, height, nrChannels;
     unsigned char* data = stbi_load("Metal.png", &width, &height, &nrChannels, 0);
     if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         // 텍스처 유형 , 밉맵 레벨 , 이미지를 어떤 포멧으로 저장할지 결정(RGB), border(항상 0), data가 어떤 구성으로 되었는지, 데이터 타입 , 실제 이미지 픽셀정보가 담긴 주소)
         glGenerateMipmap(GL_TEXTURE_2D);
     }
@@ -105,7 +105,7 @@ int main() {
         proccessInput(window);
         glClearColor(0.3f, 0.3f, 0.3f, 1.0f);   //BG Color
         glClear(GL_COLOR_BUFFER_BIT);
-
+        
         glBindTexture(GL_TEXTURE_2D, texture);
 
         TEXTURE_Shader.use();

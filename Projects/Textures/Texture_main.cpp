@@ -79,7 +79,7 @@ int main() {
     // --Generating Texture--
     unsigned int texture;
     glGenTextures(1, &texture);   // ( 생성할 텍스처의 개수 , 텍스처 ID 
-    glBindTexture(GL_TEXTURE_2D, texture);  // 바인딩해야 이후의 텍스처 관련 명령어들이 현재 바인딩된 텍스처를 설정
+    glBindTexture(GL_TEXTURE_2D, texture);  // 바인 딩해야 이후의 텍스처 관련 명령어들이 현재 바인딩된 텍스처를 설정
     // texture wrapping
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -93,6 +93,8 @@ int main() {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         // 텍스처 유형 , 밉맵 레벨 , 이미지를 어떤 포멧으로 저장할지 결정(RGB), border(항상 0), data가 어떤 구성으로 되었는지, 데이터 타입 , 실제 이미지 픽셀정보가 담긴 주소)
         glGenerateMipmap(GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
     else {
         std::cout << "Failed to load texture" << std::endl;

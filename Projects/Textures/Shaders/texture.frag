@@ -9,5 +9,7 @@ uniform sampler2D Shape_Texture;
 
 void main() {
 	FragColor = texture(Shape_Texture,Tex_Coord) * vec4(Shape_Color, 1.0);
+	if(FragColor.a < 0.1)
+		discard;
 	// texture 함수는 ( 샘플러 , 좌표) 인자가 필요
 }

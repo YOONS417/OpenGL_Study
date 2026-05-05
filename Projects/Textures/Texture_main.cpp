@@ -3,7 +3,6 @@
 #include <iostream>
 #include <cmath>
 #include "ShaderClass.h"
-
 #include "stb_image.h"
 
 
@@ -12,7 +11,7 @@ void proccessInput(GLFWwindow* window);
 
 const unsigned int Screen_Wdith = 800;
 const unsigned int Screen_Height = 600;
-
+ 
 
 int main() {
     glfwInit();
@@ -35,14 +34,14 @@ int main() {
         return -1;
     }
 
-    Shader TEXTURE_Shader("Shaders/texture.vert", "Shaders/texture.frag");
+    Shader TEXTURE_Shader("Shaders/texture.vert", "Shaders/texture.frag"); 
 
     // -- Input Vertex Data -- 
     float vertices[] = {                        // texture coordinate
         -0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  0.0f, 0.0f, // left bottom     =0
          0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  1.0f, 0.0f, // right bottom    =1
          0.5f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f,  1.0f, 1.0f, // right  top      =2
-        -0.5f, 0.5f, 0.0f,   0.0f, 0.5f, 0.5f,  0.0f, 1.0f  // left top        =3
+        -0.5f, 0.5f, 0.0f,   0.0f, 0.7f, 0.7f,  0.0f, 1.0f  // left top        =3
     };
 
     unsigned int indices[] = {
@@ -88,9 +87,9 @@ int main() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     int width, height, nrChannels;
-    unsigned char* data = stbi_load("Metal.png", &width, &height, &nrChannels, 0);
+    unsigned char* data = stbi_load("PaperSheet.jpg", &width, &height, &nrChannels, 0);
     if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         // 텍스처 유형 , 밉맵 레벨 , 이미지를 어떤 포멧으로 저장할지 결정(RGB), border(항상 0), data가 어떤 구성으로 되었는지, 데이터 타입 , 실제 이미지 픽셀정보가 담긴 주소)
         glGenerateMipmap(GL_TEXTURE_2D);
         glEnable(GL_BLEND);
@@ -107,6 +106,11 @@ int main() {
         proccessInput(window);
         glClearColor(0.3f, 0.3f, 0.3f, 1.0f);   //BG Color
         glClear(GL_COLOR_BUFFER_BIT);
+
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)   // WireFrame Mode
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);      // w : line, F : fill
+        if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         
         glBindTexture(GL_TEXTURE_2D, texture);
 

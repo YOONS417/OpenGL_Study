@@ -75,7 +75,7 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    // --Generating Texture--
+    // --Generating(load & creat) Texture--
     unsigned int texture;
     glGenTextures(1, &texture);   // ( 생성할 텍스처의 개수 , 텍스처 ID 
     glBindTexture(GL_TEXTURE_2D, texture);  // 바인 딩해야 이후의 텍스처 관련 명령어들이 현재 바인딩된 텍스처를 설정
@@ -86,10 +86,9 @@ int main() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    int width, height, nrChannels;
-    stbi_set_flip_vertically_on_load(true); // 이미지를 상하 반전해서 로드
+    int width, height, nrChannels; // texture 원점 : 왼쪽 하단 / 이미지파일 원점 : 왼쪽 상단
+    stbi_set_flip_vertically_on_load(true); // 이미지를 상하 반전해서 로드   
     unsigned char* data = stbi_load("PaperSheet.jpg", &width, &height, &nrChannels, 0);
-
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         // 텍스처 유형 , 밉맵 레벨 , 이미지를 어떤 포멧으로 저장할지 결정(RGB), border(항상 0), data가 어떤 구성으로 되었는지, 데이터 타입 , 실제 이미지 픽셀정보가 담긴 주소)

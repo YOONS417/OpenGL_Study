@@ -15,7 +15,7 @@ public:
     {                                                          // link two shader into one shader prog
         std::string vertexCode;
         std::string fragmentCode;
-        std::ifstream vShaderFile;  //
+        std::ifstream vShaderFile;  
         std::ifstream fShaderFile;
         // C++의 파일 읽기는 기본적으로 파일이 없거나 오류가 나도 멈추지 않고 무시
         vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);   // exceptions으로 무시하지 않고 에러를 알림

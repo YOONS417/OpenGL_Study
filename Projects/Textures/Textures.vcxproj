@@ -105,7 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\Libraries\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\Libraries\include;$(ProjectDir)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -132,16 +132,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Commons\glad.c" />
-    <ClCompile Include="ShaderClass.h" />
-    <ClCompile Include="Texture_images.cpp" />
-    <ClCompile Include="Texture_main.cpp" />
+    <ClCompile Include="src\Texture_images.cpp" />
+    <ClCompile Include="src\Texture_main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Users\yooon\Downloads\stb_image.h" />
+    <ClInclude Include="ShaderClass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\texture.frag" />
     <None Include="Shaders\texture.vert" />
+    <None Include="tex_mix.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

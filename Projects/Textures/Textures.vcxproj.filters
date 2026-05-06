@@ -4,13 +4,10 @@
     <ClCompile Include="..\..\Commons\glad.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Texture_main.cpp">
+    <ClCompile Include="src\Texture_images.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderClass.h">
-      <Filter>헤더 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture_images.cpp">
+    <ClCompile Include="src\Texture_main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,12 +26,18 @@
     <ClInclude Include="..\..\..\..\Users\yooon\Downloads\stb_image.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="ShaderClass.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\texture.frag">
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\texture.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="tex_mix.frag">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

@@ -34,7 +34,7 @@ int main() {
         return -1;
     }
 
-    Shader TEXTURE_Shader("Shaders/texture.vert", "Shaders/texture.frag"); 
+    Shader TEXTURE_Shader("Shaders/texture.vert", "Shaders/tex_mix.frag"); 
 
     // -- Input Vertex Data -- 
     float vertices[] = {                        // texture coordinate
@@ -48,7 +48,7 @@ int main() {
         0, 1, 2,
         0, 2 ,3
     };
-
+     
     unsigned int VBO, VAO, EBO;
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -76,9 +76,35 @@ int main() {
     glBindVertexArray(0);
 
     // --Generating(load & creat) Texture--
-    unsigned int texture;
-    glGenTextures(1, &texture);   // ( 생성할 텍스처의 개수 , 텍스처 ID 
-    glBindTexture(GL_TEXTURE_2D, texture);  // 바인 딩해야 이후의 텍스처 관련 명령어들이 현재 바인딩된 텍스처를 설정
+    unsigned int texture01, texture02;
+    int width, height, nrChannels; // texture 원점 : 왼쪽 하단 / 이미지파일 원점 : 왼쪽 상단
+    stbi_set_flip_vertically_on_load(true); // 이미지를 상하 반전해서 로드  
+
+    // --Paper Image--
+    glGenTextures(1, &texture01);   // ( 생성할 텍스처의 개수 , 텍스처 ID )
+    glActiveTexture(GL_TEXTURE0);  // 텍스처 유닛 활성화s
+    glBindTexture(GL_TEXTURE_2D, texture01);  // 바인딩해야 이후의 텍스처 관련 명령어들이 현재 바인딩된 텍스처를 설정
+    // texture wrapping                                 
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);  // wrapping to GL_REAPTE (default)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // texture filtering
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    unsigned char* data = stbi_load("PaperSheet.jpg", &width, &height, &nrChannels, 0);
+    if (data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        // 텍스처 유형 , 밉맵 레벨 , 이미지를 어떤 포멧으로 저장할지 결정(RGB), border(항상 0), data가 어떤 구성으로 되었는지, 데이터 타입 , 실제 이미지 픽셀정보가 담긴 주소)
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);  
+
+    // --Metalball Image--
+    glGenTextures(1, &texture02);
+    glBindTexture(GL_TEXTURE_2D, texture02);
     // texture wrapping
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -86,20 +112,23 @@ int main() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    int width, height, nrChannels; // texture 원점 : 왼쪽 하단 / 이미지파일 원점 : 왼쪽 상단
-    stbi_set_flip_vertically_on_load(true); // 이미지를 상하 반전해서 로드   
-    unsigned char* data = stbi_load("PaperSheet.jpg", &width, &height, &nrChannels, 0);
+    data = stbi_load("Metal.png", &width, &height, &nrChannels, 0);
     if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        // 텍스처 유형 , 밉맵 레벨 , 이미지를 어떤 포멧으로 저장할지 결정(RGB), border(항상 0), data가 어떤 구성으로 되었는지, 데이터 타입 , 실제 이미지 픽셀정보가 담긴 주소)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        glEnable(GL_BLEND);         // 색상을 섞는 기능 ON
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  // 그리려는 색의 투명만큼 사용, 이미 그려진 배경은 (1-투명고)만큼 남겨서  섞음
     }
     else {
         std::cout << "Failed to load texture" << std::endl;
     }
     stbi_image_free(data);
+
+    TEXTURE_Shader.use();
+    glUniform1i(glGetUniformLocation(TEXTURE_Shader.ID, "texture01"), 0);
+    TEXTURE_Shader.setInt("texture02", 1);
+
 
     // --Render Loop--
     while (!glfwWindowShouldClose(window))
@@ -113,7 +142,10 @@ int main() {
         if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         
-        glBindTexture(GL_TEXTURE_2D, texture);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture01);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture02);
 
         TEXTURE_Shader.use();
         glBindVertexArray(VAO);

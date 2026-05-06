@@ -25,7 +25,9 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | **03. Shader_GLSL** | ![Shader_GLSL(in&out)](./images/03_Shader_GLSL_in&out_result.png) | GLSL에서 in&out을 사용해 shader에서 shader로 데이터 전달  |
 | **03-1. Shader_uniform** | ![Shader_uniform](./images/03_Shader_uniform_blinkingtriangle_result.gif) | GLSL에서 uniform을 사용해 GPU shader로 데이터 전달 & 삼각형의 밝기 조절  |
 | **03-2. Shader_vertices+edgecolor** | ![vertices+color](./images/03_Shader_Coloredge_result.png) | vertices Data에 color값을 넣고 각 모서리를 서로 다른 색 표현 / GLSL 분리  |
-| **04. Texture** | ![Texture](./images/04_Texture_result.png) | 사각형에 Texture 입히기 & Mipmap, Filtering  |
+| **04. Texture** | ![Texture](./images/04_Texture_Blend_result.png) | 사각형에 Texture 입히기 & Mipmap, Filtering ,Blend로 투명화 |
+| **04-1. Tex_Mix** | ![Tex_Mix](./images/04_Texture_mis-result.png) | Blend 대신 Mix로 사각형에 Texture 2개 입히기  |
+
 
 
 

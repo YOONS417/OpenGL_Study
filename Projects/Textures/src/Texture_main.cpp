@@ -132,7 +132,7 @@ int main() {
     while (!glfwWindowShouldClose(window))
     {
         proccessInput(window);
-        glClearColor(0.3f, 0.3f, 0.3f, 1.0f);   //BG Color
+        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);   //BG Color
         glClear(GL_COLOR_BUFFER_BIT);
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)   // WireFrame Mode

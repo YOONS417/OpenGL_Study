@@ -116,7 +116,7 @@ int main() {
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);         // 색상을 섞는 기능 ON
+        glEnable(GL_BLEND);         // 색상을 섞는 기능 ON    ->shader의 mix가 블랜딩 역할을 대신함
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  // 그리려는 색의 투명만큼 사용, 이미 그려진 배경은 (1-투명고)만큼 남겨서  섞음
     }
     else {

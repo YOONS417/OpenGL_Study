@@ -116,9 +116,8 @@ int main() {
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
-
-        //glEnable(GL_BLEND);         // 색상을 섞는 기능 ON
-        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  // 그리려는 색의 투명만큼 사용, 이미 그려진 배경은 (1-투명고)만큼 남겨서  섞음
+        glEnable(GL_BLEND);         // 색상을 섞는 기능 ON
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  // 그리려는 색의 투명만큼 사용, 이미 그려진 배경은 (1-투명고)만큼 남겨서  섞음
     }
     else {
         std::cout << "Failed to load texture" << std::endl;
@@ -126,7 +125,8 @@ int main() {
     stbi_image_free(data);
 
     TEXTURE_Shader.use();
-    TEXTURE_Shader.setInt("texture02", 1);
+    TEXTURE_Shader.setInt("Tex_paper", 0);  // Shader의 Tex_paper은 0번 유닛으로
+    TEXTURE_Shader.setInt("Tex_metal", 1);  // Shader의 Tex_metal은 0번 유닛으로
 
     // --Render Loop--
     while (!glfwWindowShouldClose(window))
@@ -142,7 +142,7 @@ int main() {
         
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture01);
-        glActiveTexture(GL_TEXTURE0);
+        glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, texture02);
 
         TEXTURE_Shader.use();

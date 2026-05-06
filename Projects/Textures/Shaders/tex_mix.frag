@@ -8,5 +8,5 @@ uniform sampler2D Tex_paper;
 uniform sampler2D Tex_metal;
 
 void main() {
-	FragColor = mix( texture(Tex_paper, Tex_Coord), texture(Tex_metal, Tex_Coord), 0.2);
+	FragColor = mix( texture(Tex_paper, Tex_Coord), texture(Tex_metal, Tex_Coord), 0.7);
 }

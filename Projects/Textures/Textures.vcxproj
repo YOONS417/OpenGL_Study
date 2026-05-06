@@ -142,7 +142,7 @@
   <ItemGroup>
     <None Include="Shaders\texture.frag" />
     <None Include="Shaders\texture.vert" />
-    <None Include="tex_mix.frag" />
+    <None Include="Shaders\tex_mix.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -76,12 +76,12 @@ int main() {
         glClearColor(0.3f, 0.3f, 0.3f, 1.0f);   //BG Color
         glClear(GL_COLOR_BUFFER_BIT);
 
-         // make color blink using uniformshader
+        // make color blink using uniform shader
         float TimeValue = glfwGetTime();  //실행시간으초 단위로
         float BlueValue = (sin(TimeValue * 1.5f) / 2.0f ) + 0.5f;  //sin으로 색을 변화 (0~1)
         int vertexColorLocation = glGetUniformLocation(Uniform_shader.ID, "OurColor"); //OurColor의 주소값을 찾아옴
         glUniform4f(vertexColorLocation, 0.0f, 0.0f, BlueValue,  1.0f);  //찾은 주소에 GreenValue를 보냄 ,   glUseProgram(shaderProgram)을 반드시 호출 후에 실시
-                                      //  R ,   G  ,   B
+        // Frag shader의 OurColor에 전달  R ,   G  ,   B 
 
         //InOut_shader.use();
         Uniform_shader.use();

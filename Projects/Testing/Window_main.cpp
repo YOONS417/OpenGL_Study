@@ -40,7 +40,7 @@ int main() {
 	{
 		processInput(window);
 
-		glClearColor(0.3f, 0.5f, 0.3f, 1.0f);
+		glClearColor(0.1f, 0.7f, 0.8f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glfwSwapBuffers(window);   //Double buffering기술을 사용하여 버퍼를 교체 : 깜빡거리는 현상(Flickergin)현상 방지

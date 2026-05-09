@@ -1,7 +1,9 @@
 #version 330 core
+
 out vec4 FragColor;
 //in vec4 vertexColor;	// same vertexColor in vertexShaderSource
 in vec3 edge_Color;
+
 void main() {
 	//FragColor = vertexColor;
 	FragColor = vec4(edge_Color, 1.0);

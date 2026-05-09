@@ -8,10 +8,10 @@ void proccessInput(GLFWwindow* window);
 
 const char* vertexShaderSource = "#version 330 core\n"  //가장 첫 줄(필수)
 "layout (location = 0 ) in vec3 aPos;\n"                        
-"void main() { gl_Position = vec4(aPos.x , aPos.y , aPos.z , 1.0); }\0";
+"void main() { gl_Position = vec4(aPos, 1.0); }\0";
 const char* fragmentShaderSource = "#version 330 core\n"
 "out vec4 FragColor;\n"
-"void main() { FragColor = vec4(0.0f, 0.0f, 0.0f, 1.0f); }\0"; // 삼각형 색
+"void main() { FragColor = vec4(0.1f, 0.1f, 0.7f, 1.0f); }\0"; // 삼각형 색
 
 
 int main() {     
@@ -85,7 +85,7 @@ int main() {
         0, 1, 3,        // 첫번째 삼각형
         0, 3, 2         // 두번째 삼각형
     };
-
+    /*
     // Creat Cube with trianle *2 *6 : creat two triangle to make rectrangle for six surface
     float ver2[] = {   
     0.0f, 0.0f, 0.0f,       // 0
@@ -105,34 +105,33 @@ int main() {
         2, 3, 6,  3, 6, 7,      //right
         0, 1, 5,  0, 5, 4,      //left
         4, 5, 6,  4, 6, 7       //top      
-    };
+    };*/
 
     unsigned int VBO, VAO, EBO;  
     glGenBuffers(1, &VBO); 
-    glGenBuffers(1, &EBO);  //EBO생성
+    glGenBuffers(1, &EBO);  //EBO생성 / 어떤 정점을 Vertex Shader에 보낼지
     glGenVertexArrays(1, &VAO);     
 
-    glBindVertexArray(VAO); 
-
+    glBindVertexArray(VAO);  // VAO는 glVertexAttribPointer() 호출 당시의 VBO 연결 상태를 기억함.
+    //이제부터의 vertex 관련 설정을 이 VAO에 기록(바로 아래 6줄)
     glBindBuffer(GL_ARRAY_BUFFER, VBO); 
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO); //VBO와 유사하게 EBO는 인덱스들을 버퍼에 복사
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO); // VBO와 유사하게 EBO는 인덱스들을 버퍼에 복사
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    //glVertexAttribPointer가Buffer 데이터와 Shader의 location을 연결한다 / 메모리 해석 규칙 설정!!
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);  //현재 bind된 VBO의 데이터를shader location 0에 연결
     glEnableVertexAttribArray(0);   
     //OpenGL은 최적화를 위해 정점 속성의 통로를 닫아둔 상태로 시작 -> 따로 명시 필요
-    glBindBuffer(GL_ARRAY_BUFFER, 0); 
-  
-    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);  // ARRAY_BUFFER 슬롯 비우기
+    glBindVertexArray(0);              // 현재 VAO 해제 ( unbind )
 
     // --Render Loop--
     while (!glfwWindowShouldClose(window))
     {
         proccessInput(window);
-        glClearColor(0.9f, 0.7f, 0.2f, 1.0f); //배경색
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(0.8f, 0.7f, 0.2f, 1.0f); //배경색
+        glClear(GL_COLOR_BUFFER_BIT);      // framebuffer 전체를 clear color로 덮기
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)   // WireFrame Mode
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);      // w : line, F : fill
@@ -144,6 +143,7 @@ int main() {
         //glDrawArrays(GL_TRIANGLES, 0, 3);   //그리기 명령(도형 종류, 시작 인덱스, 정점 개수)
         
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);    //모드,개수(index),타입,offset
+        //  EBO 에서 제공되는 인덱스를 사용하여 그리게 됨
 
         glfwSwapBuffers(window);
         glfwPollEvents();

@@ -9,8 +9,8 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void proccessInput(GLFWwindow* window);
 
-const unsigned int Screen_Wdith = 800;
-const unsigned int Screen_Height = 600;
+const unsigned int Screen_Wdith = 1000;
+const unsigned int Screen_Height = 800;
  
 
 int main() {
@@ -80,18 +80,18 @@ int main() {
     int width, height, nrChannels; // texture 원점 : 왼쪽 하단 / 이미지파일 원점 : 왼쪽 상단
     stbi_set_flip_vertically_on_load(true); // 이미지를 상하 반전해서 로드  
 
-    // --Paper Image--
+    // ---Paper Image---
     glGenTextures(1, &texture01);   // ( 생성할 텍스처의 개수 , 텍스처 ID )
     glActiveTexture(GL_TEXTURE0);  // 텍스처 유닛 활성화s
     glBindTexture(GL_TEXTURE_2D, texture01);  // 바인딩해야 이후의 텍스처 관련 명령어들이 현재 바인딩된 텍스처를 설정
-    // texture wrapping                                 
+    // texture wrapping    ( 텍스처 타겟, S축 , wrapping  모드 )                           
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);  // wrapping to GL_REAPTE (default)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // texture filtering
+    // texture filtering    ( 텍스처 타겟, 필터 확대/축소 상황, filtering 모드 )
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);  //GL_LINER_MIPMAP_LINER  > GL_LINER
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    unsigned char* data = stbi_load("PaperSheet.jpg", &width, &height, &nrChannels, 0);
+    unsigned char* data = stbi_load("PaperSheet.jpg", &width, &height, &nrChannels, 0);  //load image file
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         // 텍스처 유형 , 밉맵 레벨 , 이미지를 어떤 포멧으로 저장할지 결정(RGB), border(항상 0), data가 어떤 구성으로 되었는지, 데이터 타입 , 실제 이미지 픽셀정보가 담긴 주소)
@@ -102,11 +102,11 @@ int main() {
     }
     stbi_image_free(data);  
 
-    // --Metalball Image--
+    // ---Metalball Image---
     glGenTextures(1, &texture02);
     glBindTexture(GL_TEXTURE_2D, texture02);
     // texture wrapping
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);   // ( 텍스처 타겟, S축 , wrapping  모드 )
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     // texture filtering
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -116,7 +116,7 @@ int main() {
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);         // 색상을 섞는 기능 ON    ->shader의 mix가 블랜딩 역할을 대신함
+        glEnable(GL_BLEND);         // 색상을 섞는 기능 ON  -> shader의 mix가 블랜딩 역할을 대신함
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  // 그리려는 색의 투명만큼 사용, 이미 그려진 배경은 (1-투명고)만큼 남겨서  섞음
     }
     else {
@@ -124,7 +124,7 @@ int main() {
     }
     stbi_image_free(data);
 
-    TEXTURE_Shader.use();
+    TEXTURE_Shader.use();  //Shader 활성화
     TEXTURE_Shader.setInt("Tex_paper", 0);  // Shader의 Tex_paper은 0번 유닛으로
     TEXTURE_Shader.setInt("Tex_metal", 1);  // Shader의 Tex_metal은 0번 유닛으로
 
@@ -140,9 +140,9 @@ int main() {
         if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture01);
-        glActiveTexture(GL_TEXTURE1);
+        glActiveTexture(GL_TEXTURE0); //0번 슬롯 선택
+        glBindTexture(GL_TEXTURE_2D, texture01); //텍스처 장착
+        glActiveTexture(GL_TEXTURE1); //1번 슬롯 선택
         glBindTexture(GL_TEXTURE_2D, texture02);
 
         TEXTURE_Shader.use();

@@ -55,7 +55,7 @@ public:
         CheckCompileError(FragmentShdaer, "Fragment");
         // --Shader Program--
         ID = glCreateProgram();
-        glAttachShader(ID, VertexShader);
+        glAttachShader(ID, VertexShader);  
         glAttachShader(ID, FragmentShdaer);
         glLinkProgram(ID);
         CheckCompileError(ID, "PROGRAM");

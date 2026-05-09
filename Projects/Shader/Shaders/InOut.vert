@@ -11,5 +11,5 @@ void main () {
 	edge_Color = aColor;
 	//vertexColor = vec4(0.5f, 0.0f, 0.0f, 1.0);
 }
-
+// *주석은 in out 변수이름이 vert, frag에서 vertexColor로 같은 경우*
 // 타입과 변수이름이 같아 fragmentshader의 vertexColor이 vertexshader의 vertexColor와 자동으로 연결

@@ -13,8 +13,8 @@ public:
 
     Shader(const char* vertexPath, const char* fragmentPath)   // read .vert .frag & compile
     {                                                          // link two shader into one shader prog
-        std::string vertexCode;
-        std::string fragmentCode;
+        std::string vert_Code;
+        std::string frag_Code;
         std::ifstream vShaderFile;  
         std::ifstream fShaderFile;
         // C++의 파일 읽기는 기본적으로 파일이 없거나 오류가 나도 멈추지 않고 무시
@@ -32,27 +32,27 @@ public:
             vShaderFile.close();
             fShaderFile.close();
 
-            vertexCode = vShaderStream.str();    // str() -> C++(std::string)변수로 전달
-            fragmentCode = fShaderStream.str();
+            vert_Code = vShaderStream.str();    // str() -> C++(std::string)변수로 전달
+            frag_Code = fShaderStream.str();
         }
         catch (std::ifstream::failure e) {  // try에서 에러 -> catch
             std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ  : " << e.what() << std::endl;
         }                                                          // e.what() : 구체적인 에러 원인 출력
         // --OpenGL은 C언어의 라이브러리--
-        const char* v_ShaderCode = vertexCode.c_str();   // C++ -> C / 문자열 포인터로 변환
-        const char* f_ShaderCode = fragmentCode.c_str();
+        const char* vertexShaderCode = vert_Code.c_str();   // C++ -> C / 문자열 포인터로 변환
+        const char* fragmentShaderSource = frag_Code.c_str();
 
         unsigned int VertexShader, FragmentShdaer;
 
         // --Vertex Shader--
         VertexShader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(VertexShader, 1, &v_ShaderCode, NULL);
+        glShaderSource(VertexShader, 1, &vertexShaderCode, NULL);
         glCompileShader(VertexShader);
         CheckCompileError(VertexShader, "Vertex"); // ID, string
 
         // --Fragment Shader--
         FragmentShdaer = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(FragmentShdaer, 1, &f_ShaderCode, NULL);
+        glShaderSource(FragmentShdaer, 1, &fragmentShaderSource, NULL);
         glCompileShader(FragmentShdaer);
         CheckCompileError(FragmentShdaer, "Fragment");
 

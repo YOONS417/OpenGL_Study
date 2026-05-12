@@ -11,7 +11,7 @@ const unsigned int Screen_Wdith = 800;
 const unsigned int Screen_Height = 600;
 
 
-int main() {
+int main() { 
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);   
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);  
@@ -32,7 +32,7 @@ int main() {
         return -1;
     } 
     
-    //Shader InOut_shader("Shaders/InOut.vert", "Shaders/InOut.frag");
+    Shader InOut_shader("Shaders/InOut.vert", "Shaders/InOut.frag");
     Shader Uniform_shader("Shaders/Uniform.vert", "Shaders/Uniform.frag");
 
     // -- Input Vertex Data -- 
@@ -56,19 +56,19 @@ int main() {
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Uniform_vertices), Uniform_vertices , GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(InOut_vertices), InOut_vertices, GL_STATIC_DRAW);
     // Position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0); // 3 -> 6
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0); // 3 -> 6
     glEnableVertexAttribArray(0);
 
     // Color attribute                nomalize = false / stride(6 : 점 3개, 색 3개)   /  offset(시작위치 : 4번째 부터)     
-    //glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    //glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-
+      
     // --Render Loop--
     while (!glfwWindowShouldClose(window))
     {
@@ -76,23 +76,29 @@ int main() {
         glClearColor(0.3f, 0.3f, 0.3f, 1.0f);   //BG Color
         glClear(GL_COLOR_BUFFER_BIT);
 
+        
         // make color blink using uniform shader
         float TimeValue = glfwGetTime();  //실행시간으초 단위로
-        float BlueValue = (sin(TimeValue * 1.5f) / 2.0f ) + 0.5f;  //sin으로 색을 변화 (0~1)
+        float BlueValue = (sin(TimeValue * 1.5f) / 2.0f ) + 0.5f;  //sin으로 색을 변화 (0~1) , 1.5배
         int vertexColorLocation = glGetUniformLocation(Uniform_shader.ID, "OurColor"); //OurColor의 주소값을 찾아옴
-        glUniform4f(vertexColorLocation, 0.0f, 0.0f, BlueValue,  1.0f);  //찾은 주소에 GreenValue를 보냄 ,   glUseProgram(shaderProgram)을 반드시 호출 후에 실시
+        glUniform4f(vertexColorLocation, 0.0f, 0.0f, BlueValue,  1.0f);  //찾은 주소에 BlueValue를 보냄 ,   glUseProgram(shaderProgram)을 반드시 호출 후에 실시
         // Frag shader의 OurColor에 전달  R ,   G  ,   B 
+        
 
-        //InOut_shader.use();
-        Uniform_shader.use();
+        float offset = 0.3f;  // 각 꼭짓점의 offset을 이동
+        Uniform_shader.setFloat("Offset ", offset);  // vert shader의 Offset으로 값을 전달
+
+        InOut_shader.use();
+        //Uniform_shader.use();
+
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
-    }
+    } 
     glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &VBO); 
 
     glfwTerminate();
     return 0;   

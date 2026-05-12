@@ -7,10 +7,8 @@ in vec3 position;
 
 void main() {  
 	//FragColor = vertexColor;
-	vec3 temp = (position+1.0)/ 2.0;
+	vec3 temp = (position+1.0)/ 2.0;  // 음수 좌표 -> 양수
 	FragColor = vec4(temp, 1.0);
 }
 // 타입과 변수이름이 같아 fragmentshader의 vertexColor이 vertexshader의 vertexColor와 자동으로 연결
-/*  절댓값 : abs() -> 대칭형
-
-*/
+//  절댓값 : abs() -> 대칭형

@@ -132,7 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Commons\glad.c" />
-    <ClCompile Include="src\Texture_images.cpp" />
+    <ClCompile Include="src\Texture_stb_images.cpp" />
     <ClCompile Include="src\Texture_main.cpp" />
   </ItemGroup>
   <ItemGroup>

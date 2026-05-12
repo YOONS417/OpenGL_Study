@@ -85,8 +85,8 @@ int main() {
         // Frag shader의 OurColor에 전달  R ,   G  ,   B 
         
 
-        float offset = 0.3f;  // 각 꼭짓점의 offset을 이동
-        Uniform_shader.setFloat("Offset ", offset);  // vert shader의 Offset으로 값을 전달
+        //float offset = 0.3f;  // 각 꼭짓점의 offset을 이동
+        //Uniform_shader.setFloat("Offset ", offset);  // vert shader의 Offset으로 값을 전달
 
         InOut_shader.use();
         //Uniform_shader.use();

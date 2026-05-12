@@ -1,7 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include <cmath>
 #include "ShaderClass.h"
 #include "stb_image.h"
 
@@ -45,8 +44,8 @@ int main() {
     };
 
     unsigned int indices[] = {
-        0, 1, 2,
-        0, 2 ,3
+        0, 1, 2,   // right triangle
+        0, 2 ,3    // left triangle
     };
      
     unsigned int VBO, VAO, EBO;
@@ -82,20 +81,21 @@ int main() {
 
     // ---Paper Image---
     glGenTextures(1, &texture01);   // ( 생성할 텍스처의 개수 , 텍스처 ID )
-    glActiveTexture(GL_TEXTURE0);  // 텍스처 유닛 활성화s
+    glActiveTexture(GL_TEXTURE0);  // 텍스처 유닛 활성화
     glBindTexture(GL_TEXTURE_2D, texture01);  // 바인딩해야 이후의 텍스처 관련 명령어들이 현재 바인딩된 텍스처를 설정
     // texture wrapping    ( 텍스처 타겟, S축 , wrapping  모드 )                           
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);  // wrapping to GL_REAPTE (default)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     // texture filtering    ( 텍스처 타겟, 필터 확대/축소 상황, filtering 모드 )
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);  //GL_LINER_MIPMAP_LINER  > GL_LINER
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);  // nearset : 픽셀이 뚜렷 , linear : 경계를 매끄럽게
 
     unsigned char* data = stbi_load("PaperSheet.jpg", &width, &height, &nrChannels, 0);  //load image file
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        // 텍스처 유형 , 밉맵 레벨 , 이미지를 어떤 포멧으로 저장할지 결정(RGB), border(항상 0), data가 어떤 구성으로 되었는지, 데이터 타입 , 실제 이미지 픽셀정보가 담긴 주소)
+        // 텍스처 유형 , 밉맵 레벨(원본) , 이미지를 어떤 포멧으로 저장할지 결정(RGB), border(항상 0), data가 어떤 구성으로 되었는지, 데이터 타입 , 실제 이미지 픽셀정보가 담긴 주소)
         glGenerateMipmap(GL_TEXTURE_2D);
+        std::cout << "PaperSheet nrChannels : " <<  nrChannels << std::endl;
     }
     else {
         std::cout << "Failed to load texture" << std::endl;
@@ -112,14 +112,16 @@ int main() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    data = stbi_load("Metal.png", &width, &height, &nrChannels, 0);
+    data = stbi_load("Metal.png", &width, &height, &nrChannels, 0); // nrChannels : 색상 채널 (RGBA : 4) , 0 -> 파일 정보 그대로
     if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
         glEnable(GL_BLEND);         // 색상을 섞는 기능 ON  -> shader의 mix가 블랜딩 역할을 대신함
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  // 그리려는 색의 투명만큼 사용, 이미 그려진 배경은 (1-투명고)만큼 남겨서  섞음
+        std::cout << "Metal nrChannels : " << nrChannels << std::endl;
+
     }
-    else {
+    else {  
         std::cout << "Failed to load texture" << std::endl;
     }
     stbi_image_free(data);

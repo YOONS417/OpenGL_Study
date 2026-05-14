@@ -26,9 +26,6 @@
     <ClInclude Include="..\..\..\..\Users\yooon\Downloads\stb_image.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderClass.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\texture.frag">

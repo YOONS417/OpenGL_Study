@@ -11,5 +11,6 @@
   <Project Path="Projects/Shader/Shader.vcxproj" Id="1342bb37-3225-4c92-abf7-b65292991142" />
   <Project Path="Projects/Testing/Testing.vcxproj" Id="54525f58-8d94-4a67-8cb4-58d0afaa29cf" />
   <Project Path="Projects/Textures/Textures.vcxproj" Id="56087ddb-4723-444d-8437-6b0c75a882ef" />
+  <Project Path="Projects/Transformation/Transformation.vcxproj" Id="308c474e-2afa-47a7-8d27-0296cd7e7e3d" />
   <Project Path="Projects/Triangle/Triangle.vcxproj" Id="c8637ed1-eab5-49a9-9b8d-e730e0b22bcc" />
 </Solution>

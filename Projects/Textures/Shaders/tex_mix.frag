@@ -9,11 +9,9 @@ uniform sampler2D Tex_metal;
 
 void main() {
 	vec4 Paper = texture(Tex_paper, Tex_Coord);
-	vec4 MetalBall = texture(Tex_metal, Tex_Coord);
-	FragColor = mix(Paper, MetalBall, MetalBall.a*0.8); // Tex_Color02.a : Alpha 채널
-	/*FragColor = mix( texture(Tex_paper, Tex_Coord), texture(Tex_metal, Tex_Coord), 0.7); //이미지를 섞은 후 투명도 설정  / 두번재 텍스처를 0.7만큼(첫번째는 0.3만큼)
-	if(FragColor.a < 0.1)  // 투명도가 낮은 곳은 아예 안 그리기 ( 배경없는 이미지 등 )
-		discard; */
+	vec4 MetalBall = texture(Tex_metal, Tex_Coord*2);    //  vec2(1-Tex_Coord.x, Tex_Coord.y):Tex_Coord의 x,y조정
+	FragColor = mix(Paper, MetalBall, MetalBall.a*0.6); // Tex_Color02.a : Alpha 채널
+	//FragColor = mix( texture(Tex_paper, Tex_Coord), texture(Tex_metal, Tex_Coord), 0.7); //이미지를 섞은 후 투명도 설정  / 두번재 텍스처를 0.7만큼(첫번째는 0.3만큼)
 }
 /*
 구분,					mix (함수),						BLEND (기능)

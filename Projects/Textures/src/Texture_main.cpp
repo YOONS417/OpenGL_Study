@@ -79,15 +79,14 @@ int main() {
     int width, height, nrChannels; // texture 원점 : 왼쪽 하단 / 이미지파일 원점 : 왼쪽 상단
     stbi_set_flip_vertically_on_load(true); // 이미지를 상하 반전해서 로드  
 
-    // ---Paper Image---
+    // *--Paper Image--*
     glGenTextures(1, &texture01);   // ( 생성할 텍스처의 개수 , 텍스처 ID )
-    glActiveTexture(GL_TEXTURE0);  // 텍스처 유닛 활성화
     glBindTexture(GL_TEXTURE_2D, texture01);  // 바인딩해야 이후의 텍스처 관련 명령어들이 현재 바인딩된 텍스처를 설정
     // texture wrapping    ( 텍스처 타겟, S축 , wrapping  모드 )                           
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);  // wrapping to GL_REAPTE (default)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     // texture filtering    ( 텍스처 타겟, 필터 확대/축소 상황, filtering 모드 )
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);  //GL_LINER_MIPMAP_LINER  > GL_LINER
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //GL_LINER_MIPMAP_LINER  > GL_LINER
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);  // nearset : 픽셀이 뚜렷 , linear : 경계를 매끄럽게
 
     unsigned char* data = stbi_load("PaperSheet.jpg", &width, &height, &nrChannels, 0);  //load image file
@@ -102,7 +101,7 @@ int main() {
     }
     stbi_image_free(data);  
 
-    // ---Metalball Image---
+    // *--Metalball Image--*
     glGenTextures(1, &texture02);
     glBindTexture(GL_TEXTURE_2D, texture02);
     // texture wrapping
@@ -119,7 +118,6 @@ int main() {
         glEnable(GL_BLEND);         // 색상을 섞는 기능 ON  -> shader의 mix가 블랜딩 역할을 대신함
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  // 그리려는 색의 투명만큼 사용, 이미 그려진 배경은 (1-투명고)만큼 남겨서  섞음
         std::cout << "Metal nrChannels : " << nrChannels << std::endl;
-
     }
     else {  
         std::cout << "Failed to load texture" << std::endl;
@@ -128,8 +126,9 @@ int main() {
 
     TEXTURE_Shader.use();  //Shader 활성화
     TEXTURE_Shader.setInt("Tex_paper", 0);  // Shader의 Tex_paper은 0번 유닛으로
-    TEXTURE_Shader.setInt("Tex_metal", 1);  // Shader의 Tex_metal은 0번 유닛으로
-
+    TEXTURE_Shader.setInt("Tex_metal", 1);  // Shader의 Tex_metal은 1번 유닛으로
+    // or glUniform1f(glfetUnifoemLocation(TEXTURE_Shader.ID, "aTexCoord"), 0);
+    
     // --Render Loop--
     while (!glfwWindowShouldClose(window))
     {
@@ -137,12 +136,9 @@ int main() {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);   //BG Color
         glClear(GL_COLOR_BUFFER_BIT);
 
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)   // WireFrame Mode
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);      // w : line, F : fill
-        if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      
         
-        glActiveTexture(GL_TEXTURE0); //0번 슬롯 선택
+        glActiveTexture(GL_TEXTURE0); //0번 슬롯 선택 , 텍스처 유닛 활성화
         glBindTexture(GL_TEXTURE_2D, texture01); //텍스처 장착
         glActiveTexture(GL_TEXTURE1); //1번 슬롯 선택
         glBindTexture(GL_TEXTURE_2D, texture02);
@@ -171,4 +167,14 @@ void proccessInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+       
+    }
+
+    // WireFrame Mode
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)   
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);      // w : line, F : fill
+    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

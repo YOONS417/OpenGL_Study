@@ -105,7 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\Libraries\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\Libraries\include;$(ProjectDir)..\..\Commons</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -133,13 +133,15 @@
   <ItemGroup>
     <ClCompile Include="..\..\Commons\glad.c" />
     <ClCompile Include="Shader_main.cpp" />
-    <ClCompile Include="ShaderClass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\InOut.frag" />
     <None Include="Shaders\InOut.vert" />
     <None Include="Shaders\Uniform.frag" />
     <None Include="Shaders\Uniform.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Commons\ShaderClass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

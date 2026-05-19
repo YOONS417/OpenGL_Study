@@ -16,7 +16,7 @@ int main() {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     GLFWwindow* window = glfwCreateWindow(800, 600, "Project_Triangle", NULL, NULL);
     if (window == NULL) {
@@ -32,18 +32,18 @@ int main() {
         std::cout << " Failed to initialze GLAD" << std::endl;  
     }
 
-
     glm::vec4 vec(2.0f, 3.0f, 4.0f, 1.0f);    // vector 생성 , w=1 : 점 , w=0 : 방향
-    glm::mat4 trans = glm::mat4(1.0f);   // 4x4 단위행렬 생성
-    //trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f)); // translation 행렬에 이동 변환(1,1,0) 적용
+    glm::mat4 trans01 = glm::mat4(1.0f);   // 4x4 단위행렬 생성
+    trans01 = glm::translate(trans01, glm::vec3(1.0f, 1.0f, 0.0f)); // translation 행렬에 이동 변환(1,1,0) 적용
+    vec = trans01 * vec;
+    std::cout << " ( " << vec.x << " , " << vec.y << " , " << vec.z << " )" << std::endl;
 
-    //vec = trans * vec;
-    //std::cout << " ( " << vec.x << " , " << vec.y << " , " << vec.z << " )" << std::endl;
 
-    trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));  // z축 기준으로 90도 회전, 90도를 ㅠ/2로 바꿔서 계산
-    trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+    glm::mat4 trans02 = glm::mat4(1.0f);
+    trans02 = glm::rotate(trans02, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));  // z축 기준으로 90도 회전, 90도를 ㅠ/2로 바꿔서 계산
+    trans02 = glm::scale(trans02, glm::vec3(0.5, 0.5, 0.5));
     
-    Shader Translation("Trans.vert", "Trans.frag");
+    Shader Transformation("Shaders/Trans.vert", "Shaders/Trans.frag");
    
     float vertices[] = {                        // texture coordinate
        -0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // left bottom     =0
@@ -79,9 +79,7 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    unsigned int trans_Location = glGetUniformLocation(Translation.ID, "transform");
-    glUniformMatrix4fv(trans_Location, 2, GL_FALSE, glm::value_ptr(trans));
-
+   
 
    // --Render Loop--
     while (!glfwWindowShouldClose(window))
@@ -90,7 +88,10 @@ int main() {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);   //BG Color
         glClear(GL_COLOR_BUFFER_BIT);
 
-        Translation.use();
+        Transformation.use();
+        unsigned int trans_Location = glGetUniformLocation(Transformation.ID, "transform");
+        glUniformMatrix4fv(trans_Location, 1, GL_FALSE, glm::value_ptr(trans02));
+
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 

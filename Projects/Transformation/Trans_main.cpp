@@ -33,17 +33,15 @@ int main() {
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << " Failed to initialze GLAD" << std::endl;  
     }
+
     // translate vec
     glm::vec4 vec(2.0f, 3.0f, 4.0f, 1.0f);    // vector 생성 , w=1 : 점 , w=0 : 방향
     glm::mat4 trans01 = glm::mat4(1.0f);   // 4x4 단위행렬 생성
+
     trans01 = glm::translate(trans01, glm::vec3(1.0f, 1.0f, 0.0f)); // translation 행렬에 이동 변환(1,1,0) 적용
     vec = trans01 * vec;
     std::cout << " ( " << vec.x << " , " << vec.y << " , " << vec.z << " )" << std::endl;
-
-    // rotate & scale vec
-    glm::mat4 trans02 = glm::mat4(1.0f);      //  회저각도        회전 축                  
-    trans02 = glm::rotate(trans02, glm::radians(45.0f), glm::vec3(1.0, 1.0, 0.0));  // 축 기준으로 회전, radians(90.f) :  90도를 ㅠ/2로 바꿔서 계산
-    trans02 = glm::scale(trans02, glm::vec3(0.5, 0.5, 0.5));    // scaling -> x 0.5
+    
     
     Shader Transformation("Shaders/Trans.vert", "Shaders/Trans.frag");
    
@@ -81,7 +79,6 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-   
 
    // --Render Loop--
     while (!glfwWindowShouldClose(window))
@@ -90,10 +87,22 @@ int main() {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);   //BG Color
         glClear(GL_COLOR_BUFFER_BIT);
 
-        Transformation.use();
-        unsigned int trans_Location = glGetUniformLocation(Transformation.ID, "transform");
-        glUniformMatrix4fv(trans_Location, 1, GL_FALSE, glm::value_ptr(trans02));
+        // rotate & scale vec  
+        glm::mat4 trans02 = glm::mat4(1.0f);    //  회저각도           회전 축     
+        trans02 = glm::rotate(trans02, glm::radians(45.0f), glm::vec3(1.0, 1.0, 0.0));  // 축 기준으로 회전, radians(90.f) :  90도를 ㅠ/2로 바꿔서 계산
+        trans02 = glm::scale(trans02, glm::vec3(0.5, 0.5, 0.5));    // scaling -> x 0.5
 
+        // move rectangle 
+        glm::mat4 trans03 = glm::mat4(1.0f);
+        trans03 = glm::translate(trans03, glm::vec3(0.1f, -0.1f, 0.0f));
+        trans03 = glm::rotate(trans03, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+        //
+
+        Transformation.use();
+
+        unsigned int trans_Location = glGetUniformLocation(Transformation.ID, "transform");
+        glUniformMatrix4fv(trans_Location, 1, GL_FALSE, glm::value_ptr(trans03));
+     
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 

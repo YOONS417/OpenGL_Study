@@ -27,6 +27,7 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | **03-2. Shader_vertices+edgecolor** | ![vertices+color](./images/03_Shader_Coloredge_result.png) | vertices Data에 color값을 넣고 각 모서리를 서로 다른 색 표현 / GLSL 분리  |
 | **04. Texture** | ![Texture](./images/04_Texture_Blend_result.png) | 사각형에 Texture 입히기 & Mipmap, Filtering ,Blend로 투명화 |
 | **04-1. Tex_Mix** | ![Tex_Mix](./images/04_Texture_mix_result.png) | Blend 대신 Mix로 사각형에 Texture 2개 입히기  |
+| **05. Transformation** | ![Trans](./images/05_Transforamations_rotate_result.png) | 렌더링된 사각형을 glm을 이용해 rotate |
 
 
 
@@ -34,7 +35,7 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 
 
 
-*(이곳에 실행 화면 캡처본을 넣어주세요!)* 
+
 
 ## ✨ 주요 기능
 - **GLFW/Glad**를 이용한 OpenGL 컨텍스트 설정

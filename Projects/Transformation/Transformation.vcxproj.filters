@@ -20,7 +20,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Trans.vert" />
-    <None Include="Trans.frag" />
+    <None Include="Shaders\Trans.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\Trans.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

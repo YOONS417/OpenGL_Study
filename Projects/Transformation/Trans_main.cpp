@@ -5,9 +5,12 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void proccessInput(GLFWwindow* window);
+
 
 int main() {
     glfwInit();
@@ -30,15 +33,16 @@ int main() {
     }
 
 
-    glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);    // ( 1, 0, 0, 1) 생성 , w=1 : 점 , w=0 : 방향
-    glm::mat4 translation = glm::mat4(1.0f);   // 4x4 단위행렬 생성
-    translation = glm::translate(translation, glm::vec3(1.0f, 1.0f, 0.0f)); // translation 행렬에 이동 변환(1,1,0) 적용
+    glm::vec4 vec(2.0f, 3.0f, 4.0f, 1.0f);    // vector 생성 , w=1 : 점 , w=0 : 방향
+    glm::mat4 trans = glm::mat4(1.0f);   // 4x4 단위행렬 생성
+    //trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f)); // translation 행렬에 이동 변환(1,1,0) 적용
 
-    vec = translation * vec;
-    std::cout << vec.x << vec.y << vec.z << std::endl;
+    //vec = trans * vec;
+    //std::cout << " ( " << vec.x << " , " << vec.y << " , " << vec.z << " )" << std::endl;
 
-
-
+    trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));  // z축 기준으로 90도 회전, 90도를 ㅠ/2로 바꿔서 계산
+    trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+    
     Shader Translation("Trans.vert", "Trans.frag");
    
     float vertices[] = {                        // texture coordinate
@@ -74,6 +78,10 @@ int main() {
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+
+    unsigned int trans_Location = glGetUniformLocation(Translation.ID, "transform");
+    glUniformMatrix4fv(trans_Location, 2, GL_FALSE, glm::value_ptr(trans));
+
 
    // --Render Loop--
     while (!glfwWindowShouldClose(window))

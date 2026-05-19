@@ -135,8 +135,8 @@
     <ClCompile Include="Trans_main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Trans.frag" />
-    <None Include="Trans.vert" />
+    <None Include="Shaders\Trans.frag" />
+    <None Include="Shaders\Trans.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

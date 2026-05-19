@@ -17,7 +17,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);  
     glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(Screen_Wdith, Screen_Height, "Project_Triangle", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(Screen_Wdith, Screen_Height, "Project_Shaders", NULL, NULL);
     if (window == NULL) {  
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();

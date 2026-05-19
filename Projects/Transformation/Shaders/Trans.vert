@@ -9,7 +9,7 @@ out vec2 Coordinate;
 uniform mat4 transform;
 
 void main() {
-	gl_Position = transform * vec4(aPos, 1.0);
+	gl_Position =  transform * vec4(aPos, 1.0);
 	Shape_Color = aColor;
 	Coordinate = vec2(aTexCoord.x, aTexCoord.y);
 

@@ -7,18 +7,20 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void proccessInput(GLFWwindow* window);
+
+const unsigned int Screen_Width = 1000;
+const unsigned int Sereen_Height = 800;
 
 
 int main() {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Project_Triangle", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(Screen_Width, Sereen_Height, "Project_Transformation", NULL, NULL);
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -31,17 +33,17 @@ int main() {
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << " Failed to initialze GLAD" << std::endl;  
     }
-
+    // translate vec
     glm::vec4 vec(2.0f, 3.0f, 4.0f, 1.0f);    // vector 생성 , w=1 : 점 , w=0 : 방향
     glm::mat4 trans01 = glm::mat4(1.0f);   // 4x4 단위행렬 생성
     trans01 = glm::translate(trans01, glm::vec3(1.0f, 1.0f, 0.0f)); // translation 행렬에 이동 변환(1,1,0) 적용
     vec = trans01 * vec;
     std::cout << " ( " << vec.x << " , " << vec.y << " , " << vec.z << " )" << std::endl;
 
-
-    glm::mat4 trans02 = glm::mat4(1.0f);
-    trans02 = glm::rotate(trans02, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));  // z축 기준으로 90도 회전, 90도를 ㅠ/2로 바꿔서 계산
-    trans02 = glm::scale(trans02, glm::vec3(0.5, 0.5, 0.5));
+    // rotate & scale vec
+    glm::mat4 trans02 = glm::mat4(1.0f);      //  회저각도        회전 축                  
+    trans02 = glm::rotate(trans02, glm::radians(45.0f), glm::vec3(1.0, 1.0, 0.0));  // 축 기준으로 회전, radians(90.f) :  90도를 ㅠ/2로 바꿔서 계산
+    trans02 = glm::scale(trans02, glm::vec3(0.5, 0.5, 0.5));    // scaling -> x 0.5
     
     Shader Transformation("Shaders/Trans.vert", "Shaders/Trans.frag");
    
@@ -49,7 +51,7 @@ int main() {
        -0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // left bottom     =0
         0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // right bottom    =1
         0.5f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   // right  top      =2
-       -0.5f, 0.5f, 0.0f,   0.0f, 0.7f, 0.7f    // left top        =3
+       -0.5f, 0.5f, 0.0f,   0.0f, 1.0f, 1.0f    // left top        =3
     };
 
     unsigned int indices[] = {

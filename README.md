@@ -20,7 +20,7 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | :--- | :---: | :--- |
 | **01. Testing** | ![Testing](./images/01_Testing_result.png) | 프로젝트 설정 및 라이브러리 로드 테스트, OpenGL Window 생성 |
 <details>
-<summary><b> Ch 1 . 기본 렌더링 및 도형 출력 </b></summary>
+<summary><b> Ch 2 . 기본 렌더링 및 도형 출력 </b></summary>
 <div id="ch1-table" markdown="1">
 <br>
   
@@ -58,13 +58,14 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 </div>
 </details>
 <details>
-<summary><b> Ch 4. Texture 렌더링  </b></summary>
+<summary><b> Ch 3. Texture 렌더링  </b></summary>   
 <div id="ch1-table" markdown="1">
 <br>
 
 | 프로젝트명 | 실행 결과 | 설명 |
 | :--- | :---: | :--- |
 | **05. Transformation** | ![Trans](./images/05_Transforamations_rotate_result.png) | 렌더링된 사각형을 glm을 이용해 rotate |
+| **05-1. Trans_rotateing** | ![Trans](./images/05_Trnsformation_translate_rotateing) | 사각형을 translate+scale+rotateing |
 
 </div>
 </details>

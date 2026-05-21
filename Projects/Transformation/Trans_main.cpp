@@ -42,6 +42,11 @@ int main() {
     vec = trans01 * vec;
     std::cout << " ( " << vec.x << " , " << vec.y << " , " << vec.z << " )" << std::endl;
     
+    // rotate & scale vec  
+    glm::mat4 trans02 = glm::mat4(1.0f);    //  회전각도           회전 축     
+    trans02 = glm::rotate(trans02, glm::radians(45.0f), glm::vec3(1.0, 1.0, 0.0));  // 축 기준으로 회전, radians(90.f) :  90도를 ㅠ/2로 바꿔서 계산
+    trans02 = glm::scale(trans02, glm::vec3(0.5, 0.5, 0.5));    // scaling -> x 0.5
+
     
     Shader Transformation("Shaders/Trans.vert", "Shaders/Trans.frag");
    
@@ -87,24 +92,31 @@ int main() {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);   //BG Color
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // rotate & scale vec  
-        glm::mat4 trans02 = glm::mat4(1.0f);    //  회저각도           회전 축     
-        trans02 = glm::rotate(trans02, glm::radians(45.0f), glm::vec3(1.0, 1.0, 0.0));  // 축 기준으로 회전, radians(90.f) :  90도를 ㅠ/2로 바꿔서 계산
-        trans02 = glm::scale(trans02, glm::vec3(0.5, 0.5, 0.5));    // scaling -> x 0.5
-
-        // move rectangle 
-        glm::mat4 trans03 = glm::mat4(1.0f);
-        trans03 = glm::translate(trans03, glm::vec3(0.1f, -0.1f, 0.0f));
-        trans03 = glm::rotate(trans03, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
-        //
-
         Transformation.use();
+        glBindVertexArray(VAO);
 
         unsigned int trans_Location = glGetUniformLocation(Transformation.ID, "transform");
+
+        // 1st rectangle
+        glm::mat4 i_mat = glm::mat4(1.0f);
+        glm::mat4 trans03 = glm::rotate(i_mat, (1/2)*(float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        trans03 = glm::translate(trans03, glm::vec3(0.5f, -0.5f, 0.0f));   // mat4에 translate 적용
+        trans03 = glm::rotate(trans03, (float)glfwGetTime()*2, glm::vec3(0.0f, 0.0f, 1.0f));  //z축 기준으로 매순간 회전, 2배속
+        trans03 = glm::scale(trans03, glm::vec3(0.4f, 0.4f, 0.0f));
         glUniformMatrix4fv(trans_Location, 1, GL_FALSE, glm::value_ptr(trans03));
-     
-        glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        // 2nd rectangle
+        glm::mat4 trans04 = glm::rotate(i_mat, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, .0f));
+        trans04 = glm::scale(trans04, glm::vec3(0.6f, 0.6f, 0.0f));
+        glUniformMatrix4fv(trans_Location, 1, GL_FALSE, glm::value_ptr(trans04));
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        // 3rd rectangle
+        glm::mat4 trans05 = glm::translate(i_mat, glm::vec3(-0.5f, 0.5f, 0.0f));
+        float scaleAmount = static_cast<float>(sin(glfwGetTime())/2 +0.5);  // 색이 뒤집힘 없이
+        trans05 = glm::scale(trans05, glm::vec3(scaleAmount, scaleAmount, scaleAmount));
+        glUniformMatrix4fv(trans_Location, 1, GL_FALSE, &trans05[0][0]);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -112,7 +124,6 @@ int main() {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &EBO);
     glDeleteBuffers(1, &VBO);
-
 
     glfwTerminate(); 
     return 0;

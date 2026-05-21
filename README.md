@@ -65,7 +65,9 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | 프로젝트명 | 실행 결과 | 설명 |
 | :--- | :---: | :--- |
 | **05. Transformation** | ![Trans](./images/05_Transforamations_rotate_result.png) | 렌더링된 사각형을 glm을 이용해 rotate |
-| **05-1. Trans_rotateing** | ![Trans](./images/05_Trnsformation_translate_rotateing) | 사각형을 translate+scale+rotateing |
+| **05-1. Trans_rotateing** | ![Trans](./images/05_Transformation_translate_rotating.gif) | 사각형을 translate+scale+rotateing |
+| **05-2. Trans_Orbit** | ![Trans](./images/05_Transformation_Orbit.gif) | translate한 사각형을 공전(orbit) |
+
 
 </div>
 </details>

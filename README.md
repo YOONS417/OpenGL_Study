@@ -33,7 +33,7 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 </div>
 </details>
 <details>
-<summary><b> Ch 3 . Shaders 분리 및 GLSL관리 </b></summary>
+<summary><b> Ch 3 . Shaders </b></summary>
 <div id="ch1-table" markdown="1">
 <br>
 
@@ -58,7 +58,7 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 </div>
 </details>
 <details>
-<summary><b> Ch 3. Texture 렌더링  </b></summary>   
+<summary><b> Ch 5. Transformation  </b></summary>   
 <div id="ch1-table" markdown="1">
 <br>
 

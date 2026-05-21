@@ -21,7 +21,7 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | **01. Testing** | ![Testing](./images/01_Testing_result.png) | 프로젝트 설정 및 라이브러리 로드 테스트, OpenGL Window 생성 |
 <details>
 <summary><b> Ch 1 . 기본 렌더링 및 도형 출력 </b></summary>
-div id="ch1-table" markdown="1">
+<div id="ch1-table" markdown="1">
 <br>
 | **02. Triangle** | ![Triangle](./images/02_Triangle_result.png) | 기본적인 VAO/VBO를 이용한 삼각형 렌더링 (EBO X) |
 | **02-1. Rectangle** | ![Rectangle](./images/02_Rectangle_result.png) | 기본적인 VAO/VBO/EBO를 이용한 사각형 렌더링 |

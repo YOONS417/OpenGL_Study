@@ -99,13 +99,13 @@ int main() {
 
         // 1st rectangle
         glm::mat4 i_mat = glm::mat4(1.0f);
-        glm::mat4 trans03 = glm::rotate(i_mat, (1/2)*(float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        glm::mat4 trans03 = glm::rotate(i_mat, (float)glfwGetTime()*0.7f, glm::vec3(0.0f, 0.0f, 1.0f));
         trans03 = glm::translate(trans03, glm::vec3(0.5f, -0.5f, 0.0f));   // mat4에 translate 적용
-        trans03 = glm::rotate(trans03, (float)glfwGetTime()*2, glm::vec3(0.0f, 0.0f, 1.0f));  //z축 기준으로 매순간 회전, 2배속
-        trans03 = glm::scale(trans03, glm::vec3(0.4f, 0.4f, 0.0f));
+        trans03 = glm::rotate(trans03, (float)glfwGetTime()*2.0f, glm::vec3(0.0f, 0.0f, 1.0f));  //z축 기준으로 매순간 회전, 2배속
+        trans03 = glm::scale(trans03, glm::vec3(0.3f, 0.3f, 0.0f));
         glUniformMatrix4fv(trans_Location, 1, GL_FALSE, glm::value_ptr(trans03));
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        // 2nd rectangle(orbit)
+        // 2nd rectangle
         glm::mat4 trans04 = glm::rotate(i_mat, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, .0f));
         trans04 = glm::scale(trans04, glm::vec3(0.6f, 0.6f, 0.0f));
         glUniformMatrix4fv(trans_Location, 1, GL_FALSE, glm::value_ptr(trans04));

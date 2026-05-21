@@ -23,6 +23,8 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 <summary><b> Ch 1 . 기본 렌더링 및 도형 출력 </b></summary>
 <div id="ch1-table" markdown="1">
 <br>
+| 프로젝트명 | 실행 결과 | 설명 |
+| :--- | :---: | :--- |
 | **02. Triangle** | ![Triangle](./images/02_Triangle_result.png) | 기본적인 VAO/VBO를 이용한 삼각형 렌더링 (EBO X) |
 | **02-1. Rectangle** | ![Rectangle](./images/02_Rectangle_result.png) | 기본적인 VAO/VBO/EBO를 이용한 사각형 렌더링 |
 | **02-2. Wireframe Mode** | ![Wireframe Mode](./images/02_Rectangle_Wireframe_result.png) | glPolygonMode를 사용한 Wireframe Mode |

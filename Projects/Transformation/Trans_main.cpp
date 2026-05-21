@@ -96,26 +96,32 @@ int main() {
         glBindVertexArray(VAO);
 
         unsigned int trans_Location = glGetUniformLocation(Transformation.ID, "transform");
+        float scaleAmount = static_cast<float>( sin(glfwGetTime()) /3  ) +0.7;  // 색이 뒤집힘 없이
+        float RealTime = (float)glfwGetTime();
 
-        // 1st rectangle
+        // 1st rectangle--Orbit01
         glm::mat4 i_mat = glm::mat4(1.0f);
-        glm::mat4 trans03 = glm::rotate(i_mat, (float)glfwGetTime()*0.7f, glm::vec3(0.0f, 0.0f, 1.0f));
-        trans03 = glm::translate(trans03, glm::vec3(0.5f, -0.5f, 0.0f));   // mat4에 translate 적용
-        trans03 = glm::rotate(trans03, (float)glfwGetTime()*2.0f, glm::vec3(0.0f, 0.0f, 1.0f));  //z축 기준으로 매순간 회전, 2배속
-        trans03 = glm::scale(trans03, glm::vec3(0.3f, 0.3f, 0.0f));
+        glm::mat4 trans03 = glm::rotate(i_mat, RealTime *0.7f, glm::vec3(0.0f, 0.0f, 1.0f));  // 공전
+        trans03 = glm::translate(trans03, glm::vec3(0.5f, 0.0f, 0.0f));   // mat4에 translate 적용
+        trans03 = glm::rotate(trans03, -RealTime *0.7f, glm::vec3(0.0f, 0.0f, 1.0f));  //공전의 반대로 미리 회전
+        trans03 = glm::rotate(trans03, RealTime*2, glm::vec3(0.0f, 1.0f, .0f));  // 자전
+        trans03 = glm::scale(trans03, glm::vec3(0.1f, 0.1f, 0.0f));
         glUniformMatrix4fv(trans_Location, 1, GL_FALSE, glm::value_ptr(trans03));
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        // 2nd rectangle
-        glm::mat4 trans04 = glm::rotate(i_mat, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, .0f));
-        trans04 = glm::scale(trans04, glm::vec3(0.6f, 0.6f, 0.0f));
+
+        // 2nd rectangle--Orbit02
+        glm::mat4 trans04 = glm::rotate(i_mat, RealTime, glm::vec3(0.0f, 1.0f, .0f));  // 공전
+        trans04 = glm::translate(trans04, glm::vec3(0.5f, 0.0f, 0.0f));
+        trans04 = glm::rotate(trans04, RealTime, glm::vec3(0.0f, 1.0f, 0.0f));      // 자전
+        trans04 = glm::scale(trans04, glm::vec3(0.1f, 0.1f, 0.0f));
         glUniformMatrix4fv(trans_Location, 1, GL_FALSE, glm::value_ptr(trans04));
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        // 3rd rectangle
-        glm::mat4 trans05 = glm::translate(i_mat, glm::vec3(-0.5f, 0.5f, 0.0f));
-        float scaleAmount = static_cast<float>(sin(glfwGetTime())/2 +0.5);  // 색이 뒤집힘 없이
-        trans05 = glm::scale(trans05, glm::vec3(scaleAmount, scaleAmount, scaleAmount));
-        glUniformMatrix4fv(trans_Location, 1, GL_FALSE, &trans05[0][0]);
-        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        
+        // Middle rectangle
+        glm::mat4 middle = glm::scale(i_mat, glm::vec3(scaleAmount, scaleAmount, 0.0f));
+        middle = glm::scale(middle, glm::vec3(0.6f, 0.6f, 0.0f));
+        glUniformMatrix4fv(trans_Location, 1, GL_FALSE, &middle[0][0]);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 
         glfwSwapBuffers(window);

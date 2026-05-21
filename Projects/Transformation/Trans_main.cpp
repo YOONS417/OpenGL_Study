@@ -105,7 +105,7 @@ int main() {
         trans03 = glm::scale(trans03, glm::vec3(0.4f, 0.4f, 0.0f));
         glUniformMatrix4fv(trans_Location, 1, GL_FALSE, glm::value_ptr(trans03));
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        // 2nd rectangle
+        // 2nd rectangle(orbit)
         glm::mat4 trans04 = glm::rotate(i_mat, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, .0f));
         trans04 = glm::scale(trans04, glm::vec3(0.6f, 0.6f, 0.0f));
         glUniformMatrix4fv(trans_Location, 1, GL_FALSE, glm::value_ptr(trans04));
@@ -115,7 +115,7 @@ int main() {
         float scaleAmount = static_cast<float>(sin(glfwGetTime())/2 +0.5);  // 색이 뒤집힘 없이
         trans05 = glm::scale(trans05, glm::vec3(scaleAmount, scaleAmount, scaleAmount));
         glUniformMatrix4fv(trans_Location, 1, GL_FALSE, &trans05[0][0]);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 
         glfwSwapBuffers(window);

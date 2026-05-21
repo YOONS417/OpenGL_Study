@@ -101,10 +101,10 @@ int main() {
 
         // 1st rectangle--Orbit01
         glm::mat4 i_mat = glm::mat4(1.0f);
-        glm::mat4 trans03 = glm::rotate(i_mat, RealTime *0.7f, glm::vec3(0.0f, 0.0f, 1.0f));  // 공전
+        glm::mat4 trans03 = glm::rotate(i_mat, RealTime *0.9f, glm::vec3(0.0f, 0.0f, 1.0f));  // 공전
         trans03 = glm::translate(trans03, glm::vec3(0.5f, 0.0f, 0.0f));   // mat4에 translate 적용
-        trans03 = glm::rotate(trans03, -RealTime *0.7f, glm::vec3(0.0f, 0.0f, 1.0f));  //공전의 반대로 미리 회전
-        trans03 = glm::rotate(trans03, RealTime*2, glm::vec3(0.0f, 1.0f, .0f));  // 자전
+        trans03 = glm::rotate(trans03, -RealTime *0.9f, glm::vec3(0.0f, 0.0f, 1.0f));  //공전의 반대로 미리 회전
+        trans03 = glm::rotate(trans03, RealTime*3, glm::vec3(0.0f, 1.0f, .0f));  // 자전
         trans03 = glm::scale(trans03, glm::vec3(0.1f, 0.1f, 0.0f));
         glUniformMatrix4fv(trans_Location, 1, GL_FALSE, glm::value_ptr(trans03));
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -112,7 +112,7 @@ int main() {
         // 2nd rectangle--Orbit02
         glm::mat4 trans04 = glm::rotate(i_mat, RealTime, glm::vec3(0.0f, 1.0f, .0f));  // 공전
         trans04 = glm::translate(trans04, glm::vec3(0.5f, 0.0f, 0.0f));
-        trans04 = glm::rotate(trans04, RealTime, glm::vec3(0.0f, 1.0f, 0.0f));      // 자전
+        trans04 = glm::rotate(trans04, RealTime*3, glm::vec3(0.0f, 1.0f, 0.0f));      // 자전
         trans04 = glm::scale(trans04, glm::vec3(0.1f, 0.1f, 0.0f));
         glUniformMatrix4fv(trans_Location, 1, GL_FALSE, glm::value_ptr(trans04));
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

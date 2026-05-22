@@ -84,13 +84,14 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
+    glEnable(GL_DEPTH_TEST);
 
    // --Render Loop--
     while (!glfwWindowShouldClose(window))
     {
-        proccessInput(window); 
+        proccessInput(window);
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);   //BG Color
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         Transformation.use();
         glBindVertexArray(VAO);
@@ -113,7 +114,7 @@ int main() {
         glm::mat4 trans04 = glm::rotate(i_mat, RealTime, glm::vec3(0.0f, 1.0f, .0f));  // 공전
         trans04 = glm::translate(trans04, glm::vec3(0.5f, 0.0f, 0.0f));
         trans04 = glm::rotate(trans04, RealTime*3, glm::vec3(0.0f, 1.0f, 0.0f));      // 자전
-        trans04 = glm::scale(trans04, glm::vec3(0.1f, 0.1f, 0.0f));
+        trans04 = glm::scale(trans04, glm::vec3(0.1f, 0.1f, 1.0f));
         glUniformMatrix4fv(trans_Location, 1, GL_FALSE, glm::value_ptr(trans04));
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         
@@ -122,7 +123,6 @@ int main() {
         middle = glm::scale(middle, glm::vec3(0.6f, 0.6f, 0.0f));
         glUniformMatrix4fv(trans_Location, 1, GL_FALSE, &middle[0][0]);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
 
         glfwSwapBuffers(window);
         glfwPollEvents();

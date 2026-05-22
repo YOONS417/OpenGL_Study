@@ -135,8 +135,6 @@ int main() {
         proccessInput(window);
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);   //BG Color
         glClear(GL_COLOR_BUFFER_BIT);
-
-      
         
         glActiveTexture(GL_TEXTURE0); //0번 슬롯 선택 , 텍스처 유닛 활성화
         glBindTexture(GL_TEXTURE_2D, texture01); //텍스처 장착

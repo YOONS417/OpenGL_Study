@@ -54,6 +54,8 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | :--- | :---: | :--- |
 | **04. Texture** | ![Texture](./images/04_Texture_Blend_result.png) | 사각형에 Texture 입히기 & Mipmap, Filtering ,Blend로 투명화 |
 | **04-1. Tex_Mix** | ![Tex_Mix](./images/04_Texture_mix_result.png) | Blend 대신 Mix로 사각형에 Texture 2개 입히기  |
+| **04-2. Mix_independent** | ![Tex_Mix](./images/04_Texture_mix_independent.png) |  Textrue들의 alpha를 독립적으로 mix, 한개는 좌표를 2배 |
+
 
 </div>
 </details>

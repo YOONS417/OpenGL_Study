@@ -69,7 +69,7 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | **05. Transformation** | ![Trans](./images/05_Transformation_rotate_result.png) | 렌더링된 사각형을 glm을 이용해 rotate |
 | **05-1. Trans_rotateing** | ![Trans_rotate](./images/05_Transformation_translate_rotating.gif) | 사각형을 translate+scale+rotateing |
 | **05-2. Trans_Orbit** | ![Trans_orbit](./images/05_Transformation_Orbit.gif) | translate한 사각형을 공전(orbit) |
-| **05-3. Orbit with depth** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/83e75564-c5e7-4ba1-96e8-79d2d8336695" autoplay="autoplay" loop="loop" muted="muted" playsinline="true" controls="true" width="250"></video> | 사각형을 깊이감 있게 공전(orbit) 및 수평 유지 자전 구현 |
+| **05-3. Orbit with depth** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/83e75564-c5e7-4ba1-96e8-79d2d8336695" controls autoplay loop muted playsinline style="max-width:250px; display:block;"></video> | 사각형을 깊이감 있게 공전(orbit) 및 수평 유지 자전 구현 |
 
 </div>
 </details>

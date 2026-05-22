@@ -54,7 +54,7 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | :--- | :---: | :--- |
 | **04. Texture** | ![Texture](./images/04_Texture_Blend_result.png) | 사각형에 Texture 입히기 & Mipmap, Filtering ,Blend로 투명화 |
 | **04-1. Tex_Mix** | ![Tex_Mix](./images/04_Texture_mix_result.png) | Blend 대신 Mix로 사각형에 Texture 2개 입히기  |
-| **04-2. Mix_independent** | ![Tex_Mix](./images/04_Texture_mix_independent.png) |  Textrue들의 alpha를 독립적으로 mix, 한개는 좌표를 2배 |
+| **04-2. Mix_independent** | ![Tex_Mix](./images/04_Texture_mix_independent.png) |  Textrue 2개를 독립적으로 mix, 한개는 좌표를 2배+Color, 각 이미지의 nrChannel 확인 |
 
 
 </div>
@@ -69,7 +69,7 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | **05. Transformation** | ![Trans](./images/05_Transforamation_rotate_result.png) | 렌더링된 사각형을 glm을 이용해 rotate |
 | **05-1. Trans_rotateing** | ![Trans_rotate](./images/05_Transformation_translate_rotating.gif) | 사각형을 translate+scale+rotateing |
 | **05-2. Trans_Orbit** | ![Trans_orbit](./images/05_Transformation_Orbit.gif) | translate한 사각형을 공전(orbit) |
-| **05-3. upgraded Orbit** | ![Orbit_upgrad](./images/05_Transformation_Orbit_upgrad.gif) | translate한 사각형을 공전(orbit) |
+| **05-3. Orbit with depth** | ![Depth_Orbit](./images/05_Transformation_Depth_Orbit.gif) | translate한 사각형을 공전(orbit) |
 
 
 </div>

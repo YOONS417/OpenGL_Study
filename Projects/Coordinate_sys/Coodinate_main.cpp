@@ -2,7 +2,6 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "ShaderClass.h"
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -20,7 +19,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(Screen_Width, Sereen_Height, "Project_Transformation", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(Screen_Width, Sereen_Height, "Project_Coordinate_system", NULL, NULL);
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -48,9 +47,10 @@ int main() {
     trans02 = glm::scale(trans02, glm::vec3(0.5, 0.5, 0.5));    // scaling -> x 0.5
 
      
-    Shader Transformation("Shaders/Trans.vert", "Shaders/Trans.frag");
+    Shader Transformation("Shaders/coord.vert", "Shaders/coord.frag");
    
-    float vertices[] = {                        // texture coordinate
+    // Local space
+    float vertices[] = {                     
        -0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // left bottom     =0
         0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // right bottom    =1
         0.5f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   // right  top      =2
@@ -111,7 +111,7 @@ int main() {
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
           
         // 2nd rectangle--Orbit02
-        glm::mat4 trans04 = glm::rotate(i_mat, -RealTime, glm::vec3(0.0f, 1.0f, .0f));  // 공전
+        glm::mat4 trans04 = glm::rotate(i_mat, -RealTime, glm::vec3(0.0f, 1.0f, 0.0f));  // 공전 , 축을 바라보는 방향이 반대 
         trans04 = glm::translate(trans04, glm::vec3(0.75f, 0.0f, 0.0f));
         trans04 = glm::rotate(trans04, RealTime*5, glm::vec3(0.0f, 1.0f, 0.0f));      // 자전
         trans04 = glm::scale(trans04, glm::vec3(0.1f, 0.1f, 0.0f));

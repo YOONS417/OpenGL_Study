@@ -7,7 +7,6 @@ out vec3 Shape_Color;
 uniform mat4 transform;
 
 void main() {
-	gl_Position =  transform * vec4(aPos, 1.0); 
-	// loop의 transformation과 vertice의 행렬 곱
+	gl_Position =  transform*vec4(aPos, 1.0);
 	Shape_Color = aColor;
 }

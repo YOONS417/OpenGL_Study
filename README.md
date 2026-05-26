@@ -6,12 +6,13 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 
 ## 🪜 학습 루트
 1. 기본 렌더링
-2. Shader + 색
-3. Transform
-4. Texture
-5. Camera
-6. Lighting
-7. Shadow, Post Processing
+2. Shader + Color
+3. Texture
+4. Transform
+5. Coordinate system
+6. Camera
+7. Lighting
+8. Shadow, Post Processing
 
 
 ## 📺 실행 화면

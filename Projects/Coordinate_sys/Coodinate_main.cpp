@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "ShaderClass.h"
+#include "stb_image.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -32,29 +33,15 @@ int main() {
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << " Failed to initialze GLAD" << std::endl;  
     }
-
-    // translate vec
-    glm::vec4 vec(2.0f, 3.0f, 4.0f, 1.0f);    // vector 생성 , w=1 : 점 , w=0 : 방향
-    glm::mat4 trans01 = glm::mat4(1.0f);   // 4x4 단위행렬 생성
-
-    trans01 = glm::translate(trans01, glm::vec3(1.0f, 1.0f, 0.0f)); // translation 행렬에 이동 변환(1,1,0) 적용
-    vec = trans01 * vec;
-    std::cout << " ( " << vec.x << " , " << vec.y << " , " << vec.z << " )" << std::endl;
-    
-    // rotate & scale vec  
-    glm::mat4 trans02 = glm::mat4(1.0f);    //  회전각도           회전 축     
-    trans02 = glm::rotate(trans02, glm::radians(45.0f), glm::vec3(1.0, 1.0, 0.0));  // 축 기준으로 회전, radians(90.f) :  90도를 ㅠ/2로 바꿔서 계산
-    trans02 = glm::scale(trans02, glm::vec3(0.5, 0.5, 0.5));    // scaling -> x 0.5
-
      
-    Shader Transformation("Shaders/coord.vert", "Shaders/coord.frag");
+    Shader Texture_Shader("Shaders/coord.vert", "Shaders/coord.frag");
    
-    // Local space
+    // vertex data
     float vertices[] = {                     
-       -0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // left bottom     =0
-        0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // right bottom    =1
-        0.5f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   // right  top      =2
-       -0.5f, 0.5f, 0.0f,   0.0f, 1.0f, 1.0f    // left top        =3
+       -0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left bottom     =0
+        0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right bottom    =1
+        0.5f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top      =2
+       -0.5f, 0.5f, 0.0f,   0.0f, 1.0f, 1.0f,   0.0f, 1.0f      // left top        =3
     };
 
     unsigned int indices[] = {
@@ -75,14 +62,68 @@ int main() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,  6* sizeof(float), (void*)0);
+    // Position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,  8* sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,  6* sizeof(float), (void*)(3 * sizeof(float)));
+    // Color attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,  8* sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+    // Texture attribute
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+
+    unsigned int tex01, tex02;
+    int width, height, nrChannels;
+    stbi_set_flip_vertically_on_load(true);
+    
+    // Paper Texture
+    glGenTextures(1, &tex01);
+    glBindTexture(GL_TEXTURE_2D, tex01);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    unsigned char* data = stbi_load("PaperSheet.jpg", &width, &height, &nrChannels, 0);
+    if (data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        std::cout << "Papaer Image nrChannel : " << nrChannels << std::endl;
+    }
+    else {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);
+
+    // Metal ball
+    glGenTextures(1, &tex02);
+    glBindTexture(GL_TEXTURE_2D, tex02);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    data = stbi_load("MetalBall.png", &width, &height, &nrChannels, 0);
+    if (data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        std::cout << "MetalBall image nrChannel : " << nrChannels << std::endl;
+    }
+    else {
+        std::cout << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);
+
+    Texture_Shader.use();
+    Texture_Shader.setInt("Tex_papersheet", 0);
+    Texture_Shader.setInt("Tex_metalball", 1);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -93,10 +134,15 @@ int main() {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);    //BG Color  
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        Transformation.use();
+        glActiveTexture(GL_TEXTURE0);  // 0번 슬롯
+        glBindTexture(GL_TEXTURE_2D, tex01);
+        glActiveTexture(GL_TEXTURE1);  // 1번 슬롯
+        glBindTexture(GL_TEXTURE_2D, tex02);
+
+        Texture_Shader.use();
         glBindVertexArray(VAO);
 
-        unsigned int trans_Location = glGetUniformLocation(Transformation.ID, "transform");
+        unsigned int trans_Location = glGetUniformLocation(Texture_Shader.ID, "transform");
         float scaleAmount = static_cast<float>( sin(glfwGetTime()) /3  ) +0.7;  // 색이 뒤집힘 없이
         float RealTime = (float)glfwGetTime();
 

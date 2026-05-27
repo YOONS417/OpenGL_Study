@@ -133,6 +133,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\Commons\glad.c" />
     <ClCompile Include="Coodinate_main.cpp" />
+    <ClCompile Include="stb_images.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\coord.frag" />

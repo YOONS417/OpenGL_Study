@@ -124,7 +124,8 @@ int main() {
     Texture_Shader.use();
     Texture_Shader.setInt("Tex_papersheet", 0);
     Texture_Shader.setInt("Tex_metalball", 1);
-
+    //setInt는 반드시 shader가 켜져있을 때만 작동 , 내부적으로 glUniform1i라는 함수를 호출
+    //유니폼 변수에 값을 넣으려면 반드시 그 유니폼을 가지고 있는 shaderprogrma이 켜져 있는 상태
     glEnable(GL_DEPTH_TEST);
 
     // --Render Loop--
@@ -141,34 +142,8 @@ int main() {
 
         Texture_Shader.use();
         glBindVertexArray(VAO);
-
-        unsigned int trans_Location = glGetUniformLocation(Texture_Shader.ID, "transform");
-        float scaleAmount = static_cast<float>( sin(glfwGetTime()) /3  ) +0.7;  // 색이 뒤집힘 없이
-        float RealTime = (float)glfwGetTime();
-
-        // 1st rectangle--Orbit01
-        glm::mat4 i_mat = glm::mat4(1.0f);
-        glm::mat4 trans03 = glm::rotate(i_mat, RealTime*0.9f, glm::vec3(0.0f, 0.0f, 1.0f));  // 공전
-        trans03 = glm::translate(trans03, glm::vec3(0.75f, 0.0f, 0.0f));   // mat4에 translate 적용
-        trans03 = glm::rotate(trans03, -RealTime *0.9f, glm::vec3(0.0f, 0.0f, 1.0f));  //공전의 반대로 미리 회전
-        trans03 = glm::rotate(trans03, RealTime*5, glm::vec3(0.0f, 1.0f, 0.0f));  // 자전
-        trans03 = glm::scale(trans03, glm::vec3(0.1f, 0.1f, 0.0f));
-        glUniformMatrix4fv(trans_Location, 1, GL_FALSE, glm::value_ptr(trans03));
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-          
-        // 2nd rectangle--Orbit02
-        glm::mat4 trans04 = glm::rotate(i_mat, -RealTime, glm::vec3(0.0f, 1.0f, 0.0f));  // 공전 , 축을 바라보는 방향이 반대 
-        trans04 = glm::translate(trans04, glm::vec3(0.75f, 0.0f, 0.0f));
-        trans04 = glm::rotate(trans04, RealTime*5, glm::vec3(0.0f, 1.0f, 0.0f));      // 자전
-        trans04 = glm::scale(trans04, glm::vec3(0.1f, 0.1f, 0.0f));
-        glUniformMatrix4fv(trans_Location, 1, GL_FALSE, glm::value_ptr(trans04));
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         
-        // Middle rectangle
-        glm::mat4 middle = glm::scale(i_mat, glm::vec3(scaleAmount, scaleAmount, 0.0f));
-        middle = glm::scale(middle, glm::vec3(0.6f, 0.6f, 0.0f));
-        glUniformMatrix4fv(trans_Location, 1, GL_FALSE, &middle[0][0]);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

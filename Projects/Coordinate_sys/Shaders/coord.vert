@@ -9,7 +9,7 @@ out vec2 Texture_Coord;
 uniform mat4 transform;
 
 void main() {
-	gl_Position =  transform*vec4(aPos, 1.0);
+	gl_Position =  vec4(aPos, 1.0);
 	Shape_Color = aColor;
 	Texture_Coord = aTexCoordinate;
 }

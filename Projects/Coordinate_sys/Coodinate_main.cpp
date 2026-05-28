@@ -33,20 +33,55 @@ int main() {
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << " Failed to initialze GLAD" << std::endl;  
     }
+
+    glEnable(GL_DEPTH_TEST);
      
     Shader Cube_Shader("Shaders/coord.vert", "Shaders/coord.frag");
    
     // vertex data
     float vertices[] = {                     
-       -0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left bottom     =0
-        0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right bottom    =1
-        0.5f, 0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top      =2
-       -0.5f, 0.5f, 0.0f,   0.0f, 1.0f, 1.0f,   0.0f, 1.0f      // left top        =3
+       -0.5f, -0.5f, 0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left  bottom     =0
+        0.5f, -0.5f, 0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right  bottom    =1
+        0.5f, 0.5f, 0.5f,   0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top      =2
+       -0.5f, 0.5f, 0.5f,   0.0f, 1.0f, 1.0f,   0.0f, 1.0f,      // left  top        =3
     };
 
     unsigned int indices[] = {
         0, 1, 2,   // right triangle
         0, 2 ,3    // left triangle
+    };
+
+    float cube_vert[] = {  // each point : 0 ~ 7
+       // Fornt surface
+       -0.5f, -0.5f, 0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,      // left  bottom     = 0
+        0.5f, -0.5f, 0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,      // right  bottom    = 1
+        0.5f,  0.5f, 0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,      // right  top       = 2
+       -0.5f,  0.5f, 0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,      // left  top        = 3
+       // Right surface
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left  bottom     = 1
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right  bottom    = 5
+        0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top       = 6
+        0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 2
+       // Left surface
+       -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left  bottom     = 4
+       -0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right  bottom    = 0
+       -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top       = 3
+       -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 7
+       // Top surface
+       -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left  bottom     = 3
+        0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right  bottom    = 2
+        0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top       = 6
+       -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 7
+       // Bottom surface
+       -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left  bottom     = 0
+        0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right  bottom    = 1
+        0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top       = 5
+       -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 4
+       // Back surface
+       -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left  bottom     = 4
+        0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right  bottom    = 5
+        0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top       = 6
+       -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 7
     };
 
     unsigned int VBO, VAO, EBO;
@@ -126,7 +161,6 @@ int main() {
     Cube_Shader.setInt("Tex_metalball", 1);
     //setInt는 반드시 shader가 켜져있을 때만 작동 , 내부적으로 glUniform1i라는 함수를 호출
     //유니폼 변수에 값을 넣으려면 반드시 그 유니폼을 가지고 있는 shaderprogrma이 켜져 있는 상태
-    glEnable(GL_DEPTH_TEST);
 
     // --Render Loop--
     while (!glfwWindowShouldClose(window))

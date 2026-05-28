@@ -84,7 +84,7 @@ int main() {
        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 7
     };
 
-    float cube_indices[] = {
+    unsigned int cube_indices[] = {
         0, 1,  2,  0, 2, 3,       // Fornt surface
         4, 5,  6,  4, 6, 7,       // Right surface
         8, 9, 10,  8,10,11,       // Left surface  
@@ -184,6 +184,8 @@ int main() {
 
         Cube_Shader.use();
 
+        float RealTime = (float)glfwGetTime();
+
         // model matrix : object vertex -> world space
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::rotate(model, glm::radians(-60.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -202,7 +204,7 @@ int main() {
        
 
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         
 
         glfwSwapBuffers(window);

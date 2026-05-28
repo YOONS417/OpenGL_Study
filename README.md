@@ -75,7 +75,7 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 </div>
 </details>
 <details>
-<summary><b> Ch 5. Transformation  </b></summary>   
+<summary><b> Ch 6. Coordinate System | Going 3D  </b></summary>   
 <div id="ch1-table" markdown="1">
 <br>
 

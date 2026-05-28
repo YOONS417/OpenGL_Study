@@ -58,7 +58,7 @@ int main() {
         0.5f,  0.5f, 0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,      // right  top       = 2
        -0.5f,  0.5f, 0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,      // left  top        = 3
        // Right surface
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left  bottom     = 1
+        0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left  bottom     = 1
         0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right  bottom    = 5
         0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top       = 6
         0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 2
@@ -69,7 +69,7 @@ int main() {
        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 7
        // Top surface
        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left  bottom     = 3
-        0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right  bottom    = 2
+        0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right  bottom    = 2
         0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top       = 6
        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 7
        // Bottom surface
@@ -84,6 +84,14 @@ int main() {
        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 7
     };
 
+    float cube_indices[] = {
+        0, 1,  2,  0, 2, 3,       // Fornt surface
+        4, 5,  6,  4, 6, 7,       // Right surface
+        8, 9, 10,  8,10,11,       // Left surface  
+        12,13,14, 12,14,15,       //Top surface
+        16,17,18, 16,18,19,       //Bottom surface    
+        20,21,22, 20,22,23        //Back surface
+    };
     unsigned int VBO, VAO, EBO;
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -92,10 +100,10 @@ int main() {
     glBindVertexArray(VAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cube_vert), cube_vert, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
 
     // Position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,  8* sizeof(float), (void*)0);

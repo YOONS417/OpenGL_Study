@@ -84,7 +84,7 @@ int main() {
        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 7
     };
 
-    unsigned int cube_indices[] = {
+    unsigned int cube_indices[] = {  // indices : 정점 데이터 배열의 행 번호(0~23)
         0, 1,  2,  0, 2, 3,       // Fornt surface
         4, 5,  6,  4, 6, 7,       // Right surface
         8, 9, 10,  8,10,11,       // Left surface  
@@ -188,7 +188,7 @@ int main() {
 
         // model matrix : object vertex -> world space
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::rotate(model, glm::radians(-60.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, RealTime * glm::radians(60.0f), glm::vec3(1.0f, -1.0f, 1.0f)); //vec(1,-1,1)을 축으로 1초에 60도씩 회전
         // view matrix : object를 뒤로(-z방향) 이동
         glm::mat4 view = glm::mat4(1.0f);
         view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
@@ -205,7 +205,8 @@ int main() {
 
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-        
+        // glDrawElements를 사용해 인덱으르 그릴 때 
+        // 맨 마지막 인자에 사용할 인덱스 배열은 반드시 부호 없는 정수형(unsigned)
 
         glfwSwapBuffers(window);
         glfwPollEvents();

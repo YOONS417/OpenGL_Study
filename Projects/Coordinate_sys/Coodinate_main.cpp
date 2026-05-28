@@ -10,8 +10,8 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void proccessInput(GLFWwindow* window);
 
-const unsigned int Screen_Width = 1000;
-const unsigned int Sereen_Height = 800;
+const unsigned int Screen_Width = 800;
+const unsigned int Sereen_Height = 600;
 
 
 int main() {
@@ -139,6 +139,19 @@ int main() {
         glBindTexture(GL_TEXTURE_2D, tex01);
         glActiveTexture(GL_TEXTURE1);  // 1번 슬롯
         glBindTexture(GL_TEXTURE_2D, tex02);
+
+        // model matrix : object vertex -> world space
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::rotate(model, glm::radians(-60.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+        // view matrix : object를 뒤로(-z방향) 이동
+        glm::mat4 view = glm::mat4(1.0f);
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        // projection matrix : perspective 사용
+        glm::mat4 projection;
+        projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+
+
+
 
         Texture_Shader.use();
         glBindVertexArray(VAO);

@@ -153,13 +153,11 @@ int main() {
         projection = glm::perspective(glm::radians(45.0f), (float)Screen_Width / (float)Screen_Height , 0.1f, 100.0f);
 
         // send matrix to shader
-        int modelLoc = glGetUniformLocation(Cube_Shader.ID, "oMdel");
+        int modelLoc = glGetUniformLocation(Cube_Shader.ID, "Model");
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         Cube_Shader.setMat4("View", view);
         Cube_Shader.setMat4("Projection", projection);
        
-
-         
 
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

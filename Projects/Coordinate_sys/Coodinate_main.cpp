@@ -11,7 +11,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void proccessInput(GLFWwindow* window);
 
 const unsigned int Screen_Width = 800;
-const unsigned int Sereen_Height = 600;
+const unsigned int Screen_Height = 600;
 
 
 int main() {
@@ -20,7 +20,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(Screen_Width, Sereen_Height, "Project_Coordinate_system", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(Screen_Width, Screen_Height, "Project_Coordinate_system", NULL, NULL);
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -34,7 +34,7 @@ int main() {
         std::cout << " Failed to initialze GLAD" << std::endl;  
     }
      
-    Shader Texture_Shader("Shaders/coord.vert", "Shaders/coord.frag");
+    Shader Cube_Shader("Shaders/coord.vert", "Shaders/coord.frag");
    
     // vertex data
     float vertices[] = {                     
@@ -121,9 +121,9 @@ int main() {
     }
     stbi_image_free(data);
 
-    Texture_Shader.use();
-    Texture_Shader.setInt("Tex_papersheet", 0);
-    Texture_Shader.setInt("Tex_metalball", 1);
+    Cube_Shader.use();
+    Cube_Shader.setInt("Tex_papersheet", 0);
+    Cube_Shader.setInt("Tex_metalball", 1);
     //setInt는 반드시 shader가 켜져있을 때만 작동 , 내부적으로 glUniform1i라는 함수를 호출
     //유니폼 변수에 값을 넣으려면 반드시 그 유니폼을 가지고 있는 shaderprogrma이 켜져 있는 상태
     glEnable(GL_DEPTH_TEST);
@@ -140,20 +140,27 @@ int main() {
         glActiveTexture(GL_TEXTURE1);  // 1번 슬롯
         glBindTexture(GL_TEXTURE_2D, tex02);
 
+        Cube_Shader.use();
+
         // model matrix : object vertex -> world space
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::rotate(model, glm::radians(-60.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+        model = glm::rotate(model, glm::radians(-60.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         // view matrix : object를 뒤로(-z방향) 이동
         glm::mat4 view = glm::mat4(1.0f);
         view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
         // projection matrix : perspective 사용
         glm::mat4 projection;
-        projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+        projection = glm::perspective(glm::radians(45.0f), (float)Screen_Width / (float)Screen_Height , 0.1f, 100.0f);
 
+        // send matrix to shader
+        int modelLoc = glGetUniformLocation(Cube_Shader.ID, "oMdel");
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        Cube_Shader.setMat4("View", view);
+        Cube_Shader.setMat4("Projection", projection);
+       
 
+         
 
-
-        Texture_Shader.use();
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         

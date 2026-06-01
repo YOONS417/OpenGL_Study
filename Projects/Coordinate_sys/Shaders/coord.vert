@@ -10,6 +10,11 @@ uniform mat4 Model;
 uniform mat4 View;
 uniform mat4 Projection;
 
+uniform mat4 Orbit;
+uniform mat4 Distance;
+uniform mat4 Rotate;
+uniform mat4 Scale;
+
 void main() {
 	gl_Position =  Projection * View * Model * vec4(aPos, 1.0f);
 	Shape_Color = aColor;

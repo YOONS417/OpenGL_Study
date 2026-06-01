@@ -175,7 +175,7 @@ int main() {
     {
         proccessInput(window);
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);    //BG Color  
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // depth buffer 초기화
 
         glActiveTexture(GL_TEXTURE0);  // 0번 슬롯
         glBindTexture(GL_TEXTURE_2D, tex01);
@@ -183,15 +183,16 @@ int main() {
         glBindTexture(GL_TEXTURE_2D, tex02);
 
         Cube_Shader.use();
+        glBindVertexArray(VAO);
 
         float RealTime = (float)glfwGetTime();
 
-        // model matrix : object vertex -> world space
+        // model matrix : object vertex -> world space (물체 중심)
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::rotate(model, RealTime * glm::radians(60.0f), glm::vec3(1.0f, -1.0f, 1.0f)); //vec(1,-1,1)을 축으로 1초에 60도씩 회전
-        // view matrix : object를 뒤로(-z방향) 이동
+        model = glm::rotate(model, RealTime * glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f)); //vec(1,-1,1)을 축으로 1초에 60도씩 회전
+        // view matrix : object를 뒤로(-z방향) 이동 (카메라 중심)
         glm::mat4 view = glm::mat4(1.0f);
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
         // projection matrix : perspective 사용
         glm::mat4 projection;
         projection = glm::perspective(glm::radians(45.0f), (float)Screen_Width / (float)Screen_Height , 0.1f, 100.0f);
@@ -201,12 +202,44 @@ int main() {
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         Cube_Shader.setMat4("View", view);
         Cube_Shader.setMat4("Projection", projection);
-       
 
-        glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         // glDrawElements를 사용해 인덱으르 그릴 때 
         // 맨 마지막 인자에 사용할 인덱스 배열은 반드시 부호 없는 정수형(unsigned)
+
+        //first orbit 
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(3.0f, 0.0f, -5.0f));
+        model = glm::rotate(model, RealTime, glm::vec3(0.0f, 1.0f, 0.0f));  //자전
+        model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+
+        view = glm::mat4(1.0f);
+        view = glm::rotate(view, RealTime, glm::vec3(0.0f, 1.0f, 0.0f));  // 공전
+
+        Cube_Shader.setMat4("Model", model);
+        Cube_Shader.setMat4("View", view);
+        Cube_Shader.setMat4("Projection", projection);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+        /*
+         glm::mat4 orbit = glm::mat4(1.0f);
+        orbit = glm::rotate(orbit, RealTime * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::mat4 distance = glm::mat4(1.0f);
+        distance = glm::translate(distance, glm::vec3(3.0f, 0.0f, -0.5f));
+        glm::mat4 rotating = glm::mat4(1.0f);
+        rotating = glm::rotate(rotating, RealTime, glm::vec3(0.0f, 1.0f, 0.0f));
+        glm::mat4 size = glm::mat4(1.0f);
+        size = glm::scale(size, glm::vec3(0.1f, 0.1f, 0.1f));
+
+        Cube_Shader.setMat4("Scale", size);
+        Cube_Shader.setMat4("Rotate", rotating);
+        Cube_Shader.setMat4("Distance", distance);
+        Cube_Shader.setMat4("Orbit", orbit);*/
+
+       
+
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -228,4 +261,10 @@ void proccessInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+
+    // WireFrame Mode  ->  w : line, F : fill
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)   
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);      
+    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

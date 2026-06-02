@@ -199,8 +199,8 @@ int main() {
         // glDrawElements를 사용해 인덱으르 그릴 때 
         // 맨 마지막 인자에 사용할 인덱스 배열은 반드시 부호 없는 정수형(unsigned)
 
-        //---First orbit--- 
-        glm::mat4 earth = glm::rotate(model, RealTime * glm::radians(90.0f), glm::vec3(1.0f, 3.0f, 1.0f)); //1초에 60도 공전
+        //---Earth--- 
+        glm::mat4 earth = glm::rotate(model, RealTime * glm::radians(60.0f), glm::vec3(1.0f, 3.0f, 1.0f)); //1초에 60도 공전
         earth = glm::translate(earth, glm::vec3(0.0f, 0.0f, 4.0f));    //공전 반지름 
         earth = glm::rotate(earth, glm::radians(-23.5f), glm::vec3(0.0f, 0.0f, 1.0f)); //자전축 기울기
         earth = glm::rotate(earth, RealTime * glm::radians(120.0f), glm::vec3(0.0f, 1.0f, 0.0f)); //1초에 120도 자전
@@ -208,8 +208,16 @@ int main() {
         //원점에서 가운데를 중심으로 공전시킨 후 전체를 거리 이동시킴 - view는 하나만 사용
 
         Cube_Shader.setMat4("Model", earth);
-        Cube_Shader.setMat4("View", view);
-        Cube_Shader.setMat4("Projection", projection);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+        //---Moon---
+        glm::mat4 moon = earth;   //지구와 매커니즘이 같으므로 지구의 움직임을 상속
+        moon = glm::rotate(moon, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        moon = glm::translate(moon, glm::vec3(0.0f, 0.0f, 1.0f));
+        moon = glm::rotate(moon, RealTime * glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        moon = glm::scale(moon, glm::vec3(0.5f, 0.5f, 0.5f));
+
+        Cube_Shader.setMat4("Model", moon);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 

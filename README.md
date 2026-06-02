@@ -83,6 +83,17 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | :--- | :---: | :--- |
 | **06. Coordinate system** | ![Coord](./images/06_Coordinate_sys_Going3D.png) | model,view,projection(perspective)을 이용한 3D : -z방향으로 기울이기 |
 | **06-1. Rotating Cube** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/ae3bec5a-2b09-4aaa-b186-8c909de0f18d" autoplay loop muted playsinline controls width="250"></video> | 24개의 정점+색+텍스쳐 좌표를 렌더링한 큐브 |
+| **06-2. Orbit Cube** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/41ea6143-bb2b-4b73-89cd-33df6c6b47c2" autoplay loop muted playsinline controls width="250"></video> | 태양을 중싱으로 transformation을 이용한 Orbit
+
+
+
+
+
+
+
+
+
+ |
 
 </div>
 </details>

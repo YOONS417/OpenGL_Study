@@ -10,8 +10,8 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void proccessInput(GLFWwindow* window);
 
-const unsigned int Screen_Width = 800;
-const unsigned int Screen_Height = 600;
+const unsigned int Screen_Width = 1200;
+const unsigned int Screen_Height = 900;
 
 
 int main() {
@@ -37,19 +37,7 @@ int main() {
     glEnable(GL_DEPTH_TEST);
      
     Shader Cube_Shader("Shaders/coord.vert", "Shaders/coord.frag");
-   
-    // vertex data
-    float vertices[] = {                     
-       -0.5f, -0.5f, 0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left  bottom     =0
-        0.5f, -0.5f, 0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right  bottom    =1
-        0.5f, 0.5f, 0.5f,   0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top      =2
-       -0.5f, 0.5f, 0.5f,   0.0f, 1.0f, 1.0f,   0.0f, 1.0f,      // left  top        =3
-    };
 
-    unsigned int indices[] = {
-        0, 1, 2,   // right triangle
-        0, 2 ,3    // left triangle
-    };
 
     float cube_vert[] = {  // each point : 0 ~ 7
        // Fornt surface
@@ -186,20 +174,24 @@ int main() {
         glBindVertexArray(VAO);
 
         float RealTime = (float)glfwGetTime();
-
+        int modelLoc = glGetUniformLocation(Cube_Shader.ID, "Model");
+        
         // model matrix : object vertex -> world space (물체 중심)
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::rotate(model, RealTime * glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f)); //vec(1,-1,1)을 축으로 1초에 60도씩 회전
+        glm::mat4 Sun = glm::rotate(model, RealTime * glm::radians(45.0f), glm::vec3(-1.0f, 1.7f, 0.0f)); //vec()을 축으로 1초에 60도씩 회전
+        Sun = glm::rotate(Sun, glm::radians(30.0f), glm::vec3(0.0f, 0.0f, 1.0f));  //자전축
+
         // view matrix : object를 뒤로(-z방향) 이동 (카메라 중심)
         glm::mat4 view = glm::mat4(1.0f);
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));  //카메라와 중심 사이의 거리
+        
         // projection matrix : perspective 사용
         glm::mat4 projection;
         projection = glm::perspective(glm::radians(45.0f), (float)Screen_Width / (float)Screen_Height , 0.1f, 100.0f);
+        //projection = glm::ortho(-5.0f, 5.0f, -5.0f, 5.0f , 0.1f, 100.0f);  // left, right, bottom, top, near plane, far plane
 
         // send matrix to shader
-        int modelLoc = glGetUniformLocation(Cube_Shader.ID, "Model");
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(Sun));
         Cube_Shader.setMat4("View", view);
         Cube_Shader.setMat4("Projection", projection);
 
@@ -207,37 +199,17 @@ int main() {
         // glDrawElements를 사용해 인덱으르 그릴 때 
         // 맨 마지막 인자에 사용할 인덱스 배열은 반드시 부호 없는 정수형(unsigned)
 
-        //first orbit 
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(3.0f, 0.0f, -5.0f));
-        model = glm::rotate(model, RealTime, glm::vec3(0.0f, 1.0f, 0.0f));  //자전
-        model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+        //---First orbit--- 
+        glm::mat4 earth = glm::rotate(model, RealTime * glm::radians(90.0f), glm::vec3(1.0f, 3.0f, 1.0f)); //1초에 60도 공전
+        earth = glm::translate(earth, glm::vec3(0.0f, 0.0f, 4.0f));    //공전 반지름 
+        earth = glm::rotate(earth, glm::radians(-23.5f), glm::vec3(0.0f, 0.0f, 1.0f)); //자전축 기울기
+        earth = glm::rotate(earth, RealTime * glm::radians(120.0f), glm::vec3(0.0f, 1.0f, 0.0f)); //1초에 120도 자전
+        earth = glm::scale(earth, glm::vec3(0.4f, 0.4f, 0.4f));
+        //원점에서 가운데를 중심으로 공전시킨 후 전체를 거리 이동시킴 - view는 하나만 사용
 
-        view = glm::mat4(1.0f);
-        view = glm::rotate(view, RealTime, glm::vec3(0.0f, 1.0f, 0.0f));  // 공전
-
-        Cube_Shader.setMat4("Model", model);
+        Cube_Shader.setMat4("Model", earth);
         Cube_Shader.setMat4("View", view);
         Cube_Shader.setMat4("Projection", projection);
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-
-        /*
-         glm::mat4 orbit = glm::mat4(1.0f);
-        orbit = glm::rotate(orbit, RealTime * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        glm::mat4 distance = glm::mat4(1.0f);
-        distance = glm::translate(distance, glm::vec3(3.0f, 0.0f, -0.5f));
-        glm::mat4 rotating = glm::mat4(1.0f);
-        rotating = glm::rotate(rotating, RealTime, glm::vec3(0.0f, 1.0f, 0.0f));
-        glm::mat4 size = glm::mat4(1.0f);
-        size = glm::scale(size, glm::vec3(0.1f, 0.1f, 0.1f));
-
-        Cube_Shader.setMat4("Scale", size);
-        Cube_Shader.setMat4("Rotate", rotating);
-        Cube_Shader.setMat4("Distance", distance);
-        Cube_Shader.setMat4("Orbit", orbit);*/
-
-       
-
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 

@@ -126,7 +126,7 @@ int main() {
 
         glfwSwapBuffers(window);
         glfwPollEvents();
-    }  
+    }   
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &EBO);
     glDeleteBuffers(1, &VBO);

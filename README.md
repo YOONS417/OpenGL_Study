@@ -86,18 +86,20 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | **06-2. Orbit Cube** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/41ea6143-bb2b-4b73-89cd-33df6c6b47c2" autoplay loop muted playsinline controls width="250"></video> | 태양을 중심으로 transformation을 이용한 Orbit |
 | **06-3. Solar** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/b764d792-5a09-4c0d-8174-49bd9855b774" autoplay loop muted playsinline controls width="250"></video> | Earth 시스템를 상속받은 Moon 구현 |
 
+</div>
+</details>
+<details>
+<summary><b> Ch 6. Coordinate System | Going 3D  </b></summary>   
+<div id="ch1-table" markdown="1">
+<br>
+
+| 프로젝트명 | 실행 결과 | 설명 |
+| :--- | :---: | :--- |
+| **07. Camera** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/7d316de7-63ed-47b3-8ba4-07641c388495" autoplay loop muted playsinline controls width="250"></video> | Lookat를 사용한 동적인 카메라(방향키) |
 
 
 
 
-
-
-
-
-
-
-
- |
 
 </div>
 </details>

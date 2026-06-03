@@ -215,7 +215,7 @@ int main() {
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
         //---Earth--- 
-        glm::mat4 earth = glm::rotate(model, RealTime * glm::radians(0.0f), glm::vec3(1.0f, 3.0f, 1.0f)); //1초에 60도 공전
+        glm::mat4 earth = glm::rotate(model, RealTime * glm::radians(90.0f), glm::vec3(1.0f, 3.0f, 1.0f)); //1초에 60도 공전
         earth = glm::translate(earth, glm::vec3(0.0f, 0.0f, 4.0f));    //공전 반지름 
         earth = glm::rotate(earth, glm::radians(-23.5f), glm::vec3(0.0f, 0.0f, 1.0f)); //자전축 기울기
         earth = glm::rotate(earth, RealTime * glm::radians(120.0f), glm::vec3(0.0f, 1.0f, 0.0f)); //1초에 120도 자전
@@ -263,7 +263,7 @@ void processInput(GLFWwindow* window)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     // Camera Move
-    const float CameraSpeed = 0.05f;
+    const float CameraSpeed = 0.005f;
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
         CamPos += CameraSpeed * CamFront;
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)

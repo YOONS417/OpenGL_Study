@@ -31,45 +31,45 @@ int main() {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cout << " Failed to initialze GLAD" << std::endl;  
+        std::cout << " Failed to initialze GLAD" << std::endl;
     }
 
     glEnable(GL_DEPTH_TEST);
-     
-    Shader Cube_Shader("Shaders/coord.vert", "Shaders/coord.frag");
+
+    Shader Cube_Shader("Shaders/cube.vert", "Shaders/cube.frag");
 
 
     float cube_vert[] = {  // each point : 0 ~ 7
-       // Fornt surface
-       -0.5f, -0.5f, 0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,      // left  bottom     = 0
-        0.5f, -0.5f, 0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,      // right  bottom    = 1
-        0.5f,  0.5f, 0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,      // right  top       = 2
-       -0.5f,  0.5f, 0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,      // left  top        = 3
-       // Right surface
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left  bottom     = 1
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right  bottom    = 5
-        0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top       = 6
-        0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 2
-       // Left surface
-       -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left  bottom     = 4
-       -0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right  bottom    = 0
-       -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top       = 3
-       -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 7
-       // Top surface
-       -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left  bottom     = 3
-        0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right  bottom    = 2
-        0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top       = 6
-       -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 7
-       // Bottom surface
-       -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left  bottom     = 0
-        0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right  bottom    = 1
-        0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top       = 5
-       -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 4
-       // Back surface
-       -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left  bottom     = 4
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right  bottom    = 5
-        0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top       = 6
-       -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 7
+         // Fornt surface
+        -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,      // left  bottom     = 0
+         0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,      // right  bottom    = 1
+         0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,      // right  top       = 2
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,      // left  top        = 3
+         // Right surface
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left  bottom     = 1
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right  bottom    = 5
+         0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top       = 6
+         0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 2
+         // Left surface
+        -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left  bottom     = 4
+        -0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right  bottom    = 0
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top       = 3
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 7
+         // Top surface
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left  bottom     = 3
+         0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right  bottom    = 2
+         0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top       = 6
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 7
+         // Bottom surface
+        -0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left  bottom     = 0
+         0.5f, -0.5f,  0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right  bottom    = 1
+         0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top       = 5
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 4
+         // Back surface
+        -0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,   0.0f, 0.0f,     // left  bottom     = 4
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f,   1.0f, 0.0f,     // right  bottom    = 5
+         0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top       = 6
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 7
     };
 
     unsigned int cube_indices[] = {  // indices : 정점 데이터 배열의 행 번호(0~23)
@@ -94,10 +94,10 @@ int main() {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
 
     // Position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,  8* sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     // Color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,  8* sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
     // Texture attribute
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
@@ -109,7 +109,7 @@ int main() {
     unsigned int tex01, tex02;
     int width, height, nrChannels;
     stbi_set_flip_vertically_on_load(true);
-    
+
     // Paper Texture
     glGenTextures(1, &tex01);
     glBindTexture(GL_TEXTURE_2D, tex01);
@@ -175,40 +175,43 @@ int main() {
 
         float RealTime = (float)glfwGetTime();
         int modelLoc = glGetUniformLocation(Cube_Shader.ID, "Model");
-        
+        const float radius = 10.0f;
+        float camX = sin(glfwGetTime()) * radius;
+        float camY = cos(glfwGetTime()) * radius;
 
-        // view matrix : object를 뒤로(-z방향) 이동 (카메라 중심)
-        glm::mat4 view = glm::mat4(1.0f);
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -10.0f));  //카메라와 중심 사이의 거리
+        //---Camera---(동적 카메라)
+        //카메라 뒤(+z방향)를 가리키는 벡터 구하기, 기본적으로 -Z방향을 봄
+        glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 10.0f);
+        glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+        glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget); // normalize(정규화) -> 크기를 1로 맟춤
+        // +X방향 벡터
+        glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+        glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+        // +Y방향 벡터
+        glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
+
+        // View matrix
+        glm::mat4 view;
+        view = glm::lookAt(cameraPos, cameraTarget, cameraUp);
 
         // projection matrix : perspective 사용
         glm::mat4 projection;
         projection = glm::perspective(glm::radians(45.0f), (float)Screen_Width / (float)Screen_Height, 0.1f, 100.0f);
-        //projection = glm::ortho(-5.0f, 5.0f, -5.0f, 5.0f , 0.1f, 100.0f);  // left, right, bottom, top, near plane, far plane
 
-        //basic system
-        glm::mat4 Orbit = glm::mat4(1.0f);
-        Orbit = glm::rotate(Orbit, RealTime * glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        Orbit = glm::translate(Orbit, glm::vec3(0.0f, 0.0f, -5.0f));
-        Orbit = glm::rotate(Orbit, RealTime * glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        Orbit = glm::scale(Orbit, glm::vec3(0.6f, 0.6f, 0.6f));
+        // send matrix to shader
+        Cube_Shader.setMat4("View",view );  // Shader Class 사용
+        Cube_Shader.setMat4("Projection", projection);
 
 
-        // model matrix : object vertex -> world space (물체 중심)
+        //---Sun--- 
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 Sun = glm::rotate(model, RealTime * glm::radians(45.0f), glm::vec3(-1.0f, 1.7f, 0.3f)); //vec()을 축으로 1초에 60도씩 회전
         Sun = glm::rotate(Sun, glm::radians(30.0f), glm::vec3(0.0f, 0.0f, 1.0f));  //자전축
 
-        // send matrix to shader
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(Sun)); // 이 방법 or 아래(추천)
-        Cube_Shader.setMat4("View", view);  // Shader Class 사용
-        Cube_Shader.setMat4("Projection", projection);
-
+        Cube_Shader.setMat4("Model", Sun);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-        // glDrawElements를 사용해 인덱으르 그릴 때 
-        // 맨 마지막 인자에 사용할 인덱스 배열은 반드시 부호 없는 정수형(unsigned)
 
-        //---Earth---//원점에서 가운데를 중심으로 공전시킨 후 전체를 거리 이동시킴 - view는 하나만 사용
+        //---Earth---
         glm::mat4 earth = glm::rotate(model, RealTime * glm::radians(90.0f), glm::vec3(1.0f, 3.0f, 1.0f)); //1초에 60도 공전
         earth = glm::translate(earth, glm::vec3(0.0f, 0.0f, 4.0f));    //공전 반지름 
         earth = glm::rotate(earth, glm::radians(-23.5f), glm::vec3(0.0f, 0.0f, 1.0f)); //자전축 기울기
@@ -220,9 +223,9 @@ int main() {
 
         //---Moon---
         glm::mat4 moon = earth;   //지구와 매커니즘이 같으므로 지구의 움직임을 상속
-        moon = glm::rotate(moon,  RealTime *  glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        moon = glm::translate(moon, glm::vec3(2.5f, 0.0f, 0.0f));
-        moon = glm::rotate(moon, RealTime * glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        moon = glm::rotate(moon, RealTime * glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f)); //공전
+        moon = glm::translate(moon, glm::vec3(2.5f, 0.0f, 0.0f));   //공전 반지름
+        moon = glm::rotate(moon, RealTime * glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));  //자전
         moon = glm::scale(moon, glm::vec3(0.5f, 0.5f, 0.5f));
 
         Cube_Shader.setMat4("Model", moon);
@@ -231,12 +234,12 @@ int main() {
 
         glfwSwapBuffers(window);
         glfwPollEvents();
-    }  
+    }
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &EBO);
     glDeleteBuffers(1, &VBO);
 
-    glfwTerminate(); 
+    glfwTerminate();
     return 0;
 }
 
@@ -251,8 +254,8 @@ void processInput(GLFWwindow* window)
         glfwSetWindowShouldClose(window, true);
 
     // WireFrame Mode  ->  w : line, F : fill
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)   
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);      
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }

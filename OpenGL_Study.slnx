@@ -7,6 +7,7 @@
   <Project Path="C++_Learning/ch_02/ch_02.vcxproj" Id="94a7c3fb-81b9-460e-acac-dbf7e19c9b05" />
   <Project Path="C++_Learning/ch_03/ch_03.vcxproj" Id="af85b8a3-6851-47a0-be54-db39707038b8" />
   <Project Path="C++_Learning/ch_04/ch_04.vcxproj" Id="47690e54-ebd9-4226-9089-11ad97b979b2" />
+  <Project Path="Projects/Camera/Camera.vcxproj" Id="4edc3b92-536b-4bc7-98f9-2dba05304713" />
   <Project Path="Projects/Coordinate_sys/Coordinate_sys.vcxproj" Id="451c755b-e168-40db-bc78-a0061be34120" />
   <Project Path="Projects/Rectangle/Rectangle.vcxproj" Id="5056d862-6414-406a-b838-6aecdccd9617" />
   <Project Path="Projects/Shader/Shader.vcxproj" Id="1342bb37-3225-4c92-abf7-b65292991142" />

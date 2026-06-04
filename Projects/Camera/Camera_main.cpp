@@ -9,6 +9,7 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
+void mouse_Callback(GLFWwindow* window, double xPos,double yPos);
 
 const unsigned int Screen_Width = 1200;
 const unsigned int Screen_Height = 900;
@@ -16,6 +17,13 @@ const unsigned int Screen_Height = 900;
 glm::vec3 CamPos = glm::vec3(0.0f, 0.0f, 10.0f);
 glm::vec3 CamFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 CamUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+bool firstmouse = true;
+float yaw = -90.0f;
+float pitch = 0.0f;
+float lastX = Screen_Height / 2.0f;  //화면 중앙
+float lastY = Screen_Width / 2.0f;
+float FOV = 45.0f;
 
 float DeltaTime = 0.0f; //하드웨어 제한 방지(고정된 속도)
 float LastFrame = 0.0f;
@@ -26,7 +34,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(Screen_Width, Screen_Height, "Project_Coordinate_system", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(Screen_Width, Screen_Height, "Project_Dynamic_Camera", NULL, NULL);
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -35,6 +43,10 @@ int main() {
 
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetCursorPosCallback(window, mouse_Callback);
+    
+
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //커서가 창의 중심에 유지(FPS)
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << " Failed to initialze GLAD" << std::endl;
@@ -163,7 +175,7 @@ int main() {
     Cube_Shader.setInt("Tex_metalball", 1);
     //setInt는 반드시 shader가 켜져있을 때만 작동 , 내부적으로 glUniform1i라는 함수를 호출
     //유니폼 변수에 값을 넣으려면 반드시 그 유니폼을 가지고 있는 shaderprogrma이 켜져 있는 상태
-
+    
     // --Render Loop--
     while (!glfwWindowShouldClose(window))
     {
@@ -204,7 +216,7 @@ int main() {
 
         // projection matrix : perspective 사용
         glm::mat4 projection;
-        projection = glm::perspective(glm::radians(45.0f), (float)Screen_Width / (float)Screen_Height, 0.1f, 100.0f);
+        projection = glm::perspective(glm::radians(FOV), (float)Screen_Width / (float)Screen_Height, 0.1f, 100.0f);
 
         // send view,projection matrix to shader
         Cube_Shader.setMat4("View",view );  // Shader Class 사용
@@ -267,7 +279,7 @@ void processInput(GLFWwindow* window)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     // Camera Move
-    const float CameraSpeed = 2.0f * DeltaTime;
+    const float CameraSpeed = 3.0f * DeltaTime;
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
         CamPos += CameraSpeed * CamFront;
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
@@ -276,7 +288,49 @@ void processInput(GLFWwindow* window)
         CamPos += glm::normalize(glm::cross(CamFront, CamUp)) * CameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
         CamPos -= glm::normalize(glm::cross(CamFront, CamUp)) * CameraSpeed;
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+        CamPos += CamUp * CameraSpeed;
+    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+        CamPos -= CamUp * CameraSpeed;
     
 }
 
-// pos = pos - speed*front;
+void mouse_Callback(GLFWwindow* window, double xPos, double yPos)
+{
+    if (firstmouse) {
+        lastX = xPos;
+        lastY = yPos;
+        firstmouse = false;
+    }
+    float Xoffset = xPos - lastX;
+    float Yoffset = lastY - yPos;
+    lastX = xPos;
+    lastY = yPos;
+
+    const float sensitivitiy = 0.1f;
+    Xoffset *= sensitivitiy;
+    Yoffset *= sensitivitiy;
+
+    yaw += Xoffset;
+    pitch += Yoffset;
+
+    if (pitch > 89.0f)
+        pitch = 89.0f;
+    if (pitch < -89.0f)
+        pitch = -89.0f;
+
+    //3D에서 카메라의 시선 벡터
+    glm::vec3 direction;   //위아래를 볼 때,바닥 방향으로 뻗어나가는 시선의 길이가 줄어드는 비율을 곱하기
+    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch)); //축소 필터 역할
+    direction.y = sin(glm::radians(pitch));
+    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    CamFront = glm::normalize(direction);
+}
+/*
+1.이전 프레임 이후 마우스 offset계산
+2.offset값을 카메라의 yaw,pitch에 더함
+3.pitch의 최소/최대 제한
+4.방향 벡터 계산
+
+tensor function, tensor안에backward, add
+unbradcast, */

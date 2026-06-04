@@ -17,7 +17,10 @@ glm::vec3 CamPos = glm::vec3(0.0f, 0.0f, 10.0f);
 glm::vec3 CamFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 CamUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
- 
+float DeltaTime = 0.0f; //하드웨어 제한 방지(고정된 속도)
+float LastFrame = 0.0f;
+float CurrentTime = (float)glfwGetTime();
+
 int main() {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -165,6 +168,11 @@ int main() {
     // --Render Loop--
     while (!glfwWindowShouldClose(window))
     {
+        DeltaTime = CurrentTime - LastFrame;
+        LastFrame = CurrentTime;
+
+        float RealTime = (float)glfwGetTime();
+
         processInput(window);
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);    //BG Color  
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // depth buffer 초기화
@@ -177,11 +185,7 @@ int main() {
         Cube_Shader.use();
         glBindVertexArray(VAO);
 
-        float RealTime = (float)glfwGetTime();
-        const float radius = 10.0f;
-        float camX = sin(glfwGetTime()) * radius;
-        float camZ = cos(glfwGetTime()) * radius;
-
+        
         //===Camera(동적 카메라) 원리=========================================================================
         //카메라 뒤(+z방향)를 가리키는 벡터 구하기, 기본적으로 -Z방향을 봄
         glm::vec3 camera_Position = glm::vec3(0.0f, 0.0f, 8.0f);
@@ -263,7 +267,7 @@ void processInput(GLFWwindow* window)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     // Camera Move
-    const float CameraSpeed = 0.005f;
+    const float CameraSpeed = 2.0f * DeltaTime;
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
         CamPos += CameraSpeed * CamFront;
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)

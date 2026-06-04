@@ -14,10 +14,10 @@ const unsigned int Screen_Width = 1200;
 const unsigned int Screen_Height = 900;
 
 glm::vec3 CamPos = glm::vec3(0.0f, 0.0f, 10.0f);
-glm::vec3 CamTargat = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 CamFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 CamUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
+ 
 int main() {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -182,7 +182,7 @@ int main() {
         float camX = sin(glfwGetTime()) * radius;
         float camZ = cos(glfwGetTime()) * radius;
 
-        //---Camera(동적 카메라) 원리------------------------------------------------------------------
+        //===Camera(동적 카메라) 원리=========================================================================
         //카메라 뒤(+z방향)를 가리키는 벡터 구하기, 기본적으로 -Z방향을 봄
         glm::vec3 camera_Position = glm::vec3(0.0f, 0.0f, 8.0f);
         glm::vec3 camera_Target = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -193,16 +193,16 @@ int main() {
         // +Y방향 벡터
         glm::vec3 cameraUp = glm::cross(camera_Direction, camera_Right);
         glm::mat4 view_mat = glm::lookAt(camera_Position, camera_Target, cameraUp);  //cameraPos, cameraTarget, cameraUp
-        //---------------------------------------------------------------------------------------------
+        //====================================================================================================
         
-        // View matrix(Camera)
-        glm::mat4 view = glm::lookAt(CamPos, CamPos + CamFront, CamUp);  
+        // View matrix(Dynamic Camera)
+        glm::mat4 view = glm::lookAt(CamPos, CamPos + CamFront, CamUp); //두번째 인자를 고정 점(원점)인 아닌 -Z방향 주시
 
         // projection matrix : perspective 사용
         glm::mat4 projection;
         projection = glm::perspective(glm::radians(45.0f), (float)Screen_Width / (float)Screen_Height, 0.1f, 100.0f);
 
-        // send matrix to shader
+        // send view,projection matrix to shader
         Cube_Shader.setMat4("View",view );  // Shader Class 사용
         Cube_Shader.setMat4("Projection", projection);
 
@@ -225,7 +225,7 @@ int main() {
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
         //---Moon---
-        glm::mat4 moon = earth;   //지구와 매커니즘이 같으므로 지구의 움직임을 상속
+        glm::mat4 moon = earth;   //지구의 움직임을 상속
         moon = glm::rotate(moon, RealTime * glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f)); //공전
         moon = glm::translate(moon, glm::vec3(2.5f, 0.0f, 0.0f));   //공전 반지름
         moon = glm::rotate(moon, RealTime * glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));  //자전
@@ -268,8 +268,11 @@ void processInput(GLFWwindow* window)
         CamPos += CameraSpeed * CamFront;
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
         CamPos -= CameraSpeed * CamFront;
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-        CamPos -= glm::normalize(glm::cross(CamFront, CamUp)) * CameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
         CamPos += glm::normalize(glm::cross(CamFront, CamUp)) * CameraSpeed;
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        CamPos -= glm::normalize(glm::cross(CamFront, CamUp)) * CameraSpeed;
+    
 }
+
+// pos = pos - speed*front;

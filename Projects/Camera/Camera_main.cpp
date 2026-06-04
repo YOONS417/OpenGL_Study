@@ -19,7 +19,6 @@ glm::vec3 CamUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
 float DeltaTime = 0.0f; //하드웨어 제한 방지(고정된 속도)
 float LastFrame = 0.0f;
-float CurrentTime = (float)glfwGetTime();
 
 int main() {
     glfwInit();
@@ -168,6 +167,7 @@ int main() {
     // --Render Loop--
     while (!glfwWindowShouldClose(window))
     {
+        float CurrentTime = (float)glfwGetTime();
         DeltaTime = CurrentTime - LastFrame;
         LastFrame = CurrentTime;
 

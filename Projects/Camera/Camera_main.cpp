@@ -277,23 +277,25 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-	// Mouse On/Off -> m(on/off) | isMouseOn,islastframeOn = false
+	// Mouse On/Off -> m(on/off) | isMouseOn & islastframeOn = false
     if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
-        islastframeOn = !islastframeOn;
-        if (islastframeOn) {
-            isMouseOn = !isMouseOn;
-            if (isMouseOn) {
-                glfwSetCursorPosCallback(window, mouse_Callback);
+        islastframeOn = !islastframeOn;  //이전 frame이 On
+        if (islastframeOn) {            
+            isMouseOn = !isMouseOn;     
+            if (isMouseOn) {            //이전 frame On & 현재 frame On
+                glfwSetCursorPosCallback(window, mouse_Callback);   //마우스 카메라 활성화
                 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //커서가 창의 중심에 유지(FPS)
             }
             else {
-                glfwSetCursorPosCallback(window, NULL);
+                glfwSetCursorPosCallback(window, NULL);     //마우스 카메라 비활성화
                 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             }
-        }
-        //islastframeOn = false;
+        }islastframeOn = true; // M키가 눌려있는 동안 frame은 true
     }
-    
+    else {
+        islastframeOn = false; //떼는 순간 false로 리셋
+    }
+   
     // WireFrame Mode  ->  w : line, F : fill
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

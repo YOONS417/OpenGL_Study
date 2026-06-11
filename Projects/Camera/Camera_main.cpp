@@ -28,6 +28,8 @@ float FOV = 45.0f;
 float DeltaTime = 0.0f; //하드웨어 제한 방지(고정된 속도)
 float LastFrame = 0.0f;
 
+bool isMouseOn = false;
+
 int main() {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -43,10 +45,8 @@ int main() {
 
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwSetCursorPosCallback(window, mouse_Callback);
     
-
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //커서가 창의 중심에 유지(FPS)
+    
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << " Failed to initialze GLAD" << std::endl;
@@ -176,13 +176,21 @@ int main() {
     //setInt는 반드시 shader가 켜져있을 때만 작동 , 내부적으로 glUniform1i라는 함수를 호출
     //유니폼 변수에 값을 넣으려면 반드시 그 유니폼을 가지고 있는 shaderprogrma이 켜져 있는 상태
     
+	// --Instruction--
+	std::cout << "\n" << "================Camera Control================" << std::endl;
+    std::string key[] = { "KEY_UP", "KEY_DOWN", "KEY_RIGHT", "KEY_LEFT", "SPACE_BAR", "CONTROL" };
+    std::string move[] = { "Forword", "Back", "Right", "Left", "Up" , "Down" };
+    for (int i = 0; i < std::size(move); i++) {
+        std::cout << key[i] << " : " << move[i] << std::endl;
+    }
+	std::cout << "\n" << "Press esc to exit" << std::endl;
+
     // --Render Loop--
     while (!glfwWindowShouldClose(window))
     {
         float CurrentTime = (float)glfwGetTime();
         DeltaTime = CurrentTime - LastFrame;
         LastFrame = CurrentTime;
-
         float RealTime = (float)glfwGetTime();
 
         processInput(window);
@@ -196,7 +204,6 @@ int main() {
 
         Cube_Shader.use();
         glBindVertexArray(VAO);
-
         
         //===Camera(동적 카메라) 원리=========================================================================
         //카메라 뒤(+z방향)를 가리키는 벡터 구하기, 기본적으로 -Z방향을 봄
@@ -250,7 +257,6 @@ int main() {
         Cube_Shader.setMat4("Model", moon);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
-
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -271,7 +277,17 @@ void processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+	// Mouse On/Off -> m(on/off)
+    if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
+        if (!isMouseOn)
+            isMouseOn = true;
+        if (isMouseOn) {
+            glfwSetCursorPosCallback(window, mouse_Callback);
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //커서가 창의 중심에 유지(FPS)
 
+        }
+    }
+    
     // WireFrame Mode  ->  w : line, F : fill
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -292,18 +308,17 @@ void processInput(GLFWwindow* window)
         CamPos += CamUp * CameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
         CamPos -= CamUp * CameraSpeed;
-    
 }
 
 void mouse_Callback(GLFWwindow* window, double xPos, double yPos)
 {
-    if (firstmouse) {
-        lastX = xPos;
+    if (firstmouse) {   //첫 마우스 입력 튐(jump) 방지 1200 900
+        lastX = xPos;   //lastX,Y는 화면 중앙, 실제 커서는 다른 곳, 프레임 스왑 시 마우스 튐 방지
         lastY = yPos;
         firstmouse = false;
     }
-    float Xoffset = xPos - lastX;
-    float Yoffset = lastY - yPos;
+    float Xoffset = xPos - lastX;  
+    float Yoffset = lastY - yPos;   //스크린 좌표계는 왼쪽 위가 원점(0,0)
     lastX = xPos;
     lastY = yPos;
 
@@ -314,7 +329,7 @@ void mouse_Callback(GLFWwindow* window, double xPos, double yPos)
     yaw += Xoffset;
     pitch += Yoffset;
 
-    if (pitch > 89.0f)
+    if (pitch > 89.0f) //각도 제한, 
         pitch = 89.0f;
     if (pitch < -89.0f)
         pitch = -89.0f;

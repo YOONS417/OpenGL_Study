@@ -277,14 +277,19 @@ void processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-	// Mouse On/Off -> m(on/off)
+
+	// Mouse On/Off -> m(on/off), isMouse = false
     if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
-        if (!isMouseOn)
-            isMouseOn = true;
+        isMouseOn = !isMouseOn;
         if (isMouseOn) {
             glfwSetCursorPosCallback(window, mouse_Callback);
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //커서가 창의 중심에 유지(FPS)
-
+            isMouseOn = true;
+        }
+        else {
+            glfwSetCursorPosCallback(window, NULL);
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            isMouseOn = false;
         }
     }
     

@@ -28,8 +28,7 @@ float FOV = 45.0f;
 float DeltaTime = 0.0f; //하드웨어 제한 방지(고정된 속도)
 float LastFrame = 0.0f;
 
-bool isMouseOn = false;
-
+bool isMouseOn, islastframeOn = false;
 int main() {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -278,19 +277,21 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-	// Mouse On/Off -> m(on/off), isMouse = false
+	// Mouse On/Off -> m(on/off) | isMouseOn,islastframeOn = false
     if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
-        isMouseOn = !isMouseOn;
-        if (isMouseOn) {
-            glfwSetCursorPosCallback(window, mouse_Callback);
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //커서가 창의 중심에 유지(FPS)
-            isMouseOn = true;
+        islastframeOn = !islastframeOn;
+        if (islastframeOn) {
+            isMouseOn = !isMouseOn;
+            if (isMouseOn) {
+                glfwSetCursorPosCallback(window, mouse_Callback);
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //커서가 창의 중심에 유지(FPS)
+            }
+            else {
+                glfwSetCursorPosCallback(window, NULL);
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            }
         }
-        else {
-            glfwSetCursorPosCallback(window, NULL);
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-            isMouseOn = false;
-        }
+        //islastframeOn = false;
     }
     
     // WireFrame Mode  ->  w : line, F : fill

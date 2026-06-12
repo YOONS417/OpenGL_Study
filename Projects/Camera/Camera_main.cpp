@@ -13,22 +13,22 @@ void mouse_Callback(GLFWwindow* window, double xPos,double yPos);
 
 const unsigned int Screen_Width = 1200;
 const unsigned int Screen_Height = 900;
-
+// Camera Setting
+float FOV = 45.0f;
+// Camera 방향키 
 glm::vec3 CamPos = glm::vec3(0.0f, 0.0f, 10.0f);
 glm::vec3 CamFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 CamUp = glm::vec3(0.0f, 1.0f, 0.0f);
-
+float DeltaTime = 0.0f; //카메라 이동 하드웨어 제한 방지(고정된 속도)
+float LastFrame = 0.0f; 
+// Camera Mouse
 bool firstmouse = true;
-float yaw = -90.0f;
-float pitch = 0.0f;
+float yaw = -90.0f; //좌우, direction(-z)
+float pitch = 0.0f; //위아래
 float lastX = Screen_Height / 2.0f;  //화면 중앙
 float lastY = Screen_Width / 2.0f;
-float FOV = 45.0f;
-
-float DeltaTime = 0.0f; //하드웨어 제한 방지(고정된 속도)
-float LastFrame = 0.0f;
-
-bool isMouseOn, islastframeOn = false;
+bool isMouseOn, isKeypressed = false; // M키 
+ 
 int main() {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -41,20 +41,14 @@ int main() {
         glfwTerminate();
         return  -1;
     }
-
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    
-    
-
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
         std::cout << " Failed to initialze GLAD" << std::endl;
     }
-
     glEnable(GL_DEPTH_TEST);
 
-    Shader Cube_Shader("Shaders/cube.vert", "Shaders/cube.frag");
-
+    Shader Cube_Shader("Shaders/cube.vert", "Shaders/cube.frag");  //Cube Shader
 
     float cube_vert[] = {  // each point : 0 ~ 7
          // Fornt surface
@@ -177,8 +171,8 @@ int main() {
     
 	// --Instruction--
 	std::cout << "\n" << "================Camera Control================" << std::endl;
-    std::string key[] = { "KEY_UP", "KEY_DOWN", "KEY_RIGHT", "KEY_LEFT", "SPACE_BAR", "CONTROL" };
-    std::string move[] = { "Forword", "Back", "Right", "Left", "Up" , "Down" };
+    std::string key[] = { "KEY_UP", "KEY_DOWN", "KEY_RIGHT", "KEY_LEFT", "SPACE_BAR", "CONTROL" ," M"};
+    std::string move[] = { "Forword", "Back", "Right", "Left", "Up" , "Down" ,"Mouse Camera"};
     for (int i = 0; i < std::size(move); i++) {
         std::cout << key[i] << " : " << move[i] << std::endl;
     }
@@ -277,10 +271,10 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-	// Mouse On/Off -> m(on/off) | isMouseOn & islastframeOn = false
+	// Mouse On/Off -> m(on/off) | isMouseOn & isKeypressed = false
     if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
-        islastframeOn = !islastframeOn;  //이전 frame이 On
-        if (islastframeOn) {            
+        isKeypressed = !isKeypressed;  //이전 frame이 On
+        if (isKeypressed) {            
             isMouseOn = !isMouseOn;     
             if (isMouseOn) {            //이전 frame On & 현재 frame On
                 glfwSetCursorPosCallback(window, mouse_Callback);   //마우스 카메라 활성화
@@ -290,10 +284,10 @@ void processInput(GLFWwindow* window)
                 glfwSetCursorPosCallback(window, NULL);     //마우스 카메라 비활성화
                 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             }
-        }islastframeOn = true; // M키가 눌려있는 동안 frame은 true
-    }
+        }isKeypressed = true; // M키가 눌려있는 동안 이전frame은 true
+    }                          //설정을 키거나 끌 때 항상 키는 눌려있음
     else {
-        islastframeOn = false; //떼는 순간 false로 리셋
+        isKeypressed = false; //떼는 순간 false로 리셋
     }
    
     // WireFrame Mode  ->  w : line, F : fill
@@ -302,7 +296,7 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    // Camera Move
+    // Camera Move(방향키)
     const float CameraSpeed = 3.0f * DeltaTime;
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
         CamPos += CameraSpeed * CamFront;

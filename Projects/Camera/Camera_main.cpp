@@ -15,6 +15,7 @@ const unsigned int Screen_Width = 1200;
 const unsigned int Screen_Height = 900;
 // Camera Setting
 float FOV = 45.0f;
+
 // Camera 방향키 
 glm::vec3 CamPos = glm::vec3(0.0f, 0.0f, 10.0f);
 glm::vec3 CamFront = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -171,8 +172,8 @@ int main() {
     
 	// --Instruction--
 	std::cout << "\n" << "================Camera Control================" << std::endl;
-    std::string key[] = { "KEY_UP", "KEY_DOWN", "KEY_RIGHT", "KEY_LEFT", "SPACE_BAR", "CONTROL" ," M"};
-    std::string move[] = { "Forword", "Back", "Right", "Left", "Up" , "Down" ,"Mouse Camera"};
+    std::string key[] = { "KEY_UP", "KEY_DOWN", "KEY_RIGHT", "KEY_LEFT", "SPACE_BAR", "CONTROL" ,"M"};
+    std::string move[] = { "Forword", "Back", "Right", "Left", "Up" , "Down" ,"Mouse Camera On/Off"};
     for (int i = 0; i < std::size(move); i++) {
         std::cout << key[i] << " : " << move[i] << std::endl;
     }
@@ -231,7 +232,7 @@ int main() {
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
         //---Earth--- 
-        glm::mat4 earth = glm::rotate(model, RealTime * glm::radians(90.0f), glm::vec3(1.0f, 3.0f, 1.0f)); //1초에 60도 공전
+        glm::mat4 earth = glm::rotate(model, RealTime * glm::radians(0.0f), glm::vec3(1.0f, 3.0f, 1.0f)); //1초에 60도 공전
         earth = glm::translate(earth, glm::vec3(0.0f, 0.0f, 4.0f));    //공전 반지름 
         earth = glm::rotate(earth, glm::radians(-23.5f), glm::vec3(0.0f, 0.0f, 1.0f)); //자전축 기울기
         earth = glm::rotate(earth, RealTime * glm::radians(120.0f), glm::vec3(0.0f, 1.0f, 0.0f)); //1초에 120도 자전
@@ -242,9 +243,11 @@ int main() {
 
         //---Moon---
         glm::mat4 moon = earth;   //지구의 움직임을 상속
-        moon = glm::rotate(moon, RealTime * glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f)); //공전
+        //moon = glm::rotate(moon, -RealTime * glm::radians(90.0f), glm::vec3(1.0f, 3.0f, 1.0f));
+        moon = glm::rotate(moon, RealTime * glm::radians(-120.f), glm::vec3(0.0f, 1.0f, 0.0f));
+        moon = glm::rotate(moon, glm::radians(23.5f), glm::vec3(0.0f, 0.0f, 1.0f)); //공전
         moon = glm::translate(moon, glm::vec3(2.5f, 0.0f, 0.0f));   //공전 반지름
-        moon = glm::rotate(moon, RealTime * glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));  //자전
+        //moon = glm::rotate(moon, RealTime * glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));  //자전
         moon = glm::scale(moon, glm::vec3(0.5f, 0.5f, 0.5f));
 
         Cube_Shader.setMat4("Model", moon);

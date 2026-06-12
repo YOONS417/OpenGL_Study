@@ -134,10 +134,14 @@
     <ClCompile Include="..\..\Commons\glad.c" />
     <ClCompile Include="..\..\Commons\stb_image.cpp" />
     <ClCompile Include="Camera_main.cpp" />
+    <ClCompile Include="CelestialBody.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\cube.frag" />
     <None Include="Shaders\cube.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CelestialBody.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -10,6 +10,7 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 void mouse_Callback(GLFWwindow* window, double xPos,double yPos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 const unsigned int Screen_Width = 1200;
 const unsigned int Screen_Height = 900;
@@ -83,7 +84,6 @@ int main() {
          0.5f,  0.5f, -0.5f,  0.0f, 0.0f, 1.0f,   1.0f, 1.0f,     // right  top       = 6
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 1.0f,   0.0f, 1.0f,     // left  top        = 7
     };
-
     unsigned int cube_indices[] = {  // indices : 정점 데이터 배열의 행 번호(0~23)
         0, 1,  2,  0, 2, 3,       // Fornt surface
         4, 5,  6,  4, 6, 7,       // Right surface
@@ -92,6 +92,7 @@ int main() {
         16,17,18, 16,18,19,       //Bottom surface    
         20,21,22, 20,22,23        //Back surface
     };
+
     unsigned int VBO, VAO, EBO;
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -172,8 +173,8 @@ int main() {
     
 	// --Instruction--
 	std::cout << "\n" << "================Camera Control================" << std::endl;
-    std::string key[] = { "KEY_UP", "KEY_DOWN", "KEY_RIGHT", "KEY_LEFT", "SPACE_BAR", "CONTROL" ,"M"};
-    std::string move[] = { "Forword", "Back", "Right", "Left", "Up" , "Down" ,"Mouse Camera On/Off"};
+    std::string key[] = { "KEY_UP", "KEY_DOWN", "KEY_RIGHT", "KEY_LEFT", "SPACE_BAR", "CONTROL" ,"M", "Scroll"};
+    std::string move[] = { "Forword", "Back", "Right", "Left", "Up" , "Down" ,"Mouse Camera On/Off", "Zoom in/out"};
     for (int i = 0; i < std::size(move); i++) {
         std::cout << key[i] << " : " << move[i] << std::endl;
     }
@@ -186,16 +187,16 @@ int main() {
         DeltaTime = CurrentTime - LastFrame;
         LastFrame = CurrentTime;
         float RealTime = (float)glfwGetTime();
-
+        // input
         processInput(window);
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);    //BG Color  
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // depth buffer 초기화
-
+        // Texture Bind
         glActiveTexture(GL_TEXTURE0);  // 0번 슬롯,paper
         glBindTexture(GL_TEXTURE_2D, tex01);
         glActiveTexture(GL_TEXTURE1);  // 1번 슬롯,ball
         glBindTexture(GL_TEXTURE_2D, tex02);
-
+        // Activate Shader
         Cube_Shader.use();
         glBindVertexArray(VAO);
         
@@ -211,14 +212,11 @@ int main() {
         glm::vec3 cameraUp = glm::cross(camera_Direction, camera_Right);
         glm::mat4 view_mat = glm::lookAt(camera_Position, camera_Target, cameraUp);  //cameraPos, cameraTarget, cameraUp
         //====================================================================================================
-        
         // View matrix(Dynamic Camera)
         glm::mat4 view = glm::lookAt(CamPos, CamPos + CamFront, CamUp); //두번째 인자를 고정 점(원점)인 아닌 -Z방향 주시
-
         // projection matrix : perspective 사용
         glm::mat4 projection;
         projection = glm::perspective(glm::radians(FOV), (float)Screen_Width / (float)Screen_Height, 0.1f, 100.0f);
-
         // send view,projection matrix to shader
         Cube_Shader.setMat4("View",view );  // Shader Class 사용
         Cube_Shader.setMat4("Projection", projection);
@@ -273,18 +271,19 @@ void processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-
-	// Mouse On/Off -> m(on/off) | isMouseOn & isKeypressed = false
+	// Mouse On/Off -> M | isMouseOn & isKeypressed = false
     if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
         isKeypressed = !isKeypressed;  //이전 frame이 On
         if (isKeypressed) {            
             isMouseOn = !isMouseOn;     
             if (isMouseOn) {            //이전 frame On & 현재 frame On
-                glfwSetCursorPosCallback(window, mouse_Callback);   //마우스 카메라 활성화
+                glfwSetCursorPosCallback(window, mouse_Callback);   //마우스 카메라 활성화  
+                glfwSetScrollCallback(window, scroll_callback);
                 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //커서가 창의 중심에 유지(FPS)
             }
             else {
                 glfwSetCursorPosCallback(window, NULL);     //마우스 카메라 비활성화
+                glfwSetScrollCallback(window, NULL);
                 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             }
         }isKeypressed = true; // M키가 눌려있는 동안 이전frame은 true
@@ -292,13 +291,11 @@ void processInput(GLFWwindow* window)
     else {
         isKeypressed = false; //떼는 순간 false로 리셋
     }
-   
     // WireFrame Mode  ->  w : line, F : fill
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
     // Camera Move(방향키)
     const float CameraSpeed = 3.0f * DeltaTime;
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
@@ -333,7 +330,6 @@ void mouse_Callback(GLFWwindow* window, double xPos, double yPos)
 
     yaw += Xoffset;
     pitch += Yoffset;
-
     if (pitch > 89.0f) //각도 제한, 
         pitch = 89.0f;
     if (pitch < -89.0f)
@@ -346,11 +342,12 @@ void mouse_Callback(GLFWwindow* window, double xPos, double yPos)
     direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
     CamFront = glm::normalize(direction);
 }
-/*
-1.이전 프레임 이후 마우스 offset계산
-2.offset값을 카메라의 yaw,pitch에 더함
-3.pitch의 최소/최대 제한
-4.방향 벡터 계산
 
-tensor function, tensor안에backward, add
-unbradcast, */
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    FOV -= (float)yoffset;
+    if (FOV < 1.0f)
+        FOV = 1.0f;
+    if (FOV > 60.0f)
+        FOV = 60.0f;
+}

@@ -3,6 +3,7 @@
 #include <iostream>
 #include "ShaderClass.h"
 #include "stb_image.h"
+#include "Camera.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -14,9 +15,11 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 const unsigned int Screen_Width = 1200;
 const unsigned int Screen_Height = 900;
-// Camera Setting
-float FOV = 45.0f;
 
+Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));  
+
+// Camera Setting
+float FOV = 45.0f; 
 // Camera 방향키 
 glm::vec3 CamPos = glm::vec3(0.0f, 0.0f, 10.0f);
 glm::vec3 CamFront = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -36,7 +39,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+    
     GLFWwindow* window = glfwCreateWindow(Screen_Width, Screen_Height, "Project_Dynamic_Camera", NULL, NULL);
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -184,7 +187,7 @@ int main() {
     while (!glfwWindowShouldClose(window))
     {
         float CurrentTime = (float)glfwGetTime();
-        DeltaTime = CurrentTime - LastFrame;
+        DeltaTime = CurrentTime - LastFrame;    // 현재 프레임과 마지막 프레임 사이의 시간
         LastFrame = CurrentTime;
         float RealTime = (float)glfwGetTime();
         // input
@@ -212,8 +215,11 @@ int main() {
         glm::vec3 cameraUp = glm::cross(camera_Direction, camera_Right);
         glm::mat4 view_mat = glm::lookAt(camera_Position, camera_Target, cameraUp);  //cameraPos, cameraTarget, cameraUp
         //====================================================================================================
+
         // View matrix(Dynamic Camera)
-        glm::mat4 view = glm::lookAt(CamPos, CamPos + CamFront, CamUp); //두번째 인자를 고정 점(원점)인 아닌 -Z방향 주시
+        //glm::mat4 view = glm::lookAt(CamPos, CamPos + CamFront, CamUp); //두번째 인자를 고정 점(원점)인 아닌 -Z방향 주시
+        glm::mat4 view = camera.ViewMatrix();
+
         // projection matrix : perspective 사용
         glm::mat4 projection;
         projection = glm::perspective(glm::radians(FOV), (float)Screen_Width / (float)Screen_Height, 0.1f, 100.0f);
@@ -261,7 +267,7 @@ int main() {
     glfwTerminate();
     return 0;
 }
-
+ 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -273,8 +279,8 @@ void processInput(GLFWwindow* window)
         glfwSetWindowShouldClose(window, true);
 	// Mouse On/Off -> M | isMouseOn & isKeypressed = false
     if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
-        isKeypressed = !isKeypressed;  //이전 frame이 On
-        if (isKeypressed) {            
+        //이전 frame이 off & M키가 눌렸을 때만 진입
+        if (!isKeypressed) {            
             isMouseOn = !isMouseOn;     
             if (isMouseOn) {            //이전 frame On & 현재 frame On
                 glfwSetCursorPosCallback(window, mouse_Callback);   //마우스 카메라 활성화  
@@ -286,8 +292,9 @@ void processInput(GLFWwindow* window)
                 glfwSetScrollCallback(window, NULL);
                 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             }
-        }isKeypressed = true; // M키가 눌려있는 동안 이전frame은 true
-    }                          //설정을 키거나 끌 때 항상 키는 눌려있음
+            isKeypressed = true; // M키가 눌려있는 동안 이전frame은 true
+        }                        //설정을 키거나 끌 때 항상 키는 눌려있음
+    }                          
     else {
         isKeypressed = false; //떼는 순간 false로 리셋
     }
@@ -296,8 +303,9 @@ void processInput(GLFWwindow* window)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    /*
     // Camera Move(방향키)
-    const float CameraSpeed = 3.0f * DeltaTime;
+    const float CameraSpeed = 3.0f * DeltaTime;  //3.0 unit 속도
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
         CamPos += CameraSpeed * CamFront;
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
@@ -309,11 +317,21 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
         CamPos += CamUp * CameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-        CamPos -= CamUp * CameraSpeed;
+        CamPos -= CamUp * CameraSpeed;*/
+
+
+    int keys[] = { GLFW_KEY_UP, GLFW_KEY_DOWN, GLFW_KEY_RIGHT, GLFW_KEY_LEFT, GLFW_KEY_SPACE, GLFW_KEY_LEFT_CONTROL };
+    for (int key : keys) {
+        if (glfwGetKey(window, key) == GLFW_PRESS) {
+            camera.KeyboardControl(key, DeltaTime);
+        }
+    }
 }
 
 void mouse_Callback(GLFWwindow* window, double xPos, double yPos)
 {
+    camera.MouseControl(xPos, yPos);
+    /*
     if (firstmouse) {   //첫 마우스 입력 튐(jump) 방지 1200 900
         lastX = xPos;   //lastX,Y는 화면 중앙, 실제 커서는 다른 곳, 프레임 스왑 시 마우스 튐 방지
         lastY = yPos;
@@ -329,9 +347,9 @@ void mouse_Callback(GLFWwindow* window, double xPos, double yPos)
     Yoffset *= sensitivitiy;
 
     yaw += Xoffset;
-    pitch += Yoffset;
+    pitch += Yoffset; 
     if (pitch > 89.0f) //각도 제한, 
-        pitch = 89.0f;
+        pitch = 89.0f; 
     if (pitch < -89.0f)
         pitch = -89.0f;
 
@@ -340,7 +358,7 @@ void mouse_Callback(GLFWwindow* window, double xPos, double yPos)
     direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch)); //축소 필터 역할
     direction.y = sin(glm::radians(pitch));
     direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    CamFront = glm::normalize(direction);
+    CamFront = glm::normalize(direction);*/
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)

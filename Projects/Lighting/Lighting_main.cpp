@@ -28,7 +28,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
-    GLFWwindow* window = glfwCreateWindow(Screen_Width, Screen_Height, "Project_Dynamic_Camera", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(Screen_Width, Screen_Height, "Project_Lighting", NULL, NULL);
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -191,23 +191,8 @@ int main() {
         Cube_Shader.use();
         glBindVertexArray(VAO);
         
-        //===Camera(동적 카메라) 원리=========================================================================
-        //카메라 뒤(+z방향)를 가리키는 벡터 구하기, 기본적으로 -Z방향을 봄
-        glm::vec3 camera_Position = glm::vec3(0.0f, 0.0f, 8.0f);
-        glm::vec3 camera_Target = glm::vec3(0.0f, 0.0f, 0.0f);
-        glm::vec3 camera_Direction = glm::normalize(camera_Position - camera_Target); // normalize(정규화) -> 크기를 1로 맟춤
-        // +X방향 벡터
-        glm::vec3 up_vector = glm::vec3(0.0f, 1.0f, 0.0f);
-        glm::vec3 camera_Right = glm::normalize(glm::cross(up_vector, camera_Direction));
-        // +Y방향 벡터
-        glm::vec3 cameraUp = glm::cross(camera_Direction, camera_Right);
-        glm::mat4 view_mat = glm::lookAt(camera_Position, camera_Target, cameraUp);  //cameraPos, cameraTarget, cameraUp
-        //====================================================================================================
-
         // View matrix(Dynamic Camera)
-        //glm::mat4 view = glm::lookAt(CamPos, CamPos + CamFront, CamUp); //두번째 인자를 고정 점(원점)인 아닌 -Z방향 주시
         glm::mat4 view = camera.ViewMatrix();
-
         // projection matrix : perspective 사용
         glm::mat4 projection;
         projection = glm::perspective(glm::radians(camera.FOV), (float)Screen_Width / (float)Screen_Height, 0.1f, 100.0f);
@@ -302,10 +287,10 @@ void processInput(GLFWwindow* window)
 
 void mouse_Callback(GLFWwindow* window, double xPos, double yPos)
 {
-    camera.MouseControl((float) xPos,(float) yPos);
+    camera.MouseControl((float)xPos, (float)yPos);
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    camera.MouseScroll((float) yoffset);
+    camera.MouseScroll((float)yoffset);
 }

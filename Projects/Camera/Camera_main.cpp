@@ -16,23 +16,11 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 const unsigned int Screen_Width = 1200;
 const unsigned int Screen_Height = 900;
 
-Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));  
+Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));   //카메라 생성, 위치:(0,0,10)
 
-// Camera Setting
-float FOV = 45.0f; 
-// Camera 방향키 
-glm::vec3 CamPos = glm::vec3(0.0f, 0.0f, 10.0f);
-glm::vec3 CamFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 CamUp = glm::vec3(0.0f, 1.0f, 0.0f);
 float DeltaTime = 0.0f; //카메라 이동 하드웨어 제한 방지(고정된 속도)
 float LastFrame = 0.0f; 
-// Camera Mouse
-bool firstmouse = true;
-float yaw = -90.0f; //좌우, direction(-z)
-float pitch = 0.0f; //위아래
-float lastX = Screen_Height / 2.0f;  //화면 중앙
-float lastY = Screen_Width / 2.0f;
-bool isMouseOn, isKeypressed = false; // M키 
+bool isMouseOn, isKeypressed = false; // M키 설정
  
 int main() {
     glfwInit();
@@ -222,7 +210,7 @@ int main() {
 
         // projection matrix : perspective 사용
         glm::mat4 projection;
-        projection = glm::perspective(glm::radians(FOV), (float)Screen_Width / (float)Screen_Height, 0.1f, 100.0f);
+        projection = glm::perspective(glm::radians(camera.FOV), (float)Screen_Width / (float)Screen_Height, 0.1f, 100.0f);
         // send view,projection matrix to shader
         Cube_Shader.setMat4("View",view );  // Shader Class 사용
         Cube_Shader.setMat4("Projection", projection);
@@ -302,24 +290,8 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    /*
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); 
     // Camera Move(방향키)
-    const float CameraSpeed = 3.0f * DeltaTime;  //3.0 unit 속도
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-        CamPos += CameraSpeed * CamFront;
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-        CamPos -= CameraSpeed * CamFront;
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-        CamPos += glm::normalize(glm::cross(CamFront, CamUp)) * CameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-        CamPos -= glm::normalize(glm::cross(CamFront, CamUp)) * CameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-        CamPos += CamUp * CameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-        CamPos -= CamUp * CameraSpeed;*/
-
-
     int keys[] = { GLFW_KEY_UP, GLFW_KEY_DOWN, GLFW_KEY_RIGHT, GLFW_KEY_LEFT, GLFW_KEY_SPACE, GLFW_KEY_LEFT_CONTROL };
     for (int key : keys) {
         if (glfwGetKey(window, key) == GLFW_PRESS) {
@@ -331,41 +303,9 @@ void processInput(GLFWwindow* window)
 void mouse_Callback(GLFWwindow* window, double xPos, double yPos)
 {
     camera.MouseControl(xPos, yPos);
-    /*
-    if (firstmouse) {   //첫 마우스 입력 튐(jump) 방지 1200 900
-        lastX = xPos;   //lastX,Y는 화면 중앙, 실제 커서는 다른 곳, 프레임 스왑 시 마우스 튐 방지
-        lastY = yPos;
-        firstmouse = false;
-    }
-    float Xoffset = xPos - lastX;  
-    float Yoffset = lastY - yPos;   //스크린 좌표계는 왼쪽 위가 원점(0,0)
-    lastX = xPos;
-    lastY = yPos;
-
-    const float sensitivitiy = 0.1f;
-    Xoffset *= sensitivitiy;
-    Yoffset *= sensitivitiy;
-
-    yaw += Xoffset;
-    pitch += Yoffset; 
-    if (pitch > 89.0f) //각도 제한, 
-        pitch = 89.0f; 
-    if (pitch < -89.0f)
-        pitch = -89.0f;
-
-    //3D에서 카메라의 시선 벡터
-    glm::vec3 direction;   //위아래를 볼 때,바닥 방향으로 뻗어나가는 시선의 길이가 줄어드는 비율을 곱하기
-    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch)); //축소 필터 역할
-    direction.y = sin(glm::radians(pitch));
-    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-    CamFront = glm::normalize(direction);*/
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    FOV -= (float)yoffset;
-    if (FOV < 1.0f)
-        FOV = 1.0f;
-    if (FOV > 60.0f)
-        FOV = 60.0f;
+    camera.MouseScroll(yoffset);
 }

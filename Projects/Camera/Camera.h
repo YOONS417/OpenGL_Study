@@ -22,11 +22,13 @@ public:
 	float Sensitivity;
 	float speedUnit;
 
-	Camera(glm::vec3 startPos);
+	Camera(glm::vec3 startPos);	//생성자
 
 	glm::mat4 ViewMatrix() const;
 	void KeyboardControl(int pressedkey, float DeltaTime);
 	void MouseControl(float xPos, float yPos);
-	void MouseScroll(float yPos);
+	void MouseScroll(float yoffset);
+
+private:
 	void CameraDirection();
 };

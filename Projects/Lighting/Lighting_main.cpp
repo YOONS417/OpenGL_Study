@@ -195,7 +195,7 @@ int main() {
         glm::mat4 view = camera.ViewMatrix();
         // projection matrix : perspective 사용
         glm::mat4 projection;
-        projection = glm::perspective(glm::radians(camera.FOV), (float)Screen_Width / (float)Screen_Height, 0.1f, 100.0f);
+        projection = glm::perspective(glm::radians(camera.CamFov()), (float)Screen_Width / (float)Screen_Height, 0.1f, 100.0f);
         // send view,projection matrix to shader
         Cube_Shader.setMat4("View",view );  // Shader Class 사용
         Cube_Shader.setMat4("Projection", projection);

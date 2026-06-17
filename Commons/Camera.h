@@ -16,7 +16,6 @@ public:
 	bool Firstmouse;
 	float yaw;
 	float pitch;
-	float FOV;
 	float lastX ;
 	float lastY ;
 	float Sensitivity;
@@ -29,6 +28,9 @@ public:
 	void MouseControl(float xPos, float yPos);
 	void MouseScroll(float yoffset);
 
+	float CamFov() const { return FOV; }
+
 private:
+	float FOV;
 	void CameraDirection();
 };

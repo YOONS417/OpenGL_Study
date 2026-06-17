@@ -131,9 +131,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Commons\Camera.cpp" />
     <ClCompile Include="..\..\Commons\glad.c" />
     <ClCompile Include="..\..\Commons\stb_image.cpp" />
-    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Lighting_main.cpp" />
     <ClCompile Include="CelestialBody.cpp" />
   </ItemGroup>
@@ -142,7 +142,6 @@
     <None Include="Shaders\cube.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
     <ClInclude Include="CelestialBody.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

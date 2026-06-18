@@ -101,7 +101,7 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 </div>
 </details>
 <details>
-<summary><b> Ch 8. ㅣLighting  </b></summary>   
+<summary><b> Ch 8. Lighting  </b></summary>   
 <div id="ch1-table" markdown="1">
 <br>
   

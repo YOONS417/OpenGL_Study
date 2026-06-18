@@ -85,27 +85,6 @@ int main() {
         0, 1, 3,        // 첫번째 삼각형
         0, 3, 2         // 두번째 삼각형
     };
-    /*
-    // Creat Cube with trianle *2 *6 : creat two triangle to make rectrangle for six surface
-    float ver2[] = {   
-    0.0f, 0.0f, 0.0f,       // 0
-    0.5f, 0.0f, 0.0f,       // 1
-    0.5f, 0.5f, 0.0f,       // 2
-    0.0f, 0.5f, 0.0f,       // 3
-    0.0f, 0.0f, 0.5f,       // 4
-    0.5f, 0.0f, 0.5f,       // 5
-    0.5f, 0.5f, 0.5f,       // 6
-    0.0f, 0.5f, 0.5f        // 7
-    };
-    //  -- surface--
-    unsigned int ind2[] = {
-        0, 1, 2,  0, 2, 3,      //bottom
-        1, 2, 6,  1, 6, 5,      //front
-        0, 3, 4,  3, 4, 7,      //back
-        2, 3, 6,  3, 6, 7,      //right
-        0, 1, 5,  0, 5, 4,      //left
-        4, 5, 6,  4, 6, 7       //top      
-    };*/
 
     unsigned int VBO, VAO, EBO;  
     glGenBuffers(1, &VBO); 

@@ -48,36 +48,36 @@ int main() {
     Shader LightingCube_Shader("Shaders/cube.vert", "Shaders/cube.frag");     //Cube Shader
 
     float cube_vert[] = {  // each point : 0 ~ 7
-         // Fornt surface
-        -0.5f, -0.5f,  0.5f,    // left  bottom     = 0
-         0.5f, -0.5f,  0.5f,    // right  bottom    = 1
-         0.5f,  0.5f,  0.5f,    // right  top       = 2
-        -0.5f,  0.5f,  0.5f,    // left  top        = 3
+         // Fornt surface      //법선 
+        -0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,  // left  bottom     = 0
+         0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,  // right  bottom    = 1
+         0.5f,  0.5f,  0.5f,   0.0f, 0.0f, 1.0f,  // right  top       = 2
+        -0.5f,  0.5f,  0.5f,   0.0f, 0.0f, 1.0f,  // left  top        = 3
          // Right surface
-         0.5f, -0.5f,  0.5f,    // left  bottom     = 1
-         0.5f, -0.5f, -0.5f,    // right  bottom    = 5
-         0.5f,  0.5f, -0.5f,    // right  top       = 6
-         0.5f,  0.5f,  0.5f,    // left  top        = 2
+         0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  // left  bottom     = 1
+         0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  // right  bottom    = 5
+         0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,  // right  top       = 6
+         0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,  // left  top        = 2
          // Left surface
-        -0.5f, -0.5f, -0.5f,    // left  bottom     = 4
-        -0.5f, -0.5f,  0.5f,    // right  bottom    = 0
-        -0.5f,  0.5f,  0.5f,    // right  top       = 3
-        -0.5f,  0.5f, -0.5f,    // left  top        = 7
+        -0.5f, -0.5f, -0.5f,  -1.0f, 0.0f, 0.0f,  // left  bottom     = 4
+        -0.5f, -0.5f,  0.5f,  -1.0f, 0.0f, 0.0f,  // right  bottom    = 0
+        -0.5f,  0.5f,  0.5f,  -1.0f, 0.0f, 0.0f,  // right  top       = 3
+        -0.5f,  0.5f, -0.5f,  -1.0f, 0.0f, 0.0f,  // left  top        = 7
          // Top surface
-        -0.5f,  0.5f,  0.5f,    // left  bottom     = 3
-         0.5f,  0.5f,  0.5f,    // right  bottom    = 2
-         0.5f,  0.5f, -0.5f,    // right  top       = 6
-        -0.5f,  0.5f, -0.5f,    // left  top        = 7
+        -0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,  // left  bottom     = 3
+         0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,  // right  bottom    = 2
+         0.5f,  0.5f, -0.5f,   0.0f, 1.0f, 0.0f,  // right  top       = 6
+        -0.5f,  0.5f, -0.5f,   0.0f, 1.0f, 0.0f,  // left  top        = 7
          // Bottom surface
-        -0.5f, -0.5f,  0.5f,    // left  bottom     = 0
-         0.5f, -0.5f,  0.5f,    // right  bottom    = 1
-         0.5f, -0.5f, -0.5f,    // right  top       = 5
-        -0.5f, -0.5f, -0.5f,    // left  top        = 4
+        -0.5f, -0.5f,  0.5f,   0.0f,-1.0f, 0.0f,  // left  bottom     = 0
+         0.5f, -0.5f,  0.5f,   0.0f,-1.0f, 0.0f,  // right  bottom    = 1
+         0.5f, -0.5f, -0.5f,   0.0f,-1.0f, 0.0f,  // right  top       = 5
+        -0.5f, -0.5f, -0.5f,   0.0f,-1.0f, 0.0f,  // left  top        = 4
          // Back surface
-        -0.5f, -0.5f, -0.5f,    // left  bottom     = 4
-         0.5f, -0.5f, -0.5f,    // right  bottom    = 5
-         0.5f,  0.5f, -0.5f,    // right  top       = 6
-        -0.5f,  0.5f, -0.5f     // left  top        = 7
+        -0.5f, -0.5f, -0.5f,   0.0f, 0.0f,-1.0f,  // left  bottom     = 4
+         0.5f, -0.5f, -0.5f,   0.0f, 0.0f,-1.0f,  // right  bottom    = 5
+         0.5f,  0.5f, -0.5f,   0.0f, 0.0f,-1.0f,  // right  top       = 6
+        -0.5f,  0.5f, -0.5f,   0.0f, 0.0f,-1.0f   // left  top        = 7
     };
     unsigned int cube_indices[] = {  // indices : 정점 데이터 배열의 행 번호(0~23)
         0, 1,  2,  0, 2, 3,       // Fornt surface
@@ -101,7 +101,7 @@ int main() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
     unsigned int sunVAO;
@@ -113,7 +113,7 @@ int main() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
  
 	// --Instruction--
@@ -149,8 +149,8 @@ int main() {
         LightingCube_Shader.setMat4("View", view);  // Shader Class 사용
         LightingCube_Shader.setMat4("Projection", projection);
         //---cube---
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(3.0f, 0.0f, -3.0f));
+        glm::mat4 model = glm::mat4(1.0f); 
+        model = glm::translate(model, glm::vec3(3.0f, 0.0f, -3.0f));  
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
         LightingCube_Shader.setMat4("Model", model);
 

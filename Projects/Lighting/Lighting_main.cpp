@@ -22,7 +22,7 @@ float DeltaTime = 0.0f; //카메라 이동 하드웨어 제한 방지(고정된 
 float LastFrame = 0.0f; 
 bool isMouseOn, isKeypressed = false; // M키 설정
 
-glm::vec3 SunPos(0.0f,0.0f, 0.0f); //Sun position
+glm::vec3 SunPos(-10.0f, 10.0f, -10.0f); //Sun position
 
 int main() {
     glfwInit();
@@ -104,15 +104,14 @@ int main() {
     glEnableVertexAttribArray(0);
 
     unsigned int sunVAO;
-    glGenBuffers(1, &EBO);
     glGenVertexArrays(1, &sunVAO);
-
     glBindVertexArray(sunVAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
  
@@ -152,19 +151,21 @@ int main() {
         // Reflected Cube
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(5.0f, 0.0f, -5.0f));
-        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
         LightingCube_Shader.setMat4("Model", model);
 
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-        // ======================Sun=======================
+
+        // ======================Sun======================
         SunLight_Shader.use();
         SunLight_Shader.setMat4("View", view);  // Shader Class 사용
         SunLight_Shader.setMat4("Projection", projection);
         //---Sun--- 
         model = glm::mat4(1.0f);
         glm::mat4 Sun = glm::translate(model, SunPos);
-        // = glm::rotate(Sun, glm::radians(30.0f), glm::vec3(0.0f, 0.0f, 1.0f));  //자전축
+        Sun = glm::rotate(Sun, glm::radians(30.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+        Sun = glm::rotate(Sun, RealTime * glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));  //자전축
         SunLight_Shader.setMat4("Model", Sun);
 
         glBindVertexArray(sunVAO);
@@ -175,7 +176,7 @@ int main() {
     }
     glDeleteVertexArrays(1, &cubeVAO);
     glDeleteVertexArrays(1, &sunVAO);
-    glDeleteBuffers(1, &EBO);
+    glDeleteBuffers(1, &EBO); 
     glDeleteBuffers(1, &VBO);
 
     glfwTerminate();

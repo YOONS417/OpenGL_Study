@@ -101,13 +101,13 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 </div>
 </details>
 <details>
-<summary><b> Ch 7. Camera  </b></summary>   
+<summary><b> Ch 8. ㅣLighting  </b></summary>   
 <div id="ch1-table" markdown="1">
 <br>
   
 | 프로젝트명 | 실행 결과 | 설명 |
 | :--- | :---: | :--- |
-| **08. Lightiong** | ![Light](./images/08_Lighting.png) | Shader 두개를 이용한 독립적인 광원(Sun) 및 빛 반사된 큐브 |
+| **08. Lighting** | ![Light](./images/08_Lighting.png) | Shader 두개를 이용한 독립적인 광원(Sun) 및 빛 반사된 큐브 |
 
 </div>
 </details>

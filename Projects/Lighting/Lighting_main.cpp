@@ -43,7 +43,7 @@ int main() {
     }
     glEnable(GL_DEPTH_TEST);
 
-    Shader SunLight_Shader("Shader/sunlight.vert","Shaders / sunlight.frag"); // 광원
+    Shader SunLight_Shader("Shaders/sunlight.vert", "Shaders/sunlight.frag"); // 광원
     Shader LightingCube_Shader("Shaders/cube.vert", "Shaders/cube.frag");     //Cube Shader
 
     float cube_vert[] = {  // each point : 0 ~ 7
@@ -138,28 +138,39 @@ int main() {
         LightingCube_Shader.setVec3("LightColor", glm::vec3(1.0f, 1.0f, 1.0f) );
         
         // View matrix(Dynamic Camera)
-        glm::mat4 view = camera.ViewMatrix();
+        glm::mat4 view = camera.ViewMatrix(); 
         // projection matrix : perspective 사용
         glm::mat4 projection;
         projection = glm::perspective(glm::radians(camera.CamFov()), (float)Screen_Width / (float)Screen_Height, 0.1f, 100.0f);
-        // send view,projection matrix to shader
-        LightingCube_Shader.setMat4("View",view );  // Shader Class 사용
+        LightingCube_Shader.setMat4("View", view);  // Shader Class 사용
         LightingCube_Shader.setMat4("Projection", projection);
 
-        //---Sun--- 
+        // model matrix
         glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 Sun = glm::rotate(model, RealTime * glm::radians(45.0f), glm::vec3(-1.0f, 1.7f, 0.3f)); //vec()을 축으로 1초에 60도씩 회전
-        Sun = glm::rotate(Sun, glm::radians(30.0f), glm::vec3(0.0f, 0.0f, 1.0f));  //자전축
-
-        LightingCube_Shader.setMat4("Model", Sun);
+        model = glm::translate(model, glm::vec3(5.0f, 0.0f, -5.0f));
+        model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+        LightingCube_Shader.setMat4("Model", model);
 
         glBindVertexArray(cubeVAO);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+        SunLight_Shader.use();
+        LightingCube_Shader.setMat4("View", view);  // Shader Class 사용
+        LightingCube_Shader.setMat4("Projection", projection);
+        //---Sun--- 
+        model = glm::mat4(1.0f);
+        glm::mat4 Sun = glm::translate(model, SunPos);
+        // = glm::rotate(Sun, glm::radians(30.0f), glm::vec3(0.0f, 0.0f, 1.0f));  //자전축
+        SunLight_Shader.setMat4("Model", Sun);
+
+        glBindVertexArray(sunVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
     glDeleteVertexArrays(1, &cubeVAO);
+    glDeleteVertexArrays(1, &sunVAO);
     glDeleteBuffers(1, &EBO);
     glDeleteBuffers(1, &VBO);
 

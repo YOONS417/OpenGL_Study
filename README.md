@@ -98,12 +98,19 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | **07. Camera** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/7d316de7-63ed-47b3-8ba4-07641c388495" autoplay loop muted playsinline controls width="250"></video> | Lookat를 사용한 동적인 카메라(방향키) |
 | **07-1. Camera Class** | ![CameraClass](./images/07_CameraClass.png) | Camera Class로 분리 |
 
-
-
+</div>
+</details>
+<details>
+<summary><b> Ch 7. Camera  </b></summary>   
+<div id="ch1-table" markdown="1">
+<br>
+  
+| 프로젝트명 | 실행 결과 | 설명 |
+| :--- | :---: | :--- |
+| **08. Lightiong** | ![Light](./images/08_Lighting.png) | Shader 두개를 이용한 독립적인 광원(Sun) 및 빛 반사된 큐브 |
 
 </div>
 </details>
-
 
 ## ✨ 주요 기능
 - **GLFW/Glad**를 이용한 OpenGL 컨텍스트 설정

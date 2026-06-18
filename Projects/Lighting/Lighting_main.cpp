@@ -22,7 +22,8 @@ float DeltaTime = 0.0f; //카메라 이동 하드웨어 제한 방지(고정된 
 float LastFrame = 0.0f; 
 bool isMouseOn, isKeypressed = false; // M키 설정
 
-glm::vec3 SunPos(-10.0f, 10.0f, -10.0f); //Sun position
+glm::vec3 SunPos(-5.0f, 5.0f, -5.0f); //Sun position
+glm::vec3 SunLight(1.0f, 1.0f, 1.0f);
 
 int main() {
     glfwInit();
@@ -136,30 +137,28 @@ int main() {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);    //BG Color  
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // depth buffer 초기화
          
-        // ====================lighting======================
+        // ====================Reflected Cube======================
         LightingCube_Shader.use();
         LightingCube_Shader.setVec3("ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f));
-        LightingCube_Shader.setVec3("LightColor", glm::vec3(1.0f, 1.0f, 1.0f) );
-        
-        // View matrix(Dynamic Camera)
-        glm::mat4 view = camera.ViewMatrix(); 
-        // projection matrix : perspective 사용
-        glm::mat4 projection;
+        LightingCube_Shader.setVec3("LightColor",  SunLight);
+        // view, projection 생성
+        glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)
+        glm::mat4 projection; // projection matrix : perspective 사용
         projection = glm::perspective(glm::radians(camera.CamFov()), (float)Screen_Width / (float)Screen_Height, 0.1f, 100.0f);
+        // Vertex Shader로 전달
         LightingCube_Shader.setMat4("View", view);  // Shader Class 사용
         LightingCube_Shader.setMat4("Projection", projection);
-        // Reflected Cube
+        //---cube---
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(5.0f, 0.0f, -5.0f));
+        model = glm::translate(model, glm::vec3(3.0f, 0.0f, -3.0f));
         model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
         LightingCube_Shader.setMat4("Model", model);
 
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-
-        // ======================Sun======================
+        // ==========================Sun==========================
         SunLight_Shader.use();
-        SunLight_Shader.setMat4("View", view);  // Shader Class 사용
+        SunLight_Shader.setMat4("View", view);  // Vertex Shader로 전달  
         SunLight_Shader.setMat4("Projection", projection);
         //---Sun--- 
         model = glm::mat4(1.0f);

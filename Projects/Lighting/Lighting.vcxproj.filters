@@ -29,16 +29,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CelestialBody.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Shaders\cube.frag">
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\cube.vert">
       <Filter>Shaders</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="CelestialBody.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
+    <None Include="Shaders\sunlight.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\sunlight.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

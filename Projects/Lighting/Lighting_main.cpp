@@ -22,7 +22,7 @@ float DeltaTime = 0.0f; //카메라 이동 하드웨어 제한 방지(고정된 
 float LastFrame = 0.0f; 
 bool isMouseOn, isKeypressed = false; // M키 설정
 
-glm::vec3 SunPos(-10.0f, 10.0f, -10.0f); //Sun position
+glm::vec3 SunPos(0.0f,0.0f, 0.0f); //Sun position
 
 int main() {
     glfwInit();
@@ -90,8 +90,8 @@ int main() {
     unsigned int VBO, cubeVAO, EBO; 
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
-
     glGenVertexArrays(1, &cubeVAO);
+
     glBindVertexArray(cubeVAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -104,8 +104,13 @@ int main() {
     glEnableVertexAttribArray(0);
 
     unsigned int sunVAO;
+    glGenBuffers(1, &EBO);
     glGenVertexArrays(1, &sunVAO);
+
     glBindVertexArray(sunVAO);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -144,8 +149,7 @@ int main() {
         projection = glm::perspective(glm::radians(camera.CamFov()), (float)Screen_Width / (float)Screen_Height, 0.1f, 100.0f);
         LightingCube_Shader.setMat4("View", view);  // Shader Class 사용
         LightingCube_Shader.setMat4("Projection", projection);
-
-        // model matrix
+        // Reflected Cube
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(5.0f, 0.0f, -5.0f));
         model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
@@ -153,10 +157,10 @@ int main() {
 
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-
+        // ======================Sun=======================
         SunLight_Shader.use();
-        LightingCube_Shader.setMat4("View", view);  // Shader Class 사용
-        LightingCube_Shader.setMat4("Projection", projection);
+        SunLight_Shader.setMat4("View", view);  // Shader Class 사용
+        SunLight_Shader.setMat4("Projection", projection);
         //---Sun--- 
         model = glm::mat4(1.0f);
         glm::mat4 Sun = glm::translate(model, SunPos);
@@ -209,7 +213,7 @@ void processInput(GLFWwindow* window)
         isKeypressed = false; //떼는 순간 false로 리셋
     }
     // WireFrame Mode  ->  w : line, F : fill
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) 
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); 

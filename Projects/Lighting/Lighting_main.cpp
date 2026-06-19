@@ -143,7 +143,7 @@ int main() {
         LightingCube_Shader.use();
         LightingCube_Shader.setVec3("ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f));
         LightingCube_Shader.setVec3("LightColor",  SunLight);
-        LightingCube_Shader.setVec3("LightPos", SunPos);
+        LightingCube_Shader.setVec3("SunPos", SunPos);
         // view, projection 생성
         glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)
         glm::mat4 projection; // projection matrix : perspective 사용
@@ -159,7 +159,7 @@ int main() {
 
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-        // ==========================Sun==========================
+        // ==========================Sun===========================
         SunLight_Shader.use();
         SunLight_Shader.setMat4("View", view);  // Vertex Shader로 전달  
         SunLight_Shader.setMat4("Projection", projection);

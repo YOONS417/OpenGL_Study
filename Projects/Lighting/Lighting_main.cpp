@@ -103,13 +103,15 @@ int main() {
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    // 각 면의 볍선벡터
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3&sizeof(float)) );
+    glEnableVertexAttribArray(1);
 
     unsigned int sunVAO;
     glGenVertexArrays(1, &sunVAO);
     glBindVertexArray(sunVAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
 
@@ -141,6 +143,7 @@ int main() {
         LightingCube_Shader.use();
         LightingCube_Shader.setVec3("ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f));
         LightingCube_Shader.setVec3("LightColor",  SunLight);
+        LightingCube_Shader.setVec3("LightPos", SunPos);
         // view, projection 생성
         glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)
         glm::mat4 projection; // projection matrix : perspective 사용

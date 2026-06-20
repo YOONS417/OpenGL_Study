@@ -27,6 +27,7 @@ public:
 	void KeyboardControl(int pressedkey, float DeltaTime);
 	void MouseControl(float xPos, float yPos);
 	void MouseScroll(float yoffset);
+	void Rotate_Cam();
 
 	float CamFov() const { return FOV; }
 

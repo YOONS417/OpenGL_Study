@@ -57,12 +57,6 @@ void Camera::MouseControl(float xPos, float yPos) {
 	CameraDirection();
 }
 
-void Camera::MouseScroll(float yoffset) {
-	FOV -= yoffset;			// 휠을 굴릴 때 yoffset = +1.-1
-	if (FOV > 60.0f) FOV = 60.0f; 
-	if (FOV < 1.0f) FOV = 1.0f;
-}
-
 void Camera::CameraDirection() { 
 	glm::vec3 direction; //위아래를 볼 때,바닥 방향으로 뻗어나가는 시선의 길이가 줄어드는 비율을 곱하기
 	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch)); //축소 필터 역할
@@ -70,3 +64,25 @@ void Camera::CameraDirection() {
 	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 	CamFront = glm::normalize(direction);
 } 
+
+void Camera::MouseScroll(float yoffset) {
+	FOV -= yoffset;			// 휠을 굴릴 때 yoffset = +1.-1
+	if (FOV > 60.0f) FOV = 60.0f;
+	if (FOV < 1.0f) FOV = 1.0f;
+}
+
+void Camera::Rotate_Cam() {
+	float radius = 15.0f;
+	float camX = sin(glfwGetTime()) * radius;
+	float camZ = cos(glfwGetTime()) * radius;
+	CamPosition.x += camX;
+	CamPosition.z += camZ;
+	
+	glm::vec3 target = CamFront * radius;
+	CamFront = glm::normalize(target - CamPosition);
+}
+
+/*
+1. 초점 설정
+2. 원운동
+3. 초점에 시선 고정*/

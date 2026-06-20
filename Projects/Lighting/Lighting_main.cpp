@@ -11,7 +11,7 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 void mouse_Callback(GLFWwindow* window, double xPos,double yPos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+void scroll_Callback(GLFWwindow* window, double xoffset, double yoffset);
 
 const unsigned int Screen_Width = 1200;
 const unsigned int Screen_Height = 900;
@@ -154,7 +154,7 @@ int main() {
         //---cube---
         glm::mat4 model = glm::mat4(1.0f); 
         model = glm::translate(model, glm::vec3(3.0f, 0.0f, -3.0f));  
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));
+        model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
         LightingCube_Shader.setMat4("Model", model);
 
         glBindVertexArray(cubeVAO);
@@ -201,7 +201,7 @@ void processInput(GLFWwindow* window)
             isMouseOn = !isMouseOn;     
             if (isMouseOn) {            //이전 frame On & 현재 frame On
                 glfwSetCursorPosCallback(window, mouse_Callback);   //마우스 카메라 활성화  
-                glfwSetScrollCallback(window, scroll_callback);
+                glfwSetScrollCallback(window, scroll_Callback);
                 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //커서가 창의 중심에 유지(FPS)
             }
             else {
@@ -227,6 +227,9 @@ void processInput(GLFWwindow* window)
             camera.KeyboardControl(key, DeltaTime);
         }
     }
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+        camera.Rotate_Cam();
+    }
 }
 
 void mouse_Callback(GLFWwindow* window, double xPos, double yPos)
@@ -234,7 +237,12 @@ void mouse_Callback(GLFWwindow* window, double xPos, double yPos)
     camera.MouseControl((float)xPos, (float)yPos);
 }
 
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+void scroll_Callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.MouseScroll((float)yoffset);
+}
+
+void rotation_Callback(GLFWwindow* window, double xPos, double yPos)
+{
+
 }

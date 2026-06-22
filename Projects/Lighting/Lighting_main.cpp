@@ -138,7 +138,7 @@ int main() {
         processInput(window);
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);    //BG Color  
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // depth buffer 초기화
-         
+          
         // ====================Reflected Cube======================
         LightingCube_Shader.use();
         LightingCube_Shader.setVec3("ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f));

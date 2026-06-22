@@ -22,7 +22,7 @@ float DeltaTime = 0.0f; //카메라 이동 하드웨어 제한 방지(고정된 
 float LastFrame = 0.0f; 
 bool isMouseOn, isKeypressed = false; // M키 설정
 
-glm::vec3 SunPos(-5.0f, 5.0f, -5.0f); //Sun position
+glm::vec3 SunPos(0.0f, 3.0f, 0.0f); //Sun position
 glm::vec3 SunLight(1.0f, 1.0f, 1.0f);
 
 int main() {
@@ -153,10 +153,11 @@ int main() {
         LightingCube_Shader.setMat4("Projection", projection);
         //---cube---
         glm::mat4 model = glm::mat4(1.0f); 
-        model = glm::translate(model, glm::vec3(3.0f, 0.0f, -3.0f));  
-        model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
+        model = glm::translate(model, glm::vec3(5.0f, 0.0f, 0.0f));  
+        model = glm::rotate(model, RealTime * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
         LightingCube_Shader.setMat4("Model", model);
-
+        // draw
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         // ==========================Sun===========================
@@ -168,8 +169,9 @@ int main() {
         glm::mat4 Sun = glm::translate(model, SunPos);
         Sun = glm::rotate(Sun, glm::radians(30.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         Sun = glm::rotate(Sun, RealTime * glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));  //자전축
+        Sun = glm::scale(Sun, glm::vec3(0.5f, 0.5f, 0.5f)); 
         SunLight_Shader.setMat4("Model", Sun);
-
+        // draw
         glBindVertexArray(sunVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 

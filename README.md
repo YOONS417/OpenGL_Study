@@ -108,7 +108,10 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | 프로젝트명 | 실행 결과 | 설명 |
 | :--- | :---: | :--- |
 | **08. Lighting** | ![Light](./images/08_Lighting.png) | Shader 두개를 이용한 독립적인 광원(Sun) 및 빛 반사된 큐브 |
-| **08-1. Ambient + Diffuse** | ![Ambient + Diffuse](./images/08_Ambient_Diffuse.png) | 물체의 법선 벡터와 물체와 광원 거리를 내적한 Ambient + Diffuse Light |
+| **08-1. Ambient + Diffuse Light** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/252bf371-39e0-4537-9ee3-c488233cc02a" autoplay loop muted playsinline controls width="250"></video> | Normal matrix 및 내적을 이용한 Diffuse와 Ambient 계산 |
+
+
+
 
 </div>
 </details>

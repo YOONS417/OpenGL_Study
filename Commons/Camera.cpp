@@ -65,12 +65,12 @@ void Camera::CameraDirection() {
 	CamFront = glm::normalize(direction);
 } 
 
-void Camera::MouseScroll(float yoffset) {
+void Camera::MouseScroll(float yoffset) {  
 	FOV -= yoffset;			// 휠을 굴릴 때 yoffset = +1.-1
 	if (FOV > 60.0f) FOV = 60.0f;
 	if (FOV < 1.0f) FOV = 1.0f;
 }
-
+ 
 void Camera::Rotate_Cam() {
 	float radius = 15.0f;
 	float camX = sin(glfwGetTime()) * radius;
@@ -78,11 +78,14 @@ void Camera::Rotate_Cam() {
 	CamPosition.x += camX;
 	CamPosition.z += camZ;
 	
-	glm::vec3 target = CamFront * radius;
+	glm::vec3 target =  CamPosition + (CamFront * radius);
 	CamFront = glm::normalize(target - CamPosition);
-}
 
-/*
+
+}
+//front:0.0.-1	거리:10	  위치:0.0.7  ->  초점: 0.0.7 + 0.0.-10 = 0.0.-3     
+/*   0.0.7 - 0.0.-3 = 0.0.10
+초점 중심 카메라
 1. 초점 설정
-2. 원운동
-3. 초점에 시선 고정*/
+2. 원운동(각도 변수)
+3. 초점에 시선 고정*/ 

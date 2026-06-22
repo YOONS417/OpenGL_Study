@@ -178,7 +178,7 @@ int main() {
     }
     glDeleteVertexArrays(1, &cubeVAO);
     glDeleteVertexArrays(1, &sunVAO);
-    glDeleteBuffers(1, &EBO); 
+    glDeleteBuffers(1, &EBO);  
     glDeleteBuffers(1, &VBO);
 
     glfwTerminate();

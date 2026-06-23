@@ -144,6 +144,7 @@ int main() {
         LightingCube_Shader.setVec3("ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f));
         LightingCube_Shader.setVec3("LightColor",  SunLight);
         LightingCube_Shader.setVec3("SunPos", SunPos);
+        LightingCube_Shader.setVec3("ViewPos", camera.CamPosition);
         // view, projection 생성
         glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)
         glm::mat4 projection; // projection matrix : perspective 사용
@@ -156,10 +157,10 @@ int main() {
         model = glm::translate(model, glm::vec3(5.0f, 0.0f, 0.0f));  
         model = glm::rotate(model, RealTime * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
-        LightingCube_Shader.setMat4("Model", model);
+        LightingCube_Shader.setMat4("Model", model); 
         // draw
         glBindVertexArray(cubeVAO);
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0); 
         // ==========================Sun===========================
         SunLight_Shader.use();
         SunLight_Shader.setMat4("View", view);  // Vertex Shader로 전달  

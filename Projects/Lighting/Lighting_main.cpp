@@ -22,7 +22,7 @@ float DeltaTime = 0.0f; //카메라 이동 하드웨어 제한 방지(고정된 
 float LastFrame = 0.0f; 
 bool isMouseOn, isKeypressed = false; // M키 설정
 
-glm::vec3 SunPos(0.0f, 3.0f, -3.0f); //Sun position
+glm::vec3 SunPos(0.0f, 3.0f, -2.0f); //Sun position
 glm::vec3 SunLight(1.0f, 1.0f, 1.0f);
 
 int main() {

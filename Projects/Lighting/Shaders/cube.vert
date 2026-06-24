@@ -12,7 +12,7 @@ uniform mat4 Projection;
 void main() {
 	gl_Position =  Projection * View * Model * vec4(aPos, 1.0f);
 	// 큐브 정점의 실제(월드)위치를 계산 후 전달
-	FragPos = vec3(Model*vec4(aPos,1.0f));
+	FragPos = vec3(Model * vec4(aPos,1.0f));
 	NormalVector = mat3(transpose(inverse(Model))) * aNormal;
 	// non-uniform scale과 rotation을 방지하기 위한 Normal matrix로 적용
 }

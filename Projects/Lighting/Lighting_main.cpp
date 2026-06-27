@@ -22,7 +22,7 @@ float DeltaTime = 0.0f; //카메라 이동 하드웨어 제한 방지(고정된 
 float LastFrame = 0.0f; 
 bool isMouseOn, isKeypressed = false; // M키 설정
 
-glm::vec3 SunPos(0.0f, 3.0f, -2.0f); //Sun position
+glm::vec3 SunPos(0.0f, 1.0f, 0.0f); //Sun position
 glm::vec3 SunLight(1.0f, 1.0f, 1.0f);
 
 int main() {
@@ -138,13 +138,13 @@ int main() {
         processInput(window);
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);    //BG Color  
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // depth buffer 초기화
-            
+
         // ====================Reflected Cube======================
         LightingCube_Shader.use();
         LightingCube_Shader.setVec3("ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f));
         LightingCube_Shader.setVec3("LightColor",  SunLight);
         LightingCube_Shader.setVec3("SunPos", SunPos);
-        LightingCube_Shader.setVec3("ViewPos", camera.CamPosition); 
+        LightingCube_Shader.setVec3("ViewPos", camera.CamPosition);
         // view, projection 생성
         glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)
         glm::mat4 projection; // projection matrix : perspective 사용
@@ -153,10 +153,10 @@ int main() {
         LightingCube_Shader.setMat4("View", view);  // Shader Class 사용
         LightingCube_Shader.setMat4("Projection", projection);
         //---cube---
-        glm::mat4 model = glm::mat4(1.0f); 
-        model = glm::translate(model, glm::vec3(5.0f, 3.0f, 5.0f));  
-       // model = glm::rotate(model, RealTime * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));
+        glm::mat4 model = glm::mat4(1.0f);  
+        model = glm::translate(model, glm::vec3(5.0f, 0.0f, -5.0f));  
+        model = glm::rotate(model, RealTime * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
         LightingCube_Shader.setMat4("Model", model); 
         // draw
         glBindVertexArray(cubeVAO);

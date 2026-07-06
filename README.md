@@ -1,4 +1,4 @@
----------------------------------# 🎮 OpenGL Rendering Project
+# 🎮 OpenGL Rendering Project
 
 C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프로젝트 및 학습.
 외부 설정 없이 바로 빌드하여 실행할 수 있도록 정적 라이브러리 구조로 설계.
@@ -110,9 +110,7 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | **08. Lighting** | ![Light](./images/08_Lighting.png) | Shader 두개를 이용한 독립적인 광원(Sun) 및 빛 반사된 큐브 |
 | **08-1. Ambient + Diffuse Light** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/252bf371-39e0-4537-9ee3-c488233cc02a" autoplay loop muted playsinline controls width="250"></video> | Normal matrix 및 내적을 이용한 Diffuse와 Ambient 계산 |
 | **08-2. Sepuclar** |![Trans](./images/08Specualar.png) | reflectDir과 viewDir(픽셀에서 카메라)벡터를 내적한 값을 pow함수 사용한 하이라이트 |
-| **08-3. Materrial + Light** |   | 구조체를 이용한 Light과 Material의 독립적 구조 |
-
-
+| **08-3. Materrial + Light** |  <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/ccfa93ef-6c8c-4862-987d-a3939f199a24" autoplay loop muted playsinline controls width="250"></video> | 구조체를 이용한 Light과 Material의 독립적 구조 |
 
 
 </div>

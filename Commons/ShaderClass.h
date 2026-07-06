@@ -1,4 +1,4 @@
-#ifndef SHADER_H  //  linking conflicts 방지 
+  #ifndef SHADER_H  //  linking conflicts 방지 
 #define SHADER_H  //  중복으로 정의되어 발생하는 컴파일 에러 방지
 
 #include <glad/glad.h>

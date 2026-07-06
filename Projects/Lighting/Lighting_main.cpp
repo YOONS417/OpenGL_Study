@@ -1,4 +1,4 @@
-#include <glad/glad.h>
+  #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "ShaderClass.h"
@@ -124,7 +124,7 @@ int main() {
     std::string move[] = { "Forword", "Back", "Right", "Left", "Up" , "Down" ,"Mouse Camera On/Off", "Zoom in/out"};
     for (int i = 0; i < std::size(move); i++) {
         std::cout << key[i] << " : " << move[i] << std::endl;
-    }
+    } 
 	std::cout << "\n" << "Press esc to exit" << std::endl;
      
     // --Render Loop--
@@ -139,14 +139,24 @@ int main() {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);    //BG Color  
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // depth buffer 초기화
 
-        // ====================Reflected Cube======================
+        // ====================Light Reflected Cube======================
         LightingCube_Shader.use();
         LightingCube_Shader.setVec3("ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f));
         LightingCube_Shader.setVec3("LightColor",  SunLight);
         LightingCube_Shader.setVec3("SunPos", SunPos);
         LightingCube_Shader.setVec3("ViewPos", camera.CamPosition);
-        // view, projection 생성
-        glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)
+
+        LightingCube_Shader.setVec3("material.ambient", glm::vec3(1.0f, 0.5f, 0.31f));
+        LightingCube_Shader.setVec3("material.diffuse", glm::vec3(1.0f, 0.5f, 0.31f));
+        LightingCube_Shader.setVec3("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
+        LightingCube_Shader.setFloat("material.shininess", 32.0f);
+        
+        LightingCube_Shader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));   
+        LightingCube_Shader.setVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
+        LightingCube_Shader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+       
+        // view, projection 생성    
+        glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)  
         glm::mat4 projection; // projection matrix : perspective 사용
         projection = glm::perspective(glm::radians(camera.CamFov()), (float)Screen_Width / (float)Screen_Height, 0.1f, 100.0f);
         // Vertex Shader로 전달

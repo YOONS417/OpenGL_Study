@@ -20,7 +20,6 @@ struct Light {
 
 uniform Material material;
 uniform Light light;
-uniform vec3 LightColor;
 uniform vec3 SunPos; // loop에서 물체와 광원 사이의 거리를 위해 광원 위치를 받음
 uniform vec3 ViewPos;  //카메라 위치
 
@@ -47,4 +46,3 @@ void main() {
 	vec3 result = Ambient + Diffuse + Specular; 
 	FragColor =  vec4(result , 1.0);
 }   
-

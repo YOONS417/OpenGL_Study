@@ -46,5 +46,8 @@
     <None Include="Shaders\sunlight.vert">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Shaders\cube_objectcolor.frag">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

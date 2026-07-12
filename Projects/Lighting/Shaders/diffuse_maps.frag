@@ -3,10 +3,10 @@ out vec4 FragColor;
 
 in vec3 NormalVector; // 큐브면의 법선 벡터
 in vec3 FragPos;
-
+in vec2 TexCoords;
+    
 struct Material {  //GLSL에서는 비어 있는 구조체 허용 X
-	vec3 ambient;
-	vec3 diffuse;
+	sampler2D diffuse;
 	vec3 specular;  
 	float shininess;     
 };
@@ -26,7 +26,6 @@ uniform vec3 ViewPos;  //카메라 위치
 void main() {   
 	// Ambient light : 광원이 아닌 다른 곳에서 반사된 빛 
 	float ambientStrenght = 0.1f;  	 
-	vec3 Ambient = light.ambient * material.ambient;
 
 	// Diffuse light : 광원의 빛이 직접 물체에 반사되는 빛
 	vec3 norm = normalize(NormalVector); // 법선 벡터를 정규화
@@ -43,6 +42,6 @@ void main() {
 	// 0~1의 값을 거듭제곱(반사된 빛과 카메라의 사이각이 커질수록 수가 0의 수렴) 
 	vec3 Specular = light.specular * (spec *material.specular);
 	   
-	vec3 result = Ambient + Diffuse + Specular; 
+	vec3 result = vec3(0.0f, 0.0f, 0.0f); 
 	FragColor =  vec4(result , 1.0);
 }   

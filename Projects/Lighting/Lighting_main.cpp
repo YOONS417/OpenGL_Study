@@ -83,9 +83,19 @@ int main() {
         0, 1,  2,  0, 2, 3,       // Fornt surface
         4, 5,  6,  4, 6, 7,       // Right surface
         8, 9, 10,  8,10,11,       // Left surface  
-        12,13,14, 12,14,15,       //Top surface
-        16,17,18, 16,18,19,       //Bottom surface    
-        20,21,22, 20,22,23        //Back surface
+        12,13,14, 12,14,15,       // Top surface
+        16,17,18, 16,18,19,       // Bottom surface    
+        20,21,22, 20,22,23        //  Back surface
+    };
+    float terrain[] = {
+         -1.0f, -1.0f,  1.0f, 
+          1.0f, -1.0f,  1.0f,
+          1.0f, -1.0f, -1.0f,
+         -1.0f, -1.0f, -1.0f
+    };
+    unsigned int terrain_indices[] = {
+        0, 3, 2,
+        0, 1, 2
     };
 
     unsigned int VBO, cubeVAO, EBO; 
@@ -126,9 +136,9 @@ int main() {
         std::cout << key[i] << " : " << move[i] << std::endl;
     } 
 	std::cout << "\n" << "Press esc to exit" << std::endl;
-     
+  
     // --Render Loop--
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(window))   
     {
         float CurrentTime = (float)glfwGetTime();
         DeltaTime = CurrentTime - LastFrame;    // 현재 프레임과 마지막 프레임 사이의 시간
@@ -172,6 +182,9 @@ int main() {
         // draw
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0); 
+        // =============================Terrain==============================
+         
+
         // =============================Sun==============================
         SunLight_Shader.use();
         SunLight_Shader.setMat4("View", view);  // Vertex Shader로 전달  

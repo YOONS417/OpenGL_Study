@@ -49,5 +49,8 @@
     <None Include="Shaders\cube_objectcolor.frag">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Shaders\diffuse_maps.frag">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

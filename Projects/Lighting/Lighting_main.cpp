@@ -127,6 +127,8 @@ int main() {
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+
+    //unsigned int DiffuseMap = 
  
 	// --Instruction--
 	std::cout << "\n" << "================Camera Control================" << std::endl;

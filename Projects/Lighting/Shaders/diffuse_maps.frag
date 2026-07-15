@@ -1,4 +1,4 @@
-#version 330 core
+#version 330 core   //diffuse map : 기본 바탕색 담당
 out vec4 FragColor;
 
 in vec3 NormalVector; // 큐브면의 법선 벡터
@@ -17,7 +17,7 @@ struct Light {
 	vec3 diffuse;
 	vec3 specular;
 };
-
+     
 uniform Material material;
 uniform Light light;
 uniform vec3 SunPos; // loop에서 물체와 광원 사이의 거리를 위해 광원 위치를 받음

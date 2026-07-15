@@ -136,9 +136,11 @@
     <ClCompile Include="..\..\Commons\stb_image.cpp" />
     <ClCompile Include="Lighting_main.cpp" />
     <ClCompile Include="CelestialBody.cpp" />
+    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CelestialBody.h" />
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\cube.frag" />

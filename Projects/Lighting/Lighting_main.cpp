@@ -129,7 +129,7 @@ int main() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    unsigned int DiffuseMap = LoadTexture("woodbox");
+    unsigned int DiffuseMap = LoadTexture("woodbox.png");
 
  
 	// --Instruction--

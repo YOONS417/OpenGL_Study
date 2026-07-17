@@ -3,7 +3,7 @@
 #include "Texture.h"
 #include "stb_image.h"
 
-unsigned int LoadTesture(const std::string& path, bool flip) {
+unsigned int LoadTexture(const std::string& path, bool flip) {
 	unsigned int TextureID;
 	glGenTextures(1, &TextureID);
 

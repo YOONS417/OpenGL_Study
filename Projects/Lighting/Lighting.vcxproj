@@ -134,8 +134,8 @@
     <ClCompile Include="..\..\Commons\Camera.cpp" />
     <ClCompile Include="..\..\Commons\glad.c" />
     <ClCompile Include="..\..\Commons\stb_image.cpp" />
-    <ClCompile Include="..\..\Commons\Texture.cpp" />
     <ClCompile Include="Lighting_main.cpp" />
+    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\cube.frag" />
@@ -144,6 +144,10 @@
     <None Include="Shaders\diffuse_maps.frag" />
     <None Include="Shaders\sunlight.frag" />
     <None Include="Shaders\sunlight.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Commons\Camera.h" />
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

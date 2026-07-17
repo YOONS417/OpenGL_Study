@@ -4,6 +4,7 @@
 #include "ShaderClass.h"
 #include "stb_image.h"
 #include "Camera.h"
+#include "Texture.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -128,7 +129,8 @@ int main() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    //unsigned int DiffuseMap = 
+    unsigned int DiffuseMap = LoadTexture("woodbox");
+
  
 	// --Instruction--
 	std::cout << "\n" << "================Camera Control================" << std::endl;
@@ -174,7 +176,7 @@ int main() {
         // Vertex Shader로 전달
         LightingCube_Shader.setMat4("View", view);  // Shader Class 사용
         LightingCube_Shader.setMat4("Projection", projection);
-        //---cube---
+        //---cube---  
         glm::mat4 model = glm::mat4(1.0f);     
 
         model = glm::translate(model, glm::vec3(5.0f, 0.0f, -5.0f));  

@@ -17,7 +17,7 @@ struct Light {
 	vec3 diffuse;
 	vec3 specular;
 };
-     
+    
 uniform Material material;
 uniform Light light;
 uniform vec3 SunPos; // loop에서 물체와 광원 사이의 거리를 위해 광원 위치를 받음

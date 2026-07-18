@@ -46,7 +46,7 @@ int main() {
     glEnable(GL_DEPTH_TEST);
 
     Shader SunLight_Shader("Shaders/sunlight.vert", "Shaders/sunlight.frag"); // 광원
-    Shader LightingCube_Shader("Shaders/cube.vert", "Shaders/cube.frag");     //Cube Shader
+    Shader LightingCube_Shader("Shaders/cube.vert", "Shaders/diffuse_maps.frag");     //Cube Shader
 
     float cube_vert[] = {  // each point : 0 ~ 7
          // Fornt surface      //법선 
@@ -112,11 +112,15 @@ int main() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     // 각 면의 볍선벡터
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3*sizeof(float)) );
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3*sizeof(float)) );
     glEnableVertexAttribArray(1);
+    //texture
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+     
 
     unsigned int sunVAO;
     glGenVertexArrays(1, &sunVAO);
@@ -126,12 +130,15 @@ int main() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    unsigned int DiffuseMap = LoadTexture("woodbox.png");
+    // load texture
+    unsigned int DiffuseMap = LoadTexture("woodbox.png"); 
+        
+    LightingCube_Shader.use();
+    LightingCube_Shader.setInt("material.diffuse", 0);
 
- 
 	// --Instruction--
 	std::cout << "\n" << "================Camera Control================" << std::endl;
     std::string key[] = { "KEY_UP", "KEY_DOWN", "KEY_RIGHT", "KEY_LEFT", "SPACE_BAR", "CONTROL" ,"M", "Scroll"};
@@ -158,17 +165,17 @@ int main() {
         //LightingCube_Shader.setVec3("ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f));
         //LightingCube_Shader.setVec3("LightColor",  SunLight);
         LightingCube_Shader.setVec3("SunPos", SunPos);
-        LightingCube_Shader.setVec3("ViewPos", camera.CamPosition);
+        LightingCube_Shader.setVec3("ViewPos", camera.CamPosition); 
 
-        LightingCube_Shader.setVec3("material.ambient", glm::vec3(0.25f, 0.25f, 0.25f));
-        LightingCube_Shader.setVec3("material.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
+        LightingCube_Shader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+        LightingCube_Shader.setVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
+        LightingCube_Shader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+
+        //LightingCube_Shader.setVec3("material.ambient", glm::vec3(0.25f, 0.25f, 0.25f));
+        //LightingCube_Shader.setVec3("material.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
         LightingCube_Shader.setVec3("material.specular", glm::vec3(0.774597f, 0.774597f, 0.774597f));
         LightingCube_Shader.setFloat("material.shininess", 0.6f);
         
-        LightingCube_Shader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));   
-        LightingCube_Shader.setVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
-        LightingCube_Shader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
-       
         // view, projection 생성    
         glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)  
         glm::mat4 projection; // projection matrix : perspective 사용
@@ -183,6 +190,9 @@ int main() {
         model = glm::rotate(model, RealTime * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
         LightingCube_Shader.setMat4("Model", model);  
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, DiffuseMap);
         // draw
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0); 

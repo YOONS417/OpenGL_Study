@@ -163,7 +163,7 @@ int main() {
         LightingCube_Shader.use();
         //LightingCube_Shader.setVec3("ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f));
         //LightingCube_Shader.setVec3("LightColor",  SunLight);
-        LightingCube_Shader.setVec3("SunPos", SunPos);
+        LightingCube_Shader.setVec3("light.position", SunPos);
         LightingCube_Shader.setVec3("ViewPos", camera.CamPosition); 
 
         LightingCube_Shader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));

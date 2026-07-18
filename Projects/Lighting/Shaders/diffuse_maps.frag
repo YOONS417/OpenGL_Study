@@ -20,7 +20,6 @@ struct Light {
       
 uniform Material material;
 uniform Light light;
-uniform vec3 SunPos; // loop에서 물체와 광원 사이의 거리를 위해 광원 위치를 받음
 uniform vec3 ViewPos;  //카메라 위치
 
 void main() {      
@@ -30,7 +29,7 @@ void main() {
 
 	// Diffuse light : 광원의 빛이 직접 물체에 반사되는 빛
 	vec3 norm = normalize(NormalVector); // 법선 벡터를 정규화
-	vec3 lightDirection = normalize(SunPos - FragPos); // 면의 모든 픽셀마다 계산
+	vec3 lightDirection = normalize(light.position - FragPos); // 면의 모든 픽셀마다 계산
 	float diff = max(dot(norm, lightDirection), 0.0); //max를 써서 음수 방지 
 	//diffuse가 0이 되더라도 ambient가 0.1로 유지되어 실루엣이 남아 있음      
 	vec3 Diffuse =  light.diffuse * diff * vec3(texture(material.diffuse, TextureCoord));

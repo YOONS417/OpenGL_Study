@@ -3,7 +3,7 @@
 #include "Texture.h"
 #include "stb_image.h"
 
-unsigned int LoadTesture(const std::string& path, bool flip) {
+unsigned int LoadTexture(const std::string& path, bool flip) {
 	unsigned int TextureID;
 	glGenTextures(1, &TextureID);
 
@@ -12,7 +12,6 @@ unsigned int LoadTesture(const std::string& path, bool flip) {
 	int width, height, nrComponents;
 	// CPU 메모리로 이미지 로드
 	unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrComponents, 0); 
-	
 	if (data) {
 		GLenum format = GL_RGB;
 		if (nrComponents == 1) format = GL_RED;
@@ -32,11 +31,11 @@ unsigned int LoadTesture(const std::string& path, bool flip) {
 		stbi_image_free(data);
 
 		std::cout << "Texture successfully loaded at path : " << path << std::endl;
+		std::cout << "Texture Image nrComponents : " << nrComponents << std::endl;
 	}               
 	else {
 		std::cout << "Texture failed to load at path : " << path << std::endl;
 		stbi_image_free(data);
 	}
-
 	return TextureID;
 }

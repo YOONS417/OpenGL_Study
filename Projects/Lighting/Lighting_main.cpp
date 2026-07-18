@@ -118,10 +118,10 @@ int main() {
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3*sizeof(float)) );
     glEnableVertexAttribArray(1);
     //texture
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
-     
-
+    
+    //
     unsigned int sunVAO;
     glGenVertexArrays(1, &sunVAO);
     glBindVertexArray(sunVAO);
@@ -135,7 +135,6 @@ int main() {
 
     // load texture
     unsigned int DiffuseMap = LoadTexture("woodbox.png"); 
-        
     LightingCube_Shader.use();
     LightingCube_Shader.setInt("material.diffuse", 0);
 
@@ -173,8 +172,9 @@ int main() {
 
         //LightingCube_Shader.setVec3("material.ambient", glm::vec3(0.25f, 0.25f, 0.25f));
         //LightingCube_Shader.setVec3("material.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
-        LightingCube_Shader.setVec3("material.specular", glm::vec3(0.774597f, 0.774597f, 0.774597f));
-        LightingCube_Shader.setFloat("material.shininess", 0.6f);
+        LightingCube_Shader.setVec3("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
+        LightingCube_Shader.setFloat("material.shininess", 64.0f);
+
         
         // view, projection 생성    
         glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)  
@@ -185,7 +185,6 @@ int main() {
         LightingCube_Shader.setMat4("Projection", projection);
         //---cube---  
         glm::mat4 model = glm::mat4(1.0f);     
-
         model = glm::translate(model, glm::vec3(5.0f, 0.0f, -5.0f));  
         model = glm::rotate(model, RealTime * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
@@ -196,9 +195,6 @@ int main() {
         // draw
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0); 
-        // =============================Terrain==============================
-         
-
         // =============================Sun==============================
         SunLight_Shader.use();
         SunLight_Shader.setMat4("View", view);  // Vertex Shader로 전달  

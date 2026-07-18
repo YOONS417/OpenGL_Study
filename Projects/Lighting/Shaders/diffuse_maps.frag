@@ -44,6 +44,6 @@ void main() {
 	// 0~1의 값을 거듭제곱(반사된 빛과 카메라의 사이각이 커질수록 수가 0의 수렴) 
 	vec3 Specular = light.specular * (spec *material.specular);
 	   
-	vec3 result = vec3(0.0f, 0.0f, 0.0f); 
+	vec3 result = Ambient + Diffuse + Specular;  // 최종 색상 = ambient + diffuse + specular
 	FragColor =  vec4(result , 1.0);
 }   

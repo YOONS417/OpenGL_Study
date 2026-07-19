@@ -148,7 +148,7 @@ int main() {
 	std::cout << "\n" << "Press esc to exit" << std::endl;
   
     // --Render Loop--
-    while (!glfwWindowShouldClose(window))   
+    while (!glfwWindowShouldClose(window))    
     {
         float CurrentTime = (float)glfwGetTime();
         DeltaTime = CurrentTime - LastFrame;    // 현재 프레임과 마지막 프레임 사이의 시간
@@ -217,7 +217,7 @@ int main() {
     glDeleteVertexArrays(1, &sunVAO);
     glDeleteBuffers(1, &EBO);  
     glDeleteBuffers(1, &VBO);
-
+      
     glfwTerminate();
     return 0;
 }
@@ -277,9 +277,4 @@ void mouse_Callback(GLFWwindow* window, double xPos, double yPos)
 void scroll_Callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.MouseScroll((float)yoffset);
-}
-
-void rotation_Callback(GLFWwindow* window, double xPos, double yPos)
-{
-
 }

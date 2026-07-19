@@ -12,7 +12,7 @@ struct Material {  //ambient를 유지 -> 오브제트 전체에 동일하게 �
 };
   
 struct Light {
-	vec3 position;
+	vec3 position; 
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
@@ -23,19 +23,19 @@ uniform Light light;
 uniform vec3 ViewPos;  //카메라 위치
 
 void main() {      
-	// Ambient light : 광원이 아닌 다른 곳에서 반사된 빛 
-	float ambientStrenght = 0.1f;  	 
+	// Ambient light : 광원이 아닌 다른 곳에서 반사된 빛, 그늘진 곳이 완전히 까맟지 않고 희미하게 보임
+	float ambientStrenght = 0.1f;  // 광원의 최소 기본 빛 세기 * 텍스처 픽셀의 색상	 
 	vec3 Ambient = light.ambient * vec3(texture(material.diffuse, TextureCoord));
 
-	// Diffuse light : 광원의 빛이 직접 물체에 반사되는 빛
+	// Diffuse light : 광원의 빛이 직접 물체에 반사되는 빛(명암) 
 	vec3 norm = normalize(NormalVector); // 법선 벡터를 정규화
 	vec3 lightDirection = normalize(light.position - FragPos); // 면의 모든 픽셀마다 계산
-	float diff = max(dot(norm, lightDirection), 0.0); //max를 써서 음수 방지 
+	float diff = max(dot(norm, lightDirection), 0.0); //max를 써서 음수 방지,  
 	//diffuse가 0이 되더라도 ambient가 0.1로 유지되어 실루엣이 남아 있음      
 	vec3 Diffuse =  light.diffuse * diff * vec3(texture(material.diffuse, TextureCoord));
-  	// 광원 색 * 빛을 받는 각고 세기 * 픽셀 고유 색    
+  	// 광원 색 * 빛을 받는 각도 세기 * 픽셀 고유 색    
 
-	// Specular light
+	// Specular light : 재질에 따른 눈부심(하이라이트)
 	float specularStrenght = 0.5;
 	vec3 viewDir = normalize(ViewPos - FragPos); //(픽셀에서 카메라) 벡터를 정규화
 	vec3 reflectDirection = reflect(-lightDirection, norm); //정반사된 단위벡터(light dierection은 픽셀에서 광원 벡터) 

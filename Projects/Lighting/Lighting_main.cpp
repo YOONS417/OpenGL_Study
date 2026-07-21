@@ -137,7 +137,7 @@ int main() {
     unsigned int DiffuseMap = LoadTexture("woodbox.png"); 
     unsigned int SpecualrMap = LoadTexture("metaledge.png");
     LightingCube_Shader.use();
-    LightingCube_Shader.setInt("material.diffuse", 0);
+    LightingCube_Shader.setInt("material.diffuse", 0);  //texture unit
     LightingCube_Shader.setInt("material.specular", 1);
 
 	// --Instruction--
@@ -167,10 +167,10 @@ int main() {
         //LightingCube_Shader.setVec3("LightColor",  SunLight);
         LightingCube_Shader.setVec3("light.position", SunPos);    
         LightingCube_Shader.setVec3("ViewPos", camera.CamPosition); 
-
-        LightingCube_Shader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
-        LightingCube_Shader.setVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
-        LightingCube_Shader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+        // whtie light - basic setting
+        LightingCube_Shader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));  //약한 주변광
+        LightingCube_Shader.setVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));  //직접광(중간 세기)
+        LightingCube_Shader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f)); //반사광(하이라이트)
 
         //LightingCube_Shader.setVec3("material.ambient", glm::vec3(0.25f, 0.25f, 0.25f));
         //LightingCube_Shader.setVec3("material.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));

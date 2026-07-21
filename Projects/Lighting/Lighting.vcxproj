@@ -142,7 +142,7 @@
     <None Include="Shaders\cube.frag" />
     <None Include="Shaders\cube.vert" />
     <None Include="Shaders\cube_objectcolor.frag" />
-    <None Include="Shaders\diffuse_maps.frag" />
+    <None Include="Shaders\Lighting_maps.frag" />
     <None Include="Shaders\sunlight.frag" />
     <None Include="Shaders\sunlight.vert" />
   </ItemGroup>

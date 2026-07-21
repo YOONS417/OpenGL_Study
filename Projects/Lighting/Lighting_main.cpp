@@ -46,7 +46,7 @@ int main() {
     glEnable(GL_DEPTH_TEST);
 
     Shader SunLight_Shader("Shaders/sunlight.vert", "Shaders/sunlight.frag"); // 광원
-    Shader LightingCube_Shader("Shaders/cube.vert", "Shaders/diffuse_maps.frag");     //Cube Shader
+    Shader LightingCube_Shader("Shaders/cube.vert", "Shaders/Lighting_maps.frag");     //Cube Shader
 
     float cube_vert[] = {  // each point : 0 ~ 7
          // Fornt surface      //법선 
@@ -131,12 +131,14 @@ int main() {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(0); 
 
-    // load texture
+    // load texture & Lighting Maps
     unsigned int DiffuseMap = LoadTexture("woodbox.png"); 
+    unsigned int SpecualrMap = LoadTexture("metaledge.png");
     LightingCube_Shader.use();
     LightingCube_Shader.setInt("material.diffuse", 0);
+    LightingCube_Shader.setInt("material.specular", 1);
 
 	// --Instruction--
 	std::cout << "\n" << "================Camera Control================" << std::endl;
@@ -146,8 +148,8 @@ int main() {
         std::cout << key[i] << " : " << move[i] << std::endl;
     } 
 	std::cout << "\n" << "Press esc to exit" << std::endl;
-  
-    // --Render Loop--
+    
+    // --Render Loop-- 
     while (!glfwWindowShouldClose(window))    
     {
         float CurrentTime = (float)glfwGetTime();
@@ -163,7 +165,7 @@ int main() {
         LightingCube_Shader.use();
         //LightingCube_Shader.setVec3("ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f));
         //LightingCube_Shader.setVec3("LightColor",  SunLight);
-        LightingCube_Shader.setVec3("light.position", SunPos);
+        LightingCube_Shader.setVec3("light.position", SunPos);    
         LightingCube_Shader.setVec3("ViewPos", camera.CamPosition); 
 
         LightingCube_Shader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
@@ -172,7 +174,7 @@ int main() {
 
         //LightingCube_Shader.setVec3("material.ambient", glm::vec3(0.25f, 0.25f, 0.25f));
         //LightingCube_Shader.setVec3("material.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
-        LightingCube_Shader.setVec3("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
+        //LightingCube_Shader.setVec3("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
         LightingCube_Shader.setFloat("material.shininess", 64.0f);
 
         
@@ -188,10 +190,12 @@ int main() {
         model = glm::translate(model, glm::vec3(5.0f, 0.0f, -5.0f));  
         model = glm::rotate(model, RealTime * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
-        LightingCube_Shader.setMat4("Model", model);  
-
+        LightingCube_Shader.setMat4("Model", model);   
+        // Bind Texture
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, DiffuseMap);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, SpecualrMap);
         // draw
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0); 

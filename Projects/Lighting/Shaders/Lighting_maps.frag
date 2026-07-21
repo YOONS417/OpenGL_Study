@@ -6,8 +6,8 @@ in vec3 FragPos;
 in vec2 TextureCoord;
 
 struct Material {  //ambient를 유지 -> 오브제트 전체에 동일하게 적용
-	sampler2D diffuse;
-	vec3 specular;  
+	sampler2D diffuse;	 // Diffuse map 	 
+	sampler2D specular;		 // Specular map
 	float shininess;     
 };
   
@@ -41,7 +41,7 @@ void main() {
 	vec3 reflectDirection = reflect(-lightDirection, norm); //정반사된 단위벡터(light dierection은 픽셀에서 광원 벡터) 
 	float spec = pow(max(dot(viewDir, reflectDirection), 0.0), material.shininess); //pow : 거듭제곱 함수, 내적=cos값, max로 음수 방지(0=빛 없음) |32-> material.shininess
 	// 0~1의 값을 거듭제곱(반사된 빛과 카메라의 사이각이 커질수록 수가 0의 수렴) 
-	vec3 Specular = light.specular * (spec *material.specular);
+	vec3 Specular = light.specular * spec * vec3(texture(material.specular, TextureCoord));
 	   
 	vec3 result = Ambient + Diffuse + Specular;  // 최종 색상 = ambient + diffuse + specular
 	FragColor =  vec4(result , 1.0);

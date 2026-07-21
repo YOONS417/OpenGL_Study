@@ -148,7 +148,7 @@ int main() {
         std::cout << key[i] << " : " << move[i] << std::endl;
     } 
 	std::cout << "\n" << "Press esc to exit" << std::endl;
-    
+     
     // --Render Loop-- 
     while (!glfwWindowShouldClose(window))    
     {
@@ -176,7 +176,6 @@ int main() {
         //LightingCube_Shader.setVec3("material.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
         //LightingCube_Shader.setVec3("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
         LightingCube_Shader.setFloat("material.shininess", 64.0f);
-
         
         // view, projection 생성    
         glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)  

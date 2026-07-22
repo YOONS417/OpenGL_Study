@@ -8,23 +8,24 @@ in vec2 TextureCoord;
 struct Material {  //ambient를 유지 -> 오브제트 전체에 동일하게 적용
 	sampler2D diffuse;	 // Diffuse map, 0번 슬롯	 
 	sampler2D specular;  // Specular map, 1번 슬롯
-	float shininess;     
+	float shininess;	 // 64	
 };
   
-struct Light {
-	vec3 position; 
-	vec3 ambient;
-	vec3 diffuse;
-	vec3 specular;
+struct Light {       // Sun
+	vec3 position;   // SunPos
+	vec3 ambient;	 // (0.2, 0.2, 0.2)
+	vec3 diffuse;	 // (0.5, 0.5, 0.5)
+	vec3 specular;	 // (1.0, 1.0, 1.0)
 };
-      
+       
 uniform Material material;
-uniform Light light;
+uniform Light light;  
 uniform vec3 ViewPos;  //카메라 위치
 
 void main() {      
 	// Ambient light : 광원이 아닌 다른 곳에서 반사된 빛, 그늘진 곳이 완전히 까맟지 않고 희미하게 보임
 	vec3 Ambient = light.ambient * texture(material.diffuse, TextureCoord).rgb;
+	// gpu가 texture함수를 실행할 때 그 위치의 색을 자동으로 꺼냄
 
 	// Diffuse light : 광원의 빛이 직접 물체에 반사되는 빛(명암) 
 	vec3 norm = normalize(NormalVector); // 법선 벡터를 정규화
@@ -39,8 +40,8 @@ void main() {
 	vec3 reflectDirection = reflect(-lightDirection, norm); //정반사된 단위벡터(light dierection은 픽셀에서 광원 벡터) 
 	float spec = pow(max(dot(viewDir, reflectDirection), 0.0), material.shininess); //pow : 거듭제곱 함수, 내적=cos값, max로 음수 방지(0=빛 없음) |32-> material.shininess
 	// 0~1의 값을 거듭제곱(반사된 빛과 카메라의 사이각이 커질수록 수가 0의 수렴) 
-	vec3 Specular = light.specular * spec * texture(material.specular, TextureCoord).rgb;
-	   
+	vec3 Specular = light.specular * spec * (texture(material.specular, TextureCoord).rgb * 2.0f);
+
 	vec3 result = Ambient + Diffuse + Specular;  // 최종 색상 = ambient + diffuse + specular
-	FragColor =  vec4(result , 1.0);
+	FragColor =  vec4(result , 1.0);  // 단 metalEdge 이미지의 안쪽이 검은색이라 specular계산 값이 0
 }   

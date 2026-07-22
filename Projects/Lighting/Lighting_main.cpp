@@ -135,10 +135,10 @@ int main() {
 
     // load texture & Lighting Maps
     unsigned int DiffuseMap = LoadTexture("woodbox.png"); 
-    unsigned int SpecualrMap = LoadTexture("metaledge.png");
+    unsigned int SpecualrMap = LoadTexture("metaledge.png"); //specular image
     LightingCube_Shader.use();
     LightingCube_Shader.setInt("material.diffuse", 0);  //texture unit
-    LightingCube_Shader.setInt("material.specular", 1);
+    LightingCube_Shader.setInt("material.specular", 1); //빛의 세기를 조절하는 가이드라인으로만 사용
 
 	// --Instruction--
 	std::cout << "\n" << "================Camera Control================" << std::endl;
@@ -175,7 +175,7 @@ int main() {
         //LightingCube_Shader.setVec3("material.ambient", glm::vec3(0.25f, 0.25f, 0.25f));
         //LightingCube_Shader.setVec3("material.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
         //LightingCube_Shader.setVec3("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
-        LightingCube_Shader.setFloat("material.shininess", 64.0f);
+        LightingCube_Shader.setFloat("material.shininess", 64.0f);  // 하이라이트 조절
         
         // view, projection 생성    
         glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)  

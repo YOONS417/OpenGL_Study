@@ -123,10 +123,6 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 
 
 
-https://github.com/user-attachments/assets/c2244e8a-dc16-4ce3-9fda-9f0ad15294ba
-
-
-
 </div>
 </details>
 

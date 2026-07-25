@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <random>
 #include "ShaderClass.h"
 #include "stb_image.h"
 #include "Camera.h"
@@ -121,9 +122,8 @@ int main() {
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
     
-    //
     unsigned int sunVAO;
-    glGenVertexArrays(1, &sunVAO);
+    glGenVertexArrays(1, &sunVAO); 
     glBindVertexArray(sunVAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -138,7 +138,7 @@ int main() {
     unsigned int SpecualrMap = LoadTexture("metaledge.png"); //specular image
     LightingCube_Shader.use();
     LightingCube_Shader.setInt("material.diffuse", 0);  //texture unit
-    LightingCube_Shader.setInt("material.specular", 1); //빛의 세기를 조절하는 가이드라인으로만 사용
+    LightingCube_Shader.setInt("material.specular", 1); //빛의 세기를 조절하는 가이드라인으로만 사용s
 
 	// --Instruction--
 	std::cout << "\n" << "================Camera Control================" << std::endl;
@@ -148,7 +148,18 @@ int main() {
         std::cout << key[i] << " : " << move[i] << std::endl;
     } 
 	std::cout << "\n" << "Press esc to exit" << std::endl;
-     
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<float> disX(-5.0f, 5.0f);
+    std::uniform_real_distribution<float> disY(-5.0f, 5.0f);
+    std::uniform_real_distribution<float> disZ(-5.0f, 5.0f);
+    const int Cube_count = 5;
+    std::vector<glm::vec3> randomPos;
+    for (int i=0; i < Cube_count; i++) {
+        randomPos.push_back(glm::vec3(disX(gen), disY(gen), disZ(gen)));
+    }
+    
     // --Render Loop-- 
     while (!glfwWindowShouldClose(window))    
     {
@@ -198,6 +209,20 @@ int main() {
         // draw
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0); 
+
+        // ===========================Random Cube======================== 
+        
+
+        glBindVertexArray(cubeVAO);
+        for (unsigned int i = 0; i < Cube_count; i++) {
+            model = glm::mat4(1.0f);
+            float angle = 20.0f * i;
+            model = glm::translate(model, randomPos[i]);
+            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            LightingCube_Shader.setMat4("Model", model);
+            
+            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        }
         // =============================Sun==============================
         SunLight_Shader.use();
         SunLight_Shader.setMat4("View", view);  // Vertex Shader로 전달  
@@ -280,4 +305,10 @@ void mouse_Callback(GLFWwindow* window, double xPos, double yPos)
 void scroll_Callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.MouseScroll((float)yoffset);
+}
+
+void random_Position(GLFWwindow * window) {
+    
+    
+   
 }

@@ -29,8 +29,8 @@ void main() {
 
 	// Diffuse light : 광원의 빛이 직접 물체에 반사되는 빛(명암) 
 	vec3 norm = normalize(NormalVector); // 법선 벡터를 정규화
-	vec3 lightDirection = normalize(light.position - FragPos); // 면의 모든 픽셀마다 계산
-	float diff = max(dot(norm, lightDirection), 0.0); //max를 써서 음수 방지,  
+	vec3 lightDirection = normalize(-light.position); // Directional Light : 픽셀에서 광원을 바라보는 방향
+	float diff = max(dot(norm, lightDirection), 0.0); // max를 써서 음수 방지,  
 	//diffuse가 0이 되더라도 ambient가 0.1로 유지되어 실루엣이 남아 있음      
 	vec3 Diffuse = light.diffuse * diff * texture(material.diffuse, TextureCoord).rgb;
   	// 광원 색 * 빛을 받는 각도 세기 * 픽셀 고유 색    
@@ -44,5 +44,5 @@ void main() {
 
 	vec3 result = Ambient + Diffuse + Specular;  // 최종 색상 = ambient + diffuse + specular
 	FragColor =  vec4(result , 1.0);  // 단 metalEdge 이미지의 안쪽이 검은색이라 specular계산 값이 0
-}   
-// 두번째 이미지 작동 확인 -> result = Specular;
+}    
+// 

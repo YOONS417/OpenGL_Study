@@ -26,6 +26,7 @@ bool isMouseOn, isKeypressed = false; // M키 설정
 
 glm::vec3 SunPos(0.0f, 1.0f, 0.0f); //Sun position
 glm::vec3 SunLight(1.0f, 1.0f, 1.0f);
+glm::vec3 Light_Direction(-0.2f, -0.8f, -0.3f);
 
 int main() {
     glfwInit();
@@ -148,7 +149,7 @@ int main() {
         std::cout << key[i] << " : " << move[i] << std::endl;
     } 
 	std::cout << "\n" << "Press esc to exit" << std::endl;
-
+    // Random Position Cubes with different angle
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<float> disX(-5.0f, 5.0f);
@@ -171,12 +172,12 @@ int main() {
         processInput(window);  
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);    //BG Color  
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // depth buffer 초기화
-
         // ====================Light Reflected Cube======================
         LightingCube_Shader.use();
         //LightingCube_Shader.setVec3("ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f));
         //LightingCube_Shader.setVec3("LightColor",  SunLight);
-        LightingCube_Shader.setVec3("light.position", SunPos);    
+        //LightingCube_Shader.setVec3("light.position", SunPos);        
+        LightingCube_Shader.setVec3("light.direction", Light_Direction);
         LightingCube_Shader.setVec3("ViewPos", camera.CamPosition); 
         // whtie light - basic setting
         LightingCube_Shader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));  //약한 주변광
@@ -210,9 +211,7 @@ int main() {
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0); 
 
-        // ===========================Random Cube======================== 
-        
-
+        // ===========================Random Cube========================
         glBindVertexArray(cubeVAO);
         for (unsigned int i = 0; i < Cube_count; i++) {
             model = glm::mat4(1.0f);
@@ -220,7 +219,6 @@ int main() {
             model = glm::translate(model, randomPos[i]);
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
             LightingCube_Shader.setMat4("Model", model);
-            
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         }
         // =============================Sun==============================
@@ -305,10 +303,4 @@ void mouse_Callback(GLFWwindow* window, double xPos, double yPos)
 void scroll_Callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.MouseScroll((float)yoffset);
-}
-
-void random_Position(GLFWwindow * window) {
-    
-    
-   
-}
+} 

@@ -12,16 +12,17 @@ struct Material {  //ambient를 유지 -> 오브제트 전체에 동일하게 �
 };
   
 struct Light {       // Sun
-	vec3 position;   // SunPos
+	//vec3 position;   // Sun Position | Directional light를 사용할 때는 필요 X
+	vec3 direction;  // Directional Light : 광원으로부터 픽셀로 향하는 평행광 
 	vec3 ambient;	 // (0.2, 0.2, 0.2)
 	vec3 diffuse;	 // (0.5, 0.5, 0.5)
 	vec3 specular;	 // (1.0, 1.0, 1.0)
 };
-       
+
 uniform Material material;
 uniform Light light;  
 uniform vec3 ViewPos;  //카메라 위치
-
+  
 void main() {      
 	// Ambient light : 광원이 아닌 다른 곳에서 반사된 빛, 그늘진 곳이 완전히 까맟지 않고 희미하게 보임
 	vec3 Ambient = light.ambient * texture(material.diffuse, TextureCoord).rgb;
@@ -29,7 +30,7 @@ void main() {
 
 	// Diffuse light : 광원의 빛이 직접 물체에 반사되는 빛(명암) 
 	vec3 norm = normalize(NormalVector); // 법선 벡터를 정규화
-	vec3 lightDirection = normalize(-light.position); // Directional Light : 픽셀에서 광원을 바라보는 방향
+	vec3 lightDirection = normalize(-light.direction); // 내적값을 위해 "픽셀->광원"을 요구, 크기 1유지
 	float diff = max(dot(norm, lightDirection), 0.0); // max를 써서 음수 방지,  
 	//diffuse가 0이 되더라도 ambient가 0.1로 유지되어 실루엣이 남아 있음      
 	vec3 Diffuse = light.diffuse * diff * texture(material.diffuse, TextureCoord).rgb;

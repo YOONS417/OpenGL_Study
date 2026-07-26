@@ -177,7 +177,7 @@ int main() {
         //LightingCube_Shader.setVec3("ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f));
         //LightingCube_Shader.setVec3("LightColor",  SunLight);
         //LightingCube_Shader.setVec3("light.position", SunPos);        
-        LightingCube_Shader.setVec3("light.direction", Light_Direction);
+        LightingCube_Shader.setVec3("light.direction", Light_Direction); // 태양빛(평행빛)
         LightingCube_Shader.setVec3("ViewPos", camera.CamPosition); 
         // whtie light - basic setting
         LightingCube_Shader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));  //약한 주변광
@@ -222,7 +222,7 @@ int main() {
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         }
         // =============================Sun==============================
-        SunLight_Shader.use();
+        /*SunLight_Shader.use();
         SunLight_Shader.setMat4("View", view);  // Vertex Shader로 전달  
         SunLight_Shader.setMat4("Projection", projection);
         //---Sun--- 
@@ -235,7 +235,7 @@ int main() {
         // draw
         glBindVertexArray(sunVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-
+        */
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

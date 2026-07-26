@@ -26,7 +26,6 @@ uniform vec3 ViewPos;  //카메라 위치
 void main() {      
 	// Ambient light : 광원이 아닌 다른 곳에서 반사된 빛, 그늘진 곳이 완전히 까맟지 않고 희미하게 보임
 	vec3 Ambient = light.ambient * texture(material.diffuse, TextureCoord).rgb;
-	// gpu가 texture함수를 실행할 때 그 위치의 색을 자동으로 꺼냄
 
 	// Diffuse light : 광원의 빛이 직접 물체에 반사되는 빛(명암) 
 	vec3 norm = normalize(NormalVector); // 법선 벡터를 정규화

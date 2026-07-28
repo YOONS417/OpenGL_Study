@@ -119,9 +119,7 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | **08-4.  diffuse maps** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/177b996e-b0fb-426d-bd4d-430f1eacb816" autoplay loop muted playsinline controls width="250"></video> | 오브젝트의 부위별 색상을 다르게 표현하기 위한 Diffuse map : 기본 바탕색 |
 | **08-5.  specular maps** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/c2244e8a-dc16-4ce3-9fda-9f0ad15294ba" autoplay loop muted playsinline controls width="250"></video> | 2가지 텍스처의 다른 질감 표현을 위한 specular maps |
 | Light Caster | Directional Light + Point Light + spotlight |  |
-| **08-6.  ** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/2e934278-95b7-47b7-a4a6-202e810a9d7c" autoplay loop muted playsinline controls width="250"></video> | Directional light(방향:-0.2, -0.8, -0.3)를 사용 및 랜덤 위치 큐브의 빛반사 |
-
-
+| **08-6.  ** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/28c17901-b2e6-4ab9-bddf-1569071a945a" autoplay loop muted playsinline controls width="250"></video> | Directional light(방향:-0.2, -0.8, -0.3)를 사용 및 랜덤 위치 큐브의 빛반사 |
 
 
 </div>

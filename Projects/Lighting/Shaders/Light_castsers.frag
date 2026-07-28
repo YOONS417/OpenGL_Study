@@ -45,4 +45,5 @@ void main() {
 	vec3 result = Ambient + Diffuse + Specular;  // 최종 색상 = ambient + diffuse + specular
 	FragColor =  vec4(result , 1.0);  // 단 metalEdge 이미지의 안쪽이 검은색이라 specular계산 값이 0
 }    
-// 
+// Specular(반사광)는 카메라 위치에 의존 : 빛이 튕기는 방향과 바라보는 방향이 일치할 때만
+//  Diffuse(난반사,상자 윗면)가 안 밝은 이유 : 

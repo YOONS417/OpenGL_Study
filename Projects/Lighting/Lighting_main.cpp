@@ -26,7 +26,7 @@ bool isMouseOn, isKeypressed = false; // M키 설정
 
 glm::vec3 SunPos(0.0f, 1.0f, 0.0f); //Sun position
 glm::vec3 SunLight(1.0f, 1.0f, 1.0f);
-glm::vec3 Light_Direction(-0.2f, -0.8f, -0.3f);
+glm::vec3 Light_Direction(0.2f, -0.8f, -0.3f); // 평행광 방향
 
 int main() {
     glfwInit();
@@ -66,7 +66,7 @@ int main() {
         -0.5f, -0.5f,  0.5f,  -1.0f, 0.0f, 0.0f,   1.0f, 0.0f,  // right  bottom    = 0
         -0.5f,  0.5f,  0.5f,  -1.0f, 0.0f, 0.0f,   1.0f, 1.0f,  // right  top       = 3
         -0.5f,  0.5f, -0.5f,  -1.0f, 0.0f, 0.0f,   0.0f, 1.0f,  // left  top        = 7
-         // Top surface
+         // Top surface   
         -0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,  // left  bottom     = 3
          0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,  // right  bottom    = 2
          0.5f,  0.5f, -0.5f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f,  // right  top       = 6
@@ -141,7 +141,7 @@ int main() {
     LightingCube_Shader.setInt("material.diffuse", 0);  //texture unit
     LightingCube_Shader.setInt("material.specular", 1); //빛의 세기를 조절하는 가이드라인으로만 사용s
 
-	// --Instruction--
+	// --Instruction-- 
 	std::cout << "\n" << "================Camera Control================" << std::endl;
     std::string key[] = { "KEY_UP", "KEY_DOWN", "KEY_RIGHT", "KEY_LEFT", "SPACE_BAR", "CONTROL" ,"M", "Scroll"};
     std::string move[] = { "Forword", "Back", "Right", "Left", "Up" , "Down" ,"Mouse Camera On/Off", "Zoom in/out"};
@@ -218,9 +218,10 @@ int main() {
             float angle = 20.0f * i;
             model = glm::translate(model, randomPos[i]);
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+            model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
             LightingCube_Shader.setMat4("Model", model);
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-        }
+        } 
         // =============================Sun==============================
         /*SunLight_Shader.use();
         SunLight_Shader.setMat4("View", view);  // Vertex Shader로 전달  

@@ -44,7 +44,7 @@
     <None Include="Shaders\cube_objectcolor.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\Light_castsers.frag">
+    <None Include="Shaders\Light_casters.frag">
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\Lighting_maps.frag">

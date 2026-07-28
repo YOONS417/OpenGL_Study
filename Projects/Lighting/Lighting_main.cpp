@@ -48,7 +48,7 @@ int main() {
     glEnable(GL_DEPTH_TEST);
 
     Shader SunLight_Shader("Shaders/sunlight.vert", "Shaders/sunlight.frag"); // 광원
-    Shader LightingCube_Shader("Shaders/cube.vert", "Shaders/Lighting_maps.frag");     //Cube Shader
+    Shader LightingCube_Shader("Shaders/cube.vert", "Shaders/Light_casters.frag");     //Cube Shader
 
     float cube_vert[] = {  // each point : 0 ~ 7
          // Fornt surface      //법선 

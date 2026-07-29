@@ -87,7 +87,7 @@ int main() {
         4, 5,  6,  4, 6, 7,       // Right surface
         8, 9, 10,  8,10,11,       // Left surface  
         12,13,14, 12,14,15,       // Top surface
-        16,17,18, 16,18,19,       // Bottom surface    
+        16,17,18, 16,18,19,       // Bottom surface       
         20,21,22, 20,22,23        //  Back surface
     };
     float terrain[] = {

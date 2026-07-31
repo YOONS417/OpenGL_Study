@@ -46,9 +46,9 @@ int main() {
         std::cout << " Failed to initialze GLAD" << std::endl;
     }
     glEnable(GL_DEPTH_TEST);
-
+    std::cout << "=================Linked Shaders=================" << std::endl;
     Shader SunLight_Shader("Shaders/sunlight.vert", "Shaders/sunlight.frag"); // 광원
-    Shader LightingCube_Shader("Shaders/cube.vert", "Shaders/Light_casters.frag");     //Cube Shader
+    Shader LightingCube_Shader("Shaders/cube.vert", "Shaders/Attenuation.frag");     //Cube Shader
 
     float cube_vert[] = {  // each point : 0 ~ 7
          // Fornt surface      //법선 
@@ -135,6 +135,7 @@ int main() {
     glEnableVertexAttribArray(0); 
 
     // load texture & Lighting Maps
+    std::cout << "\n" << "=================Loaded Texture=================" << std::endl;
     unsigned int DiffuseMap = LoadTexture("woodbox.png"); 
     unsigned int SpecualrMap = LoadTexture("metaledge.png"); //specular image
     LightingCube_Shader.use();
@@ -142,7 +143,7 @@ int main() {
     LightingCube_Shader.setInt("material.specular", 1); //빛의 세기를 조절하는 가이드라인으로만 사용s
 
 	// --Instruction-- 
-	std::cout << "\n" << "================Camera Control================" << std::endl;
+	std::cout << "\n" << "=================Camera Control=================" << std::endl;
     std::string key[] = { "KEY_UP", "KEY_DOWN", "KEY_RIGHT", "KEY_LEFT", "SPACE_BAR", "CONTROL" ,"M", "Scroll"};
     std::string move[] = { "Forword", "Back", "Right", "Left", "Up" , "Down" ,"Mouse Camera On/Off", "Zoom in/out"};
     for (int i = 0; i < std::size(move); i++) {
@@ -174,15 +175,18 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // depth buffer 초기화
         // ====================Light Reflected Cube======================
         LightingCube_Shader.use();
-        //LightingCube_Shader.setVec3("ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f));
+        //LightingCube_Shader.setVec3("ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f)); 
         //LightingCube_Shader.setVec3("LightColor",  SunLight);
-        //LightingCube_Shader.setVec3("light.position", SunPos);        
-        LightingCube_Shader.setVec3("light.direction", Light_Direction); // 태양빛(평행빛)
+        LightingCube_Shader.setVec3("light.position", SunPos);        
+        //LightingCube_Shader.setVec3("light.direction", Light_Direction); // 태양빛(평행빛)
         LightingCube_Shader.setVec3("ViewPos", camera.CamPosition); 
-        // whtie light - basic setting
+        // whtie light - basic setting | Distance setting : 50
         LightingCube_Shader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));  //약한 주변광
         LightingCube_Shader.setVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));  //직접광(중간 세기)
         LightingCube_Shader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f)); //반사광(하이라이트)
+        LightingCube_Shader.setFloat("light.constant", 1.0f);  // 일반적으로 상수항은 1
+        LightingCube_Shader.setFloat("light.linear", 0.09f);   
+        LightingCube_Shader.setFloat("light.quadratic", 0.032f);
 
         //LightingCube_Shader.setVec3("material.ambient", glm::vec3(0.25f, 0.25f, 0.25f));
         //LightingCube_Shader.setVec3("material.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
@@ -210,7 +214,6 @@ int main() {
         // draw
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0); 
-
         // ===========================Random Cube========================
         glBindVertexArray(cubeVAO);
         for (unsigned int i = 0; i < Cube_count; i++) {

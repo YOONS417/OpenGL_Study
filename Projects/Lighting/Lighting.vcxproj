@@ -139,6 +139,7 @@
     <ClCompile Include="Lighting_main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Shaders\Attenuation.frag" />
     <None Include="Shaders\cube.frag" />
     <None Include="Shaders\cube.vert" />
     <None Include="Shaders\cube_objectcolor.frag" />

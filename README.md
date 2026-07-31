@@ -116,10 +116,17 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | **08-2. Sepuclar** |![Sepuclar](./images/08_Specular.png) | reflectDir과 viewDir(픽셀에서 카메라)벡터를 내적한 값을 pow함수 사용한 하이라이트 |
 | **08-3. Materrial + Light** |  <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/ccfa93ef-6c8c-4862-987d-a3939f199a24" autoplay loop muted playsinline controls width="250"></video> | 구조체를 이용한 Light과 Material의 독립적 구조 |
 | Lighting Maps | Diffuse Map + Specular Map | Phong lighting shader |
-| **08-4.  diffuse maps** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/177b996e-b0fb-426d-bd4d-430f1eacb816" autoplay loop muted playsinline controls width="250"></video> | 오브젝트의 부위별 색상을 다르게 표현하기 위한 Diffuse map : 기본 바탕색 |
-| **08-5.  specular maps** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/c2244e8a-dc16-4ce3-9fda-9f0ad15294ba" autoplay loop muted playsinline controls width="250"></video> | 2가지 텍스처의 다른 질감 표현을 위한 specular maps |
+| **08-4.  Diffuse maps** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/177b996e-b0fb-426d-bd4d-430f1eacb816" autoplay loop muted playsinline controls width="250"></video> | 오브젝트의 부위별 색상을 다르게 표현하기 위한 Diffuse map : 기본 바탕색 |
+| **08-5.  Specular maps** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/c2244e8a-dc16-4ce3-9fda-9f0ad15294ba" autoplay loop muted playsinline controls width="250"></video> | 2가지 텍스처의 다른 질감 표현을 위한 specular maps |
 | Light Caster | Directional Light + Point Light + spotlight |  |
-| **08-6.  ** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/28c17901-b2e6-4ab9-bddf-1569071a945a" autoplay loop muted playsinline controls width="250"></video> | Directional light(방향:-0.2, -0.8, -0.3)를 사용 및 랜덤 위치 큐브의 빛반사 |
+| **08-6.  Directional Light** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/28c17901-b2e6-4ab9-bddf-1569071a945a" autoplay loop muted playsinline controls width="250"></video> | Directional light(방향:-0.2, -0.8, -0.3)를 사용 및 랜덤 위치 큐브의 빛반사 |
+| **08-7.  Attenuation** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/08637afe-be25-4bbc-a0c8-f0c01c447b15" autoplay loop muted playsinline controls width="250"></video> | 빛(10,0,0)으로부터 거리별 빛의 세기가 감소, constant:1, linear:0.045, quadratic:0.0075 |
+
+
+
+
+
+
 
 
 </div>

@@ -24,7 +24,7 @@ float DeltaTime = 0.0f; //카메라 이동 하드웨어 제한 방지(고정된 
 float LastFrame = 0.0f; 
 bool isMouseOn, isKeypressed = false; // M키 설정
 
-glm::vec3 SunPos(0.0f, 1.0f, 0.0f); //Sun position
+glm::vec3 SunPos(10.0f, 0.0f, 0.0f); //Sun position
 glm::vec3 SunLight(1.0f, 1.0f, 1.0f);
 glm::vec3 Light_Direction(0.2f, -0.8f, -0.3f); // 평행광 방향
 
@@ -181,12 +181,12 @@ int main() {
         //LightingCube_Shader.setVec3("light.direction", Light_Direction); // 태양빛(평행빛)
         LightingCube_Shader.setVec3("ViewPos", camera.CamPosition); 
         // whtie light - basic setting | Distance setting : 50
-        LightingCube_Shader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));  //약한 주변광
+        LightingCube_Shader.setVec3("light.ambient", glm::vec3(0.3f, 0.3f, 0.3f));  //약한 주변광
         LightingCube_Shader.setVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));  //직접광(중간 세기)
         LightingCube_Shader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f)); //반사광(하이라이트)
         LightingCube_Shader.setFloat("light.constant", 1.0f);  // 일반적으로 상수항은 1
-        LightingCube_Shader.setFloat("light.linear", 0.09f);   
-        LightingCube_Shader.setFloat("light.quadratic", 0.032f);
+        LightingCube_Shader.setFloat("light.linear", 0.045f);   
+        LightingCube_Shader.setFloat("light.quadratic", 0.0075f);
 
         //LightingCube_Shader.setVec3("material.ambient", glm::vec3(0.25f, 0.25f, 0.25f));
         //LightingCube_Shader.setVec3("material.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
@@ -221,12 +221,12 @@ int main() {
             float angle = 20.0f * i;
             model = glm::translate(model, randomPos[i]);
             model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-            model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
+           // model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
             LightingCube_Shader.setMat4("Model", model);
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         } 
         // =============================Sun==============================
-        /*SunLight_Shader.use();
+        SunLight_Shader.use();
         SunLight_Shader.setMat4("View", view);  // Vertex Shader로 전달  
         SunLight_Shader.setMat4("Projection", projection);
         //---Sun--- 
@@ -239,7 +239,7 @@ int main() {
         // draw
         glBindVertexArray(sunVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-        */
+        
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

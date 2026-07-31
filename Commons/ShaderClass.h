@@ -18,6 +18,7 @@ public:
         std::string fragmentCode;
         std::ifstream vShaderFile;  // 파일을 읽기위한 도구역할( ifstream 객체)
         std::ifstream fShaderFile;
+        std::cout << "Current Vertex Shader Source : " << vertexPath << std::endl;
         std::cout << "Current Fragment Shader Source : " << fragmentPath << std::endl;
         // C++의 파일 읽기는 기본적으로 파일이 없거나 오류가 나도 멈추지 않고 무시
         vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);   // exceptions으로 무시하지 않고 에러를 알림

@@ -28,7 +28,7 @@ uniform Light light;
 uniform vec3 ViewPos;  //카메라 위치
 
 void main() {      
-	float distance = length(light.position - FragPos);
+	float distance = length(light.position - FragPos); 
 	// 거리별 빛의 세기 감소  
 	float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 	// Ambient light : 광원이 아닌 다른 곳에서 반사된 빛, 그늘진 곳이 완전히 까맟지 않고 희미하게 보임

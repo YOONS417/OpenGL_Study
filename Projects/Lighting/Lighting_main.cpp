@@ -26,7 +26,7 @@ bool isMouseOn, isKeypressed = false; // M키 설정
 
 glm::vec3 SunPos(10.0f, 0.0f, 0.0f); //Sun position
 glm::vec3 SunLight(1.0f, 1.0f, 1.0f);
-glm::vec3 Light_Direction(0.2f, -0.8f, -0.3f); // 평행광 방향
+glm::vec3 Light_Direction(0.2f, -0.8f, -0.3f); // 평행광 방향(Directional Light)
 
 int main() {
     glfwInit();
@@ -178,13 +178,13 @@ int main() {
         //LightingCube_Shader.setVec3("ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f)); 
         //LightingCube_Shader.setVec3("LightColor",  SunLight);
         //LightingCube_Shader.setVec3("light.position", SunPos);       
-        LightingCube_Shader.setVec3("lifht.position", camera.CamPosition);
+        LightingCube_Shader.setVec3("light.position ", camera.CamPosition);
         //LightingCube_Shader.setVec3("light.direction", Light_Direction); // 태양빛(평행빛)
         LightingCube_Shader.setVec3("light.direction", camera.CamFront);
-        LightingCube_Shader.setFloat("light.cutoff", glm::cos(glm::radians(12.5f))); //Spotlight의 반지름을 지정
+        LightingCube_Shader.setFloat("light.cutoff", glm::cos(glm::radians(12.5f))); //Spotlight의 반지름을 지정 
         LightingCube_Shader.setVec3("ViewPos", camera.CamPosition);     //카메라 초기 위치
         // whtie light - basic setting | Distance setting : 100
-        LightingCube_Shader.setVec3("light.ambient", glm::vec3(0.3f, 0.3f, 0.3f));  //약한 주변광
+        LightingCube_Shader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));  //약한 주변광
         LightingCube_Shader.setVec3("light.diffuse", glm::vec3(0.7f, 0.7f, 0.7f));  //직접광(중간 세기)
         LightingCube_Shader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f)); //반사광(하이라이트)
         // Attenuation
@@ -229,7 +229,7 @@ int main() {
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         } 
         // =============================Sun==============================
-        SunLight_Shader.use();
+       /* SunLight_Shader.use();
         SunLight_Shader.setMat4("View", view);  // Vertex Shader로 전달  
         SunLight_Shader.setMat4("Projection", projection);
         //---Sun--- 
@@ -242,7 +242,7 @@ int main() {
         // draw
         glBindVertexArray(sunVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-        
+        */
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

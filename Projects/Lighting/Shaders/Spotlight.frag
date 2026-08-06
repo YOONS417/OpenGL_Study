@@ -13,14 +13,15 @@ struct Material {  //ambient를 유지 -> 오브제트 전체에 동일하게 �
   
 struct Light {       // Point Light 
 	vec3 position;   // Directional light를 사용할 때는 필요 X
-	//vec3 direction;  // Directional Light : 광원으로부터 픽셀로 향하는 평행광 
+	vec3 direction;  // Directional Light : 광원으로부터 픽셀로 향하는 평행광 
 	vec3 ambient;	 // (0.2, 0.2, 0.2)
 	vec3 diffuse;	 // (0.5, 0.5, 0.5)
 	vec3 specular;	 // (1.0, 1.0, 1.0)
-	// Distance setting : 50
+	// Distance setting : 50  
 	float constant;	  // Kc
 	float linear;	  // Kl
 	float quadratic;  // Kq
+	float cutoff;     // 빛이 도달할 수 있는 최대 범위를 지정
 };
 
 uniform Material material;
@@ -28,7 +29,10 @@ uniform Light light;
 uniform vec3 ViewPos;  //카메라 위치
 
 void main() {      
-	float distance = length(light.position - FragPos); 
+	vec3 lightDirection = normalize(light.position - FragPos); // 픽셀->광원 벡터
+	// 출발점을 통일하기 위해 -light.direction : 픽셀 -> 광원
+	float theta = dot(lightDirection, normalize(-light.direction)); //SpotDir과 lightDirection사이의 각도
+	float distance = length(light.position - FragPos); // 픽셀,광원 사이의 거리
 	// 거리별 빛의 세기 감소  
 	float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 	// Ambient light : 광원이 아닌 다른 곳에서 반사된 빛, 그늘진 곳이 완전히 까맟지 않고 희미하게 보임
@@ -37,12 +41,11 @@ void main() {
 
 	// Diffuse light : 광원의 빛이 직접 물체에 반사되는 빛(명암) 
 	vec3 norm = normalize(NormalVector); // 법선 벡터를 정규화
-	vec3 lightDirection = normalize(light.position - FragPos); //
 	float diff = max(dot(norm, lightDirection), 0.0); // max를 써서 음수 방지,  
 	//diffuse가 0이 되더라도 ambient가 0.1로 유지되어 실루엣이 남아 있음      
 	vec3 Diffuse = light.diffuse * diff * texture(material.diffuse, TextureCoord).rgb;
 	Diffuse *= attenuation;
-
+	  
   	// 광원 색 * 빛을 받는 각도 세기 * 픽셀 고유 색    
  	// Specular light : 재질에 따른 눈부심(하이라이트)
 	vec3 viewDir = normalize(ViewPos - FragPos); //(픽셀에서 카메라) 벡터를 정규화

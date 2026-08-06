@@ -53,6 +53,9 @@
     <None Include="Shaders\Attenuation.frag">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Shaders\Spotlight.frag">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Commons\Camera.h">

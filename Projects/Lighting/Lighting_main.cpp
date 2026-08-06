@@ -177,17 +177,21 @@ int main() {
         LightingCube_Shader.use();
         //LightingCube_Shader.setVec3("ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f)); 
         //LightingCube_Shader.setVec3("LightColor",  SunLight);
-        LightingCube_Shader.setVec3("light.position", SunPos);        
+        //LightingCube_Shader.setVec3("light.position", SunPos);       
+        LightingCube_Shader.setVec3("lifht.position", camera.CamPosition);
         //LightingCube_Shader.setVec3("light.direction", Light_Direction); // 태양빛(평행빛)
-        LightingCube_Shader.setVec3("ViewPos", camera.CamPosition); 
-        // whtie light - basic setting | Distance setting : 50
+        LightingCube_Shader.setVec3("light.direction", camera.CamFront);
+        LightingCube_Shader.setFloat("light.cutoff", glm::cos(glm::radians(12.5f))); //Spotlight의 반지름을 지정
+        LightingCube_Shader.setVec3("ViewPos", camera.CamPosition);     //카메라 초기 위치
+        // whtie light - basic setting | Distance setting : 100
         LightingCube_Shader.setVec3("light.ambient", glm::vec3(0.3f, 0.3f, 0.3f));  //약한 주변광
-        LightingCube_Shader.setVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));  //직접광(중간 세기)
+        LightingCube_Shader.setVec3("light.diffuse", glm::vec3(0.7f, 0.7f, 0.7f));  //직접광(중간 세기)
         LightingCube_Shader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f)); //반사광(하이라이트)
+        // Attenuation
         LightingCube_Shader.setFloat("light.constant", 1.0f);  // 일반적으로 상수항은 1
         LightingCube_Shader.setFloat("light.linear", 0.045f);   
         LightingCube_Shader.setFloat("light.quadratic", 0.0075f);
-
+        // Material
         //LightingCube_Shader.setVec3("material.ambient", glm::vec3(0.25f, 0.25f, 0.25f));
         //LightingCube_Shader.setVec3("material.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
         //LightingCube_Shader.setVec3("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
@@ -197,8 +201,7 @@ int main() {
         glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)  
         glm::mat4 projection; // projection matrix : perspective 사용
         projection = glm::perspective(glm::radians(camera.CamFov()), (float)Screen_Width / (float)Screen_Height, 0.1f, 100.0f);
-        // Vertex Shader로 전달
-        LightingCube_Shader.setMat4("View", view);  // Shader Class 사용
+        LightingCube_Shader.setMat4("View", view);  // Shader Class 사용, vertex shader로 전달
         LightingCube_Shader.setMat4("Projection", projection);
         //---cube---  
         glm::mat4 model = glm::mat4(1.0f);     

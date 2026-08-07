@@ -9,8 +9,8 @@ Camera::Camera(glm::vec3 startPos) {
 	yaw = -90.0f;
 	pitch = 0.0f;
 	FOV = 45.0f;
-	lastX = Screen_Height / 2.0f;
-	lastY = Screen_Width  / 2.0f;
+	lastX = Screen_Width / 2.0f;
+	lastY = Screen_Height / 2.0f;
 	Sensitivity = 0.1f;
 	speedUnit = 3.0f;
 }

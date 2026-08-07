@@ -13,6 +13,8 @@ Camera::Camera(glm::vec3 startPos) {
 	lastY = Screen_Height / 2.0f;
 	Sensitivity = 0.1f;
 	speedUnit = 3.0f;
+
+	CameraDirection();
 }
 
 glm::mat4 Camera::ViewMatrix() const {

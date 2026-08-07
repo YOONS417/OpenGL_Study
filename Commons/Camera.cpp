@@ -82,8 +82,6 @@ void Camera::Rotate_Cam() {
 	
 	glm::vec3 target =  CamPosition + (CamFront * radius);
 	CamFront = glm::normalize(target - CamPosition);
-
-
 }
 //front:0.0.-1	거리:10	  위치:0.0.7  ->  초점: 0.0.7 + 0.0.-10 = 0.0.-3     
 /*   0.0.7 - 0.0.-3 = 0.0.10

@@ -178,7 +178,7 @@ int main() {
         //LightingCube_Shader.setVec3("ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f)); 
         //LightingCube_Shader.setVec3("LightColor",  SunLight);
         //LightingCube_Shader.setVec3("light.position", SunPos);       
-        LightingCube_Shader.setVec3("light.position ", camera.CamPosition);
+        LightingCube_Shader.setVec3("light.position", camera.CamPosition);
         //LightingCube_Shader.setVec3("light.direction", Light_Direction); // 태양빛(평행빛)
         LightingCube_Shader.setVec3("light.direction", camera.CamFront);
         LightingCube_Shader.setFloat("light.cutoff", glm::cos(glm::radians(12.5f))); //Spotlight의 반지름을 지정 

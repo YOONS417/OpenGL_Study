@@ -40,7 +40,7 @@ void main() {
 		// Diffuse : 광원의 빛이 직접 물체에 반사되는 빛(명암) 
 		vec3 norm = normalize(NormalVector); // 법선 벡터를 정규화
 		float diff = max(dot(norm, lightDirection), 0.0); // max를 써서 음수 방지,  
-		//diffuse가 0이 되더라도 ambient가 0.1로 유지되어 실루엣이 남아 있음      
+		//diffuse가 0이 되더라도 ambie  nt가 0.1로 유지되어 실루엣이 남아 있음      
 		vec3 Diffuse = light.diffuse * diff * texture(material.diffuse, TextureCoord).rgb;
   		// 광원 색 * 빛을 받는 각도 세기 * 픽셀 고유 색    
 

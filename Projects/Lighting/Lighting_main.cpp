@@ -181,11 +181,12 @@ int main() {
         LightingCube_Shader.setVec3("light.position", camera.CamPosition);
         //LightingCube_Shader.setVec3("light.direction", Light_Direction); // 태양빛(평행빛)
         LightingCube_Shader.setVec3("light.direction", camera.CamFront);
-        LightingCube_Shader.setFloat("light.cutoff", glm::cos(glm::radians(6.0f))); //Spotlight의 반지름을 지정 
+        LightingCube_Shader.setFloat("light.cutoff", glm::cos(glm::radians(6.0f))); //Spotlight의 반지름 
+        LightingCube_Shader.setFloat("light.outercutoff", glm::cos(glm::radians(6.0f))); //Spotlight의 부드러운 경계
         LightingCube_Shader.setVec3("ViewPos", camera.CamPosition);     //카메라 초기 위치
         // whtie light - basic setting | Distance setting : 100
         LightingCube_Shader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));  //약한 주변광
-        LightingCube_Shader.setVec3("light.diffuse", glm::vec3(0.7f, 0.7f, 0.7f));  //직접광(중간 세기)
+        LightingCube_Shader.setVec3("light.diffuse", glm::vec3(0.6f, 0.6f, 0.6f));  //직접광(중간 세기)
         LightingCube_Shader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f)); //반사광(하이라이트)
         // Attenuation
         LightingCube_Shader.setFloat("light.constant", 1.0f);  // 일반적으로 상수항은 1

@@ -15,7 +15,7 @@ struct Light {       // Point Light
 	vec3 position;   // Directional light를 사용할 때는 필요 X
 	vec3 direction;  // Directional Light : 광원으로부터 픽셀로 향하는 평행광 
 	vec3 ambient;	 // (0.2, 0.2, 0.2)
-	vec3 diffuse;	 // (0.5, 0.5, 0.5)
+	vec3 diffuse;	 // (0.6, 0.6, 0.6)
 	vec3 specular;	 // (1.0, 1.0, 1.0)
 	// Distance setting : 50  
 	float constant;	  // Kc

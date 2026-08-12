@@ -19,8 +19,16 @@ struct DirectionalLight {
 };
 // Point Light
 struct PointLight {
-	vec
-  
+	vec3 position;
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+	// Distance setting : 50
+	float constant;
+	float linear;
+	float quadratic;
+};
+// Spotlight
 struct SpotLight {       // Point Light 
 	vec3 position;   // Directional light를 사용할 때는 필요 X
 	vec3 direction;  // Directional Light : 광원으로부터 픽셀로 향하는 평행광 
@@ -41,7 +49,6 @@ uniform SpotLight light;
 uniform vec3 ViewPos;  //카메라 위치
  
 vec3 CalculateDirLight(DirectionalLight light, vec3 NormalVector, vec3 viewDir);
-vec3 CalculatePointLight(
 
 void main() {      
 	// 출발점을 통일하기 위해 -light.direction : 픽셀 -> 광원
@@ -80,8 +87,10 @@ void main() {
 
 	vec3 result = Ambient + Diffuse + Specular;  // 최종 색상 = ambient + diffuse + specular
 	FragColor =  vec4(result , 1.0);  // 단 metalEdge 이미지의 안쪽이 검은색이라 specular계산 값이 0
- }
+}
 
- vec3 CalculateDirLight(DirectionalLight light, vec3 NormalVector, vec3 viewDir){
-	 
+vec3 CalculateDirLight(DirectionalLight light, vec3 NormalVector, vec3 viewDir){
+	vec3 LightDirection = normalize(-light.direction);
+	return 0;
+}
 	

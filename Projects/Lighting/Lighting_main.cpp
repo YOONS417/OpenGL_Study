@@ -48,7 +48,7 @@ int main() {
     glEnable(GL_DEPTH_TEST);
     std::cout << "=================Linked Shaders=================" << std::endl;
     Shader SunLight_Shader("Shaders/sunlight.vert", "Shaders/sunlight.frag");      // 광원
-    Shader LightingCube_Shader("Shaders/cube.vert", "Shaders/Spotlight.frag");     //Cube Shader
+    Shader LightingCube_Shader("Shaders/cube.vert", "Shaders/Spotlight_Feathering.frag");   //Cube Shader
 
     float cube_vert[] = {  // each point : 0 ~ 7
          // Fornt surface      //법선 
@@ -182,7 +182,7 @@ int main() {
         //LightingCube_Shader.setVec3("light.direction", Light_Direction); // 태양빛(평행빛)
         LightingCube_Shader.setVec3("light.direction", camera.CamFront);
         LightingCube_Shader.setFloat("light.cutoff", glm::cos(glm::radians(6.0f))); //Spotlight의 반지름 
-        LightingCube_Shader.setFloat("light.outercutoff", glm::cos(glm::radians(6.0f))); //Spotlight의 부드러운 경계
+        LightingCube_Shader.setFloat("light.outercutoff", glm::cos(glm::radians(9.0f))); //Spotlight의 부드러운 경계
         LightingCube_Shader.setVec3("ViewPos", camera.CamPosition);     //카메라 초기 위치
         // whtie light - basic setting | Distance setting : 100
         LightingCube_Shader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));  //약한 주변광

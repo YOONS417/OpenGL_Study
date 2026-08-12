@@ -50,15 +50,20 @@ void main() {
 	// 0~1의 값을 거듭제곱(반사된 빛과 카메라의 사이각이 커질수록 수가 0의 수렴) 
 	vec3 Specular = light.specular * spec * (texture(material.specular, TextureCoord).rgb * 2.0f);
 
-	// Spotlight
+	// Spotlight + Feathering
 	float theta = dot(lightDirection, normalize(-light.direction)); //각 픽셀에서 SpotDir과 lightDirection사이의 각도
+	float epsilon = (light.cutoff - light.outercutoff);  // 전이 영역 : 내부와 외부 사이의 공간
+	float intensity = clamp((theta - light.outercutoff)/epsilon , 0.0, 1.0); // 1~0으로 제한
+	Diffuse *= intensity;
+	Specular *= intensity;
 
 	// Attenuation : 빛의 거리별 감소 
 	float distance = length(light.position - FragPos); // 픽셀,광원 사이의 거리
 	float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
-	//Ambient *= attenuation;
+	Ambient *= attenuation;
 	Diffuse *= attenuation;
 	Specular *= attenuation;
+
 	vec3 result = Ambient + Diffuse + Specular;  // 최종 색상 = ambient + diffuse + specular
 	FragColor =  vec4(result , 1.0);  // 단 metalEdge 이미지의 안쪽이 검은색이라 specular계산 값이 0
  }

@@ -146,6 +146,7 @@
     <None Include="Shaders\Lighting_maps.frag" />
     <None Include="Shaders\Light_casters.frag" />
     <None Include="Shaders\Spotlight.frag" />
+    <None Include="Shaders\Spotlight_Feathering.frag" />
     <None Include="Shaders\sunlight.frag" />
     <None Include="Shaders\sunlight.vert" />
   </ItemGroup>

@@ -10,15 +10,18 @@ struct Material {  //ambient를 유지 -> 오브제트 전체에 동일하게 �
 	sampler2D specular;  // Specular map, 1번 슬롯
 	float shininess;	 // 64	
 };
-
+// Directional Light 
 struct DirectionalLight {
 	vec3 direction;
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
 };
+// Point Light
+struct PointLight {
+	vec
   
-struct Light {       // Point Light 
+struct SpotLight {       // Point Light 
 	vec3 position;   // Directional light를 사용할 때는 필요 X
 	vec3 direction;  // Directional Light : 광원으로부터 픽셀로 향하는 평행광 
 	vec3 ambient;	 // (0.2, 0.2, 0.2)
@@ -33,8 +36,12 @@ struct Light {       // Point Light
 };
 
 uniform Material material;
-uniform Light light;  
+uniform DirectionalLight DirLight;
+uniform SpotLight light;  
 uniform vec3 ViewPos;  //카메라 위치
+ 
+vec3 CalculateDirLight(DirectionalLight light, vec3 NormalVector, vec3 viewDir);
+vec3 CalculatePointLight(
 
 void main() {      
 	// 출발점을 통일하기 위해 -light.direction : 픽셀 -> 광원
@@ -74,3 +81,7 @@ void main() {
 	vec3 result = Ambient + Diffuse + Specular;  // 최종 색상 = ambient + diffuse + specular
 	FragColor =  vec4(result , 1.0);  // 단 metalEdge 이미지의 안쪽이 검은색이라 specular계산 값이 0
  }
+
+ vec3 CalculateDirLight(DirectionalLight light, vec3 NormalVector, vec3 viewDir){
+	 
+	

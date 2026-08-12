@@ -11,7 +11,7 @@ struct Material {  //ambient를 유지 -> 오브제트 전체에 동일하게 �
 	float shininess;	 // 64	
 };
   
-struct Light {       // Point Light 
+struct PointLight {       // Point Light 
 	vec3 position;   // Directional light를 사용할 때는 필요 X
 	//vec3 direction;  // Directional Light : 광원으로부터 픽셀로 향하는 평행광 
 	vec3 ambient;	 // (0.2, 0.2, 0.2)
@@ -24,7 +24,7 @@ struct Light {       // Point Light
 };
 
 uniform Material material;
-uniform Light light;  
+uniform PointLight light;  
 uniform vec3 ViewPos;  //카메라 위치
 
 void main() {      

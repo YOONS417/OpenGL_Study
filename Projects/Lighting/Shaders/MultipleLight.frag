@@ -54,9 +54,8 @@ vec3 CalculatePointLight(PointLight light, vec3 NormalVector, vec3 FragPos, vec3
 vec3 CalculateSpotLight(SpotLight light, vec3 NormalVector, vec3 FragPos, vec3 viewDir);
 
 void main() {      
-	// 출발점을 통일하기 위해 -light.direction : 픽셀 -> 광원
-	
-	
+	vec3 norm = normalize(NormalVector);
+	vec3 viewDir = normalize(ViewPos - FragPos); // (픽셀->카메라)벡터
 }
 
 vec3 CalculateDirLight(DirectionalLight light, vec3 NormalVector, vec3 viewDir){
@@ -95,7 +94,7 @@ vec3 CalculateSpotLight(SpotLight light, vec3 NormalVector, vec3 FragPos, vec3 v
 	float spec = pow(max(dot(viewDir, reflectDirection), 0.0 ), material.shininess);
 	float distance = length(light.position - FragPos);//빛과 픽셀 사이의 거리
 	float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance + distance));
-	// 거리별 빛의 세기 감소(attenuation) 
+	// 거리별 빛의 세기 감소(attenuation), 출발점을 통일하기 위해 -light.direction : 픽셀 -> 광원
 	float theta = dot(LightDirection, normalize(-light.direction));//각 픽셀에서 SpotDir과 lightDirection사이의 각도
 	float epsilon = (light.cutoff - light.outercutoff); // 전이 영역 : 내부(cutoff)와 외부(outercutoff)사이의 공간
 	float intensity = clamp((theta - light.outercutoff) / epsilon, 0.0, 1.0);// 1~0으로 제한, 전이 영역에서 빛이 감소

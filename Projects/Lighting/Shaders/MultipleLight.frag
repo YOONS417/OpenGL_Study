@@ -44,11 +44,15 @@ struct SpotLight {       // Point Light
 };
 
 uniform Material material;
-uniform DirectionalLight DirLight;
+uniform DirectionalLight dirlight;
+uniform PointLight pointlight;
 uniform SpotLight light;  
 uniform vec3 ViewPos;  //카메라 위치
  
 vec3 CalculateDirLight(DirectionalLight light, vec3 NormalVector, vec3 viewDir);
+vec3 CalculatePointLight(PointLight light,vec3 NormalVector, vec3 FragPos, vec3 viewDir);
+
+
 
 void main() {      
 	// 출발점을 통일하기 위해 -light.direction : 픽셀 -> 광원
@@ -91,6 +95,14 @@ void main() {
 
 vec3 CalculateDirLight(DirectionalLight light, vec3 NormalVector, vec3 viewDir){
 	vec3 LightDirection = normalize(-light.direction);
-	return 0;
+
+	float diff = max(dot(NormalVector, LightDirection), 0.0);
+	vec3 reflectDirection = reflect(-LightDirection, NormalVector);
+	float spec = pow(max(dot(viewDir, reflectDirection), 0.0), material.shininess);
+
+	vec3 Ambient = light.ambient * vec3(texture(material.diffuse, TextureCoord));
+	vec3 Diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TextureCoord));
+	vec3 Specular = light.specular * spec * vec3(texture(material.specular, TextureCoord));
+	return Ambient + Diffuse + Specular;
 }
 	

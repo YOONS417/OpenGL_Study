@@ -44,19 +44,22 @@
     <None Include="Shaders\cube_objectcolor.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\Light_casters.frag">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Shaders\Lighting_maps.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\Attenuation.frag">
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\Spotlight.frag">
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\Spotlight_Feathering.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\MultipleLight.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\PointLight_Attenuation.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\DirectionalLight.frag">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

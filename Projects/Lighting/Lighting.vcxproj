@@ -139,12 +139,13 @@
     <ClCompile Include="Lighting_main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\Attenuation.frag" />
     <None Include="Shaders\cube.frag" />
     <None Include="Shaders\cube.vert" />
     <None Include="Shaders\cube_objectcolor.frag" />
+    <None Include="Shaders\DirectionalLight.frag" />
     <None Include="Shaders\Lighting_maps.frag" />
-    <None Include="Shaders\Light_casters.frag" />
+    <None Include="Shaders\MultipleLight.frag" />
+    <None Include="Shaders\PointLight_Attenuation.frag" />
     <None Include="Shaders\Spotlight.frag" />
     <None Include="Shaders\Spotlight_Feathering.frag" />
     <None Include="Shaders\sunlight.frag" />

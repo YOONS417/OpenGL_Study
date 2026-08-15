@@ -14,6 +14,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 void mouse_Callback(GLFWwindow* window, double xPos,double yPos);
 void scroll_Callback(GLFWwindow* window, double xoffset, double yoffset);
+void tutorial_shader(Shader& LightingCube_Shader, const Camera& camera, bool isFlashlightOn);
 
 const unsigned int Screen_Width = 1200;
 const unsigned int Screen_Height = 900;
@@ -23,6 +24,7 @@ Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));   //카메라 생성, 위치:(0,0,1
 float DeltaTime = 0.0f; //카메라 이동 하드웨어 제한 방지(고정된 속도)
 float LastFrame = 0.0f; 
 bool isMouseOn, isKeypressed = false; // M키 설정
+bool isFlashlightOn = false; // F키 설정
 
 glm::vec3 SunPos(10.0f, 0.0f, 0.0f); //Sun position
 glm::vec3 SunLight(1.0f, 1.0f, 1.0f);
@@ -174,29 +176,7 @@ int main() {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);    //BG Color  
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // depth buffer 초기화
         // ====================Light Reflected Cube======================
-        LightingCube_Shader.use();  
-        //LightingCube_Shader.setVec3("ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f)); 
-        //LightingCube_Shader.setVec3("LightColor",  SunLight);
-        //LightingCube_Shader.setVec3("light.position", SunPos);       
-        LightingCube_Shader.setVec3("light.position", camera.CamPosition);
-        //LightingCube_Shader.setVec3("light.direction", Light_Direction); // 태양빛(평행빛)
-        LightingCube_Shader.setVec3("light.direction", camera.CamFront);
-        LightingCube_Shader.setFloat("light.cutoff", glm::cos(glm::radians(6.0f))); //Spotlight의 반지름 
-        LightingCube_Shader.setFloat("light.outercutoff", glm::cos(glm::radians(9.0f))); //Spotlight의 부드러운 경계
-        LightingCube_Shader.setVec3("ViewPos", camera.CamPosition);     //카메라 초기 위치
-        // whtie light - basic setting | Distance setting : 100
-        LightingCube_Shader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));  //약한 주변광
-        LightingCube_Shader.setVec3("light.diffuse", glm::vec3(0.6f, 0.6f, 0.6f));  //직접광(중간 세기)
-        LightingCube_Shader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f)); //반사광(하이라이트)
-        // Attenuation
-        LightingCube_Shader.setFloat("light.constant", 1.0f);  // 일반적으로 상수항은 1
-        LightingCube_Shader.setFloat("light.linear", 0.045f);   
-        LightingCube_Shader.setFloat("light.quadratic", 0.0075f);
-        // Material
-        //LightingCube_Shader.setVec3("material.ambient", glm::vec3(0.25f, 0.25f, 0.25f));
-        //LightingCube_Shader.setVec3("material.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
-        //LightingCube_Shader.setVec3("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
-        LightingCube_Shader.setFloat("material.shininess", 64.0f);  // 하이라이트 조절
+        tutorial_shader(LightingCube_Shader, camera, isFlashlightOn);
         
         // view, projection 생성    
         glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)  
@@ -312,3 +292,30 @@ void scroll_Callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.MouseScroll((float)yoffset);
 } 
+
+void tutorial_shader(Shader& LightingCube_Shader, const Camera& camera, bool isFlashlightOn)
+{
+    LightingCube_Shader.use();
+    //LightingCube_Shader.setVec3("ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f)); 
+    //LightingCube_Shader.setVec3("LightColor",  SunLight);
+    //LightingCube_Shader.setVec3("light.position", SunPos);       
+    LightingCube_Shader.setVec3("light.position", camera.CamPosition);
+    //LightingCube_Shader.setVec3("light.direction", Light_Direction); // 태양빛(평행빛)
+    LightingCube_Shader.setVec3("light.direction", camera.CamFront);
+    LightingCube_Shader.setFloat("light.cutoff", glm::cos(glm::radians(6.0f))); //Spotlight의 반지름 
+    LightingCube_Shader.setFloat("light.outercutoff", glm::cos(glm::radians(9.0f))); //Spotlight의 부드러운 경계
+    LightingCube_Shader.setVec3("ViewPos", camera.CamPosition);     //카메라 초기 위치
+    // whtie light - basic setting | Distance setting : 100
+    LightingCube_Shader.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));  //약한 주변광
+    LightingCube_Shader.setVec3("light.diffuse", glm::vec3(0.6f, 0.6f, 0.6f));  //직접광(중간 세기)
+    LightingCube_Shader.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f)); //반사광(하이라이트)
+    // Attenuation
+    LightingCube_Shader.setFloat("light.constant", 1.0f);  // 일반적으로 상수항은 1
+    LightingCube_Shader.setFloat("light.linear", 0.045f);
+    LightingCube_Shader.setFloat("light.quadratic", 0.0075f);
+    // Material
+    //LightingCube_Shader.setVec3("material.ambient", glm::vec3(0.25f, 0.25f, 0.25f));
+    //LightingCube_Shader.setVec3("material.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
+    //LightingCube_Shader.setVec3("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
+    LightingCube_Shader.setFloat("material.shininess", 64.0f);  // 하이라이트 조절
+}

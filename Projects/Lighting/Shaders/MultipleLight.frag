@@ -76,14 +76,14 @@ vec3 CalculatePointLight(PointLight light, vec3 NormalVector, vec3 FragPos, vec3
 	vec3 reflectDirection = reflect(-LightDirection, NormalVector);
 	float spec = pow(max(dot(viewDir, reflectDirection), 0.0 ), material.shininess);
 	float distance = length(light.position - FragPos);//빛과 픽셀 사이의 거리
-	float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance + distance));
+	float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 	// 거리별 빛의 세기 감소(attenuation)  
 	vec3 Ambient = light.ambient * vec3(texture(material.diffuse, TextureCoord)); // 기본 밝기 * 텍스처 색상(픽셀 고유 색)
 	vec3 Diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TextureCoord));// 광원 색 * 빛을 받는 각도 세기 * 텍스처 색상
 	vec3 Specular = light.specular * spec * vec3(texture(material.specular, TextureCoord));// 하이라이트 빛 색상 *  시선 방향에 따른 반사 강도 * 어느 부위가 얼마나 반짝이는지 지어하는 텍스처
 	Ambient *= attenuation;
 	Diffuse *= attenuation;
-	Specular *=attenuation;
+	Specular *= attenuation;
 	return Ambient + Diffuse + Specular;
 }
 
@@ -93,7 +93,7 @@ vec3 CalculateSpotLight(SpotLight light, vec3 NormalVector, vec3 FragPos, vec3 v
 	vec3 reflectDirection = reflect(-LightDirection, NormalVector);
 	float spec = pow(max(dot(viewDir, reflectDirection), 0.0 ), material.shininess);
 	float distance = length(light.position - FragPos);//빛과 픽셀 사이의 거리
-	float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance + distance));
+	float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
 	// 거리별 빛의 세기 감소(attenuation), 출발점을 통일하기 위해 -light.direction : 픽셀 -> 광원
 	float theta = dot(LightDirection, normalize(-light.direction));//각 픽셀에서 SpotDir과 lightDirection사이의 각도
 	float epsilon = (light.cutoff - light.outercutoff); // 전이 영역 : 내부(cutoff)와 외부(outercutoff)사이의 공간

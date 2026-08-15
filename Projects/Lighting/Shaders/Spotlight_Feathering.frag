@@ -27,7 +27,7 @@ struct Light {       // Point Light
 
 uniform Material material;
 uniform Light light;  
-uniform vec3 ViewPos;  //카메라 위치
+uniform vec3 ViewPos;  //카메라 위치 
 
 void main() {      
 	// 출발점을 통일하기 위해 -light.direction : 픽셀 -> 광원

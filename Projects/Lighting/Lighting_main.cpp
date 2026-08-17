@@ -30,7 +30,7 @@ bool isFlashlightOn, isFpressed = false; // F키 설정
 
 glm::vec3 SunPos(10.0f, 0.0f, 0.0f); //Sun position
 glm::vec3 SunLightColor(1.0f, 1.0f, 1.0f);
-glm::vec3 Light_Direction(0.2f, -0.8f, -0.3f); // 평행광 방향(Directional Light)
+glm::vec3 Light_Direction(0.2f, -0.8f, 0.2f); // 평행광 방향(Directional Light)
 glm::vec3 Pointlight_Pos(10.0f, 0.0f, 0.0f);
 
 int main() {
@@ -215,12 +215,12 @@ int main() {
             glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         } 
         // =============================Sun==============================
-       /* SunLight_Shader.use();
+        SunLight_Shader.use();
         SunLight_Shader.setMat4("View", view);  // Vertex Shader로 전달  
         SunLight_Shader.setMat4("Projection", projection);
         //---Sun--- 
         model = glm::mat4(1.0f);
-        glm::mat4 Sun = glm::translate(model, SunPos);
+        glm::mat4 Sun = glm::translate(model, Pointlight_Pos);
         Sun = glm::rotate(Sun, glm::radians(30.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         Sun = glm::rotate(Sun, RealTime * glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));  //자전축
         Sun = glm::scale(Sun, glm::vec3(0.5f, 0.5f, 0.5f)); 
@@ -228,7 +228,7 @@ int main() {
         // draw
         glBindVertexArray(sunVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-        */
+        
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -271,12 +271,14 @@ void processInput(GLFWwindow* window)
     else {
         isMpressed = false; //떼는 순간 false로 리셋
     }
-    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) { //Flash on/off
         if (!isFpressed) {
-            isFlashlightOn = !isFlashlightOn;
-            isFlashlightOn = true;
+            isFlashlightOn = !isFlashlightOn; //false -> true
+            isFpressed = true;
         }
-        else { isFpressed = false; }
+    }
+    else {
+        isFpressed = false;
     }
     // WireFrame Mode  ->  w : line, F : fill
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) 
@@ -338,12 +340,12 @@ void multiplelight(Shader& Multiplelight_Shader, const Camera& camera, bool isFl
     Multiplelight_Shader.setVec3("ViewPos", camera.CamPosition);
     //Directional Light
     Multiplelight_Shader.setVec3("dirlight.direction", Light_Direction);
-    Multiplelight_Shader.setVec3("dirlight.ambient", glm::vec3(0.05f, 0.05f, 0.05f));
+    Multiplelight_Shader.setVec3("dirlight.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
     Multiplelight_Shader.setVec3("dirlight.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
     Multiplelight_Shader.setVec3("dirlight.specular", glm::vec3(0.5f, 0.5f, 0.5f));
     //Point Light 
     Multiplelight_Shader.setVec3("pointlight.position", Pointlight_Pos);
-    Multiplelight_Shader.setVec3("pointlight.ambient", glm::vec3(0.05f, 0.05f, 0.05f));
+    Multiplelight_Shader.setVec3("pointlight.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
     Multiplelight_Shader.setVec3("pointlight.diffuse", glm::vec3(0.8f, 0.8f, 0.8f));
     Multiplelight_Shader.setVec3("pointlight.specular", glm::vec3(1.0f, 1.0f, 1.0f));
     Multiplelight_Shader.setFloat("pointlight.constant", 1.0f); //Distance setting(100)

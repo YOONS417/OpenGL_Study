@@ -25,8 +25,8 @@ Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));   //카메라 생성, 위치:(0,0,1
 
 float DeltaTime = 0.0f; //카메라 이동 하드웨어 제한 방지(고정된 속도)
 float LastFrame = 0.0f; 
-bool isMouseOn, isKeypressed = false; // M키 설정
-bool isFlashlightOn = false; // F키 설정
+bool isMouseOn, isMpressed = false; // M키 설정
+bool isFlashlightOn, isFpressed = false; // F키 설정
 
 glm::vec3 SunPos(10.0f, 0.0f, 0.0f); //Sun position
 glm::vec3 SunLightColor(1.0f, 1.0f, 1.0f);
@@ -251,7 +251,7 @@ void processInput(GLFWwindow* window)
 	// Mouse On/Off -> M | isMouseOn & isKeypressed = false
     if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS) {
         //이전 frame이 off & M키가 눌렸을 때만 진입
-        if (!isKeypressed) {            
+        if (!isMpressed) {
             isMouseOn = !isMouseOn;     
             if (isMouseOn) {            //이전 frame On & 현재 frame On
                 glfwSetCursorPosCallback(window, mouse_Callback);   //마우스 카메라 활성화  
@@ -263,11 +263,18 @@ void processInput(GLFWwindow* window)
                 glfwSetScrollCallback(window, NULL);
                 glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
             }
-            isKeypressed = true; // M키가 눌려있는 동안 이전frame은 true
+            isMpressed = true; // M키가 눌려있는 동안 이전frame은 true
         }                        //설정을 키거나 끌 때 항상 키는 눌려있음
     }                          
     else {
-        isKeypressed = false; //떼는 순간 false로 리셋
+        isMpressed = false; //떼는 순간 false로 리셋
+    }
+    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
+        if (!isFpressed) {
+            isFlashlightOn = !isFlashlightOn;
+            isFlashlightOn = true;
+        }
+        else { isFpressed = false; }
     }
     // WireFrame Mode  ->  w : line, F : fill
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) 
@@ -329,11 +336,29 @@ void multiplelight(Shader& Multiplelight_Shader, const Camera& camera, bool isFl
     Multiplelight_Shader.setVec3("ViewPos", camera.CamPosition);
     //Directional Light
     Multiplelight_Shader.setVec3("dirlight.direction", Light_Direction);
-    Multiplelight_Shader.setVec3("dirlight.ambient", glm::vec3(0.05f, 0.05f,0.05f));
+    Multiplelight_Shader.setVec3("dirlight.ambient", glm::vec3(0.05f, 0.05f, 0.05f));
     Multiplelight_Shader.setVec3("dirlight.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
     Multiplelight_Shader.setVec3("dirlight.specular", glm::vec3(0.5f, 0.5f, 0.5f));
-    //Point Light
+    //Point Light 
     Multiplelight_Shader.setVec3("pointlight.position", Pointlight_Pos);
-
-
-}
+    Multiplelight_Shader.setVec3("pointlight.ambient", glm::vec3(0.05f, 0.05f, 0.05f));
+    Multiplelight_Shader.setVec3("pointlight.diffuse", glm::vec3(0.8f, 0.8f, 0.8f));
+    Multiplelight_Shader.setVec3("pointlight.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+    Multiplelight_Shader.setFloat("pointlight.constant", 1.0f); //Distance setting(100)
+    Multiplelight_Shader.setFloat("pointlight.linear", 0.045f);
+    Multiplelight_Shader.setFloat("pointlight.quadratic", 0.0075f);
+    //Spotlight
+    Multiplelight_Shader.setBool("spotlight.isFlashlightOn", isFlashlightOn);
+    if (isFlashlightOn) {
+        Multiplelight_Shader.setVec3("spotlight.position", camera.CamPosition);
+        Multiplelight_Shader.setVec3("spotlight.direction", camera.CamFront);
+        Multiplelight_Shader.setVec3("spotlight.ambient", glm::vec3(0.0f, 0.0f, 0.0f));
+        Multiplelight_Shader.setVec3("spotlight.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
+        Multiplelight_Shader.setVec3("spotlight.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+        Multiplelight_Shader.setFloat("spotlight.constant", 1.0f); //Distance setting(100)
+        Multiplelight_Shader.setFloat("spotlight.linear", 0.022f);
+        Multiplelight_Shader.setFloat("spotlight.quadratic", 0.0019f);
+        Multiplelight_Shader.setFloat("spotlight.cutoff", glm::cos(glm::radians(6.0f))); //Spotlight의 반지름
+        Multiplelight_Shader.setFloat("light.outercutoff", glm::cos(glm::radians(9.0f))); //Spotlight의 부드러운 경계
+    }
+}   

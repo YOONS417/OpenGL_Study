@@ -53,7 +53,7 @@ int main() {
     glEnable(GL_DEPTH_TEST);
     std::cout << "=================Linked Shaders=================" << std::endl;
     Shader SunLight_Shader("Shaders/sunlight.vert", "Shaders/sunlight.frag");      // 광원
-    Shader LightingCube_Shader("Shaders/cube.vert", "Shaders/Spotlight_Feathering.frag");   //Cube Shader
+    Shader LightingCube_Shader("Shaders/cube.vert", "Shaders/MultipleLight.frag");   //Cube Shader
 
     float cube_vert[] = {  // each point : 0 ~ 7
          // Fornt surface      //법선 
@@ -178,9 +178,11 @@ int main() {
         processInput(window);  
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);    //BG Color  
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // depth buffer 초기화
+
         // ====================Light Reflected Cube======================
-        tutorial_light(LightingCube_Shader, camera);
-        
+        //tutorial_light(LightingCube_Shader, camera);
+        multiplelight(LightingCube_Shader, camera, isFlashlightOn);
+
         // view, projection 생성    
         glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)  
         glm::mat4 projection; // projection matrix : perspective 사용
@@ -189,7 +191,7 @@ int main() {
         LightingCube_Shader.setMat4("Projection", projection);
         //---cube---  
         glm::mat4 model = glm::mat4(1.0f);     
-        model = glm::translate(model, glm::vec3(5.0f, 0.0f, -5.0f));  
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));  
         model = glm::rotate(model, RealTime * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
         LightingCube_Shader.setMat4("Model", model);   
@@ -348,7 +350,7 @@ void multiplelight(Shader& Multiplelight_Shader, const Camera& camera, bool isFl
     Multiplelight_Shader.setFloat("pointlight.linear", 0.045f);
     Multiplelight_Shader.setFloat("pointlight.quadratic", 0.0075f);
     //Spotlight
-    Multiplelight_Shader.setBool("spotlight.isFlashlightOn", isFlashlightOn);
+    Multiplelight_Shader.setBool("isFlashlightOn", isFlashlightOn);
     if (isFlashlightOn) {
         Multiplelight_Shader.setVec3("spotlight.position", camera.CamPosition);
         Multiplelight_Shader.setVec3("spotlight.direction", camera.CamFront);
@@ -356,8 +358,8 @@ void multiplelight(Shader& Multiplelight_Shader, const Camera& camera, bool isFl
         Multiplelight_Shader.setVec3("spotlight.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
         Multiplelight_Shader.setVec3("spotlight.specular", glm::vec3(1.0f, 1.0f, 1.0f));
         Multiplelight_Shader.setFloat("spotlight.constant", 1.0f); //Distance setting(100)
-        Multiplelight_Shader.setFloat("spotlight.linear", 0.022f);
-        Multiplelight_Shader.setFloat("spotlight.quadratic", 0.0019f);
+        Multiplelight_Shader.setFloat("spotlight.linear", 0.045f);
+        Multiplelight_Shader.setFloat("spotlight.quadratic", 0.0075f);
         Multiplelight_Shader.setFloat("spotlight.cutoff", glm::cos(glm::radians(6.0f))); //Spotlight의 반지름
         Multiplelight_Shader.setFloat("light.outercutoff", glm::cos(glm::radians(9.0f))); //Spotlight의 부드러운 경계
     }

@@ -41,7 +41,6 @@ struct SpotLight {       // Point Light
 	float quadratic;  // Kq
 	float cutoff;     // 빛이 도달할 수 있는 최대 범위를 지정
 	float outercutoff;
-	bool isFlashlightOn;
 };
 
 uniform Material material;
@@ -49,6 +48,8 @@ uniform DirectionalLight dirlight;
 uniform PointLight pointlight;
 uniform SpotLight spotlight;  
 uniform vec3 ViewPos;  //카메라 위치
+uniform bool isFlashlightOn;
+
  
 vec3 CalculateDirLight(DirectionalLight light, vec3 NormalVector, vec3 viewDir);
 vec3 CalculatePointLight(PointLight light, vec3 NormalVector, vec3 FragPos, vec3 viewDir);
@@ -58,7 +59,14 @@ void main() {
 	vec3 norm = normalize(NormalVector);
 	vec3 viewDir = normalize(ViewPos - FragPos); // (픽셀->카메라)벡터
 
-	vec3 result = CalculateDirLight(dirlight, norm, viewDir):
+	vec3 result = CalculateDirLight(dirlight, norm, viewDir);
+
+	result += CalculatePointLight(pointlight, norm, FragPos, viewDir);
+
+	if(isFlashlightOn){
+		result += CalculateSpotLight(spotlight, norm, FragPos, viewDir);
+	}
+	FragColor = vec4(result, 1.0);
 }
 
 vec3 CalculateDirLight(DirectionalLight light, vec3 NormalVector, vec3 viewDir){

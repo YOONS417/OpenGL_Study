@@ -2,19 +2,21 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <random>
+#include <cmath>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include "ShaderClass.h"
 #include "stb_image.h"
 #include "Camera.h"
 #include "Texture.h"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 void mouse_Callback(GLFWwindow* window, double xPos,double yPos);
 void scroll_Callback(GLFWwindow* window, double xoffset, double yoffset);
-void tutorial_shader(Shader& LightingCube_Shader, const Camera& camera, bool isFlashlightOn);
+void tutorial_light(Shader& LightingCube_Shader, const Camera& camera);
+void multiplelight(Shader& Multiplelight_Shader, const Camera& camera, bool isFlashlightOn);
 
 const unsigned int Screen_Width = 1200;
 const unsigned int Screen_Height = 900;
@@ -27,8 +29,9 @@ bool isMouseOn, isKeypressed = false; // M키 설정
 bool isFlashlightOn = false; // F키 설정
 
 glm::vec3 SunPos(10.0f, 0.0f, 0.0f); //Sun position
-glm::vec3 SunLight(1.0f, 1.0f, 1.0f);
+glm::vec3 SunLightColor(1.0f, 1.0f, 1.0f);
 glm::vec3 Light_Direction(0.2f, -0.8f, -0.3f); // 평행광 방향(Directional Light)
+glm::vec3 Pointlight_Pos(10.0f, 0.0f, 0.0f);
 
 int main() {
     glfwInit();
@@ -176,7 +179,7 @@ int main() {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);    //BG Color  
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // depth buffer 초기화
         // ====================Light Reflected Cube======================
-        tutorial_shader(LightingCube_Shader, camera, isFlashlightOn);
+        tutorial_light(LightingCube_Shader, camera);
         
         // view, projection 생성    
         glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)  
@@ -293,7 +296,7 @@ void scroll_Callback(GLFWwindow* window, double xoffset, double yoffset)
     camera.MouseScroll((float)yoffset);
 } 
 
-void tutorial_shader(Shader& LightingCube_Shader, const Camera& camera, bool isFlashlightOn)
+void tutorial_light(Shader& LightingCube_Shader, const Camera& camera)
 {
     LightingCube_Shader.use();
     //LightingCube_Shader.setVec3("ObjectColor", glm::vec3(1.0f, 0.5f, 0.31f)); 
@@ -318,4 +321,19 @@ void tutorial_shader(Shader& LightingCube_Shader, const Camera& camera, bool isF
     //LightingCube_Shader.setVec3("material.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
     //LightingCube_Shader.setVec3("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
     LightingCube_Shader.setFloat("material.shininess", 64.0f);  // 하이라이트 조절
+}
+
+void multiplelight(Shader& Multiplelight_Shader, const Camera& camera, bool isFlashlightOn)
+{
+    Multiplelight_Shader.use();
+    Multiplelight_Shader.setVec3("ViewPos", camera.CamPosition);
+    //Directional Light
+    Multiplelight_Shader.setVec3("dirlight.direction", Light_Direction);
+    Multiplelight_Shader.setVec3("dirlight.ambient", glm::vec3(0.05f, 0.05f,0.05f));
+    Multiplelight_Shader.setVec3("dirlight.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
+    Multiplelight_Shader.setVec3("dirlight.specular", glm::vec3(0.5f, 0.5f, 0.5f));
+    //Point Light
+    Multiplelight_Shader.setVec3("pointlight.position", Pointlight_Pos);
+
+
 }

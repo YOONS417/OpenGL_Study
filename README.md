@@ -12,7 +12,7 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 5. Coordinate system
 6. Camera
 7. Lighting
-8. Model Loadgin
+8. Model Loading
 9. Advanced OpenGL
    - Depth testing
    - Stencil testing

@@ -338,6 +338,7 @@ void multiplelight(Shader& Multiplelight_Shader, const Camera& camera, bool isFl
 {
     Multiplelight_Shader.use();
     Multiplelight_Shader.setVec3("ViewPos", camera.CamPosition);
+    Multiplelight_Shader.setFloat("material.shininess", 64.0f);  // 하이라이트 조절
     //Directional Light
     Multiplelight_Shader.setVec3("dirlight.direction", Light_Direction);
     Multiplelight_Shader.setVec3("dirlight.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
@@ -363,6 +364,6 @@ void multiplelight(Shader& Multiplelight_Shader, const Camera& camera, bool isFl
         Multiplelight_Shader.setFloat("spotlight.linear", 0.045f);
         Multiplelight_Shader.setFloat("spotlight.quadratic", 0.0075f);
         Multiplelight_Shader.setFloat("spotlight.cutoff", glm::cos(glm::radians(6.0f))); //Spotlight의 반지름
-        Multiplelight_Shader.setFloat("light.outercutoff", glm::cos(glm::radians(9.0f))); //Spotlight의 부드러운 경계
+        Multiplelight_Shader.setFloat("spotlight.outercutoff", glm::cos(glm::radians(9.0f))); //Spotlight의 부드러운 경계
     }
 }   

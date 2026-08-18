@@ -123,7 +123,7 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | **08-7.  PointLight Attenuation** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/08637afe-be25-4bbc-a0c8-f0c01c447b15" autoplay loop muted playsinline controls width="250"></video> | 빛(10,0,0)으로부터 거리별 빛의 세기가 감소, constant:1, linear:0.045, quadratic:0.0075 |
 | **08-8.  SpotLight** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/703a0669-2b33-4db2-86ad-96049b165583" autoplay loop muted playsinline controls width="250"></video> | 픽셀에서의 LightDir과 SpotDir사이의 theta를 정해진 cutoff와 비교 |
 | **08-9.  Spotlight Feathering** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/bd2ec57e-aa00-4152-8de9-773d99551f9c" autoplay loop muted playsinline controls width="250"></video> | 기존 spotlight의 cutoff와 outercutoff사이의 epsilon에서 빛의 세기를 감소 |
-
+| **08-10. Mutiplelight** | <vide src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/5859945b-7903-4258-9e79-4b8e5b3ede04" autoplay loop muted playsinline controls width="250"></video> |  |
 
 
 

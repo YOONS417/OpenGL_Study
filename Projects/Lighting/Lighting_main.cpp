@@ -332,7 +332,7 @@ void tutorial_light(Shader& LightingCube_Shader, const Camera& camera)
     //LightingCube_Shader.setVec3("material.diffuse", glm::vec3(0.4f, 0.4f, 0.4f));
     //LightingCube_Shader.setVec3("material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
     LightingCube_Shader.setFloat("material.shininess", 64.0f);  // 하이라이트 조절
-}
+} 
 
 void multiplelight(Shader& Multiplelight_Shader, const Camera& camera, bool isFlashlightOn)
 {

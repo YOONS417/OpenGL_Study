@@ -59,10 +59,10 @@ void main() {
 	vec3 norm = normalize(NormalVector);
 	vec3 viewDir = normalize(ViewPos - FragPos); // (픽셀->카메라)벡터
 
-	vec3 result = CalculateDirLight(dirlight, norm, viewDir);
+	vec3 result = CalculateDirLight(dirlight, norm, viewDir);  //Directional light를 기본적으로 고정
 
-	result += CalculatePointLight(pointlight, norm, FragPos, viewDir);
-
+	result += CalculatePointLight(pointlight, norm, FragPos, viewDir); //Point light를 추가
+	// F키를 눌렀을 때 Spotlight를 추가
 	if(isFlashlightOn){
 		result += CalculateSpotLight(spotlight, norm, FragPos, viewDir);
 	}

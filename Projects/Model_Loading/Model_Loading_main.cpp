@@ -202,7 +202,7 @@ int main() {
         glBindTexture(GL_TEXTURE_2D, SpecualrMap);
         // draw
         glBindVertexArray(cubeVAO);
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);  
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0); 
         // ===========================Random Cube========================
         glBindVertexArray(cubeVAO);
         for (unsigned int i = 0; i < Cube_count; i++) {

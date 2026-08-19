@@ -125,6 +125,16 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | **08-9.  Spotlight Feathering** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/bd2ec57e-aa00-4152-8de9-773d99551f9c" autoplay loop muted playsinline controls width="250"></video> | 기존 spotlight의 cutoff와 outercutoff사이의 epsilon에서 빛의 세기를 감소 |
 | **08-10. Mutiplelight** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/788bf164-3d73-4ec0-bc94-aca3d26a7210" autoplay loop muted playsinline controls width="250"></video> | Directional light을 기본으로 Point light을 추가 고정 및 Spotlight(Flash)을 F키로 On/Off : 각각의 빛을 개별 함수로 나누어 계산한 뒤 최종 FragColor에서 모두 더하는 방식 |
 
+</div>
+</details>
+<details>
+<summary><b> Ch 9. Model Loading  </b></summary>   
+<div id="ch1-table" markdown="1">
+<br>
+
+| 프로젝트명 | 실행 결과 | 설명 |
+| :--- | :---: | :--- |
+| **09. Assimp** |  |  |
 
 </div>
 </details>

@@ -31,7 +31,7 @@ bool isFlashlightOn, isFpressed = false; // F키 설정
 glm::vec3 SunPos(10.0f, 0.0f, 0.0f); //Sun position
 glm::vec3 SunLightColor(1.0f, 1.0f, 1.0f);
 glm::vec3 Light_Direction(0.2f, -0.8f, 0.2f); // 평행광 방향(Directional Light)
-glm::vec3 Pointlight_Pos(10.0f, 0.0f, 0.0f);
+glm::vec3 Pointlight_Pos(7.0f, 0.0f, 0.0f);
 
 int main() {
     glfwInit();

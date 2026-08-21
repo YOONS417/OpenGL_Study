@@ -10,6 +10,7 @@
   <Project Path="Projects/Camera/Camera.vcxproj" Id="4edc3b92-536b-4bc7-98f9-2dba05304713" />
   <Project Path="Projects/Coordinate_sys/Coordinate_sys.vcxproj" Id="451c755b-e168-40db-bc78-a0061be34120" />
   <Project Path="Projects/Lighting/Lighting.vcxproj" Id="5b0718a7-fe08-4e7f-b555-ba455ec50348" />
+  <Project Path="Projects/Model_Loading/Model_Loading.vcxproj" Id="29ffc47b-ec70-4fbb-9998-03e29e85f734" />
   <Project Path="Projects/Rectangle/Rectangle.vcxproj" Id="5056d862-6414-406a-b838-6aecdccd9617" />
   <Project Path="Projects/Shader/Shader.vcxproj" Id="1342bb37-3225-4c92-abf7-b65292991142" />
   <Project Path="Projects/Testing/Testing.vcxproj" Id="54525f58-8d94-4a67-8cb4-58d0afaa29cf" />

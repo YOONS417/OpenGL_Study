@@ -40,7 +40,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(Screen_Width, Screen_Height, "Project_Lighting", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(Screen_Width, Screen_Height, "Project_Model_Loading", NULL, NULL);
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -282,10 +282,8 @@ void processInput(GLFWwindow* window)
     else {
         isFpressed = false;
     }
-
-
-
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) { //WireFramgeMode on/off
+    //WireFramgeMode on/off
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) { 
         if (!isWpressed) {  //true : on
             isWireframemodeOn = !isWireframemodeOn;
             if (isWireframemodeOn) {
@@ -300,10 +298,6 @@ void processInput(GLFWwindow* window)
     else {
         isWpressed = false;
     }
-
-
-
-
     // Camera Move(방향키)
     int keys[] = { GLFW_KEY_UP, GLFW_KEY_DOWN, GLFW_KEY_RIGHT, GLFW_KEY_LEFT, GLFW_KEY_SPACE, GLFW_KEY_LEFT_CONTROL };
     for (int key : keys) {

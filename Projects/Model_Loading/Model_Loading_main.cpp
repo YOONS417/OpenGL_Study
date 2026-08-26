@@ -59,8 +59,10 @@ int main() {
     Shader SunLight_Shader("Shaders/sunlight.vert", "Shaders/sunlight.frag");      // 광원
     Shader LightingCube_Shader("Shaders/cube.vert", "Shaders/MultipleLight.frag");   //Cube Shader
 
+    Assimp::Importer importer;
+
     float cube_vert[] = {  // each point : 0 ~ 7
-        // Fornt surface      //법선 
+        // Fornt surface      //법선  
        -0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,  // left  bottom     = 0
         0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f,  // right  bottom    = 1
         0.5f,  0.5f,  0.5f,   0.0f, 0.0f, 1.0f,   1.0f, 1.0f,  // right  top       = 2

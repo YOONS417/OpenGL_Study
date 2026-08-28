@@ -16,6 +16,9 @@
     <ClCompile Include="..\..\Commons\Texture.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="MeshClass.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -29,37 +32,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\cube.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\cube.vert">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Shaders\sunlight.frag">
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\sunlight.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\cube_objectcolor.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\Lighting_maps.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\Spotlight.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\Spotlight_Feathering.frag">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Shaders\MultipleLight.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\PointLight_Attenuation.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\DirectionalLight.frag">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

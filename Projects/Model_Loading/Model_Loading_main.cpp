@@ -30,7 +30,7 @@ float DeltaTime = 0.0f; //카메라 이동 하드웨어 제한 방지(고정된 
 float LastFrame = 0.0f;
 bool isMouseOn, isMpressed = false; // M키 설정
 bool isFlashlightOn, isFpressed = false; // F키 설정
-bool isWireframemodeOn, isWpressed = false;
+bool isWireframemodeOn, isWpressed = false; //W키 설정
 
 glm::vec3 SunPos(10.0f, 0.0f, 0.0f); //Sun position
 glm::vec3 SunLightColor(1.0f, 1.0f, 1.0f);

@@ -25,7 +25,7 @@ class Mesh {
 		vector<unsigned int> indices;
 		vector<Texture> textures;
 
-		unsigned int VAO;
+		unsigned int VAO, VBO, EBO;  //버퍼 객체
 
 		// 생성자 : 데이터 할당 및 GPU 버퍼 세팅
 		Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures) {
@@ -36,9 +36,27 @@ class Mesh {
 			setupMesh();
 		}
 
+		void Draw(Shader& shader)
+		{
+
+		}
 	private:
 		void setupMesh()
 		{
+			glGenBuffers(1, &VBO);
+			glGenBuffers(1, &EBO);
 
+			// VBO : Vertex 구조체 배열을 GPU 메모리에 복사
+			glBindBuffer(GL_ARRAY_BUFFER, VBO);
+			glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+			// EBO : 인덱스 데이터 복사
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+
+			// 정점 위치
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+			glEnableVertexAttribArray(0);
+			// 각 면의 법선
+			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
 		}
 }; 

@@ -40,11 +40,15 @@ class Mesh {
 		{
 
 		}
+
 	private:
 		void setupMesh()
 		{
 			glGenBuffers(1, &VBO);
 			glGenBuffers(1, &EBO);
+			glGenVertexArrays(1, &VAO);
+
+			glBindVertexArray(VAO);
 
 			// VBO : Vertex 구조체 배열을 GPU 메모리에 복사
 			glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -56,7 +60,15 @@ class Mesh {
 			// 정점 위치
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 			glEnableVertexAttribArray(0);
-			// 각 면의 법선
+			// 각 면의 법선 
+			// 구조체는 멤버가 메모리에 연속적으로 배치 -> offsetof : Normal 변수가 몇 바이트 떨어져 있는지 자동로 계산
+			// (void*)(3 * sizeof(float)) - > (void*)offsetof(Vertex, Normal)
 			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+			glEnableVertexAttribArray(1);
+			// 텍스쳐 좌표
+			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoord));
+			glEnableVertexAttribArray(2);
+
+			glBindVertexArray(0);
 		}
 }; 

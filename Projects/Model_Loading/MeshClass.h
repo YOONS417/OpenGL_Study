@@ -1,6 +1,11 @@
+#ifndef MESH_S
+#define MESH_H
+
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>  
+#include <string>
+#include <vector>
 #include "ShaderClass.h"
 
 using namespace std;
@@ -65,6 +70,7 @@ class Mesh {
 			// 상태 복원
 			glBindVertexArray(0);
 			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
 	private:
@@ -83,10 +89,9 @@ class Mesh {
 			// EBO : 인덱스 데이터 복사
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
-
 			// 정점 위치
 			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
 			// 각 면의 법선 
 			// 구조체는 멤버가 메모리에 연속적으로 배치 -> offsetof : Normal 변수가 몇 바이트 떨어져 있는지 자동로 계산
 			// (void*)(3 * sizeof(float)) - > (void*)offsetof(Vertex, Normal)
@@ -99,3 +104,4 @@ class Mesh {
 			glBindVertexArray(0);
 		}
 }; 
+#endif

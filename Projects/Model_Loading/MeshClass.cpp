@@ -42,7 +42,7 @@ class Mesh {
 			unsigned int diffuse_nr = 1;	// 텍스쳐 타입의 개수
 			unsigned int specular_nr = 1;
 
-			for (unsigned int i = 0; i < textures.size(); i++)
+			for (unsigned int i = 0; i < textures.size(); i++)  // 텍스쳐의 총 개수까지
 			{
 				glActiveTexture(GL_TEXTURE0 + i);	// 다음 텍스쳐 슬롯을 계속 활성화
 
@@ -94,7 +94,7 @@ class Mesh {
 			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
 			// 텍스쳐 좌표
 			glEnableVertexAttribArray(2);
-			glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoord));
+			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoord));
 
 			glBindVertexArray(0);
 		}

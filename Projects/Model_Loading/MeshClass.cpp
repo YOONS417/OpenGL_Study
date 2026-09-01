@@ -25,7 +25,7 @@ class Mesh {
 		vector<unsigned int> indices;
 		vector<Texture> textures;
 
-		unsigned int VAO, VBO, EBO;  //버퍼 객체
+		unsigned int VAO;  //버퍼 객체
 
 		// 생성자 : 데이터 할당 및 GPU 버퍼 세팅
 		Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures)
@@ -68,6 +68,7 @@ class Mesh {
 		}
 
 	private:
+		unsigned int VBO, EBO;
 		void setupMesh()
 		{
 			glGenBuffers(1, &VBO);

@@ -134,7 +134,7 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 
 | 프로젝트명 | 실행 결과 | 설명 |
 | :--- | :---: | :--- |
-| **09. Assimp** |  |  |
+| **09. Model Loading - Assimp** |  | Libraries폴더에 assimp폴더 추가 및 vcpkg,라이브러리 추가 |
 
 </div>
 </details>

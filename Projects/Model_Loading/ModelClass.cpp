@@ -62,12 +62,24 @@ class Model
 		// loadModel에서 넘겨받은 부모-자식관계의 구조를 Root부터 끝까지 탐색, 3D 메쉬 데이터들을 꺼내옴
 		void processNode(aiNode* node, const aiScene* scene)
 		{
+			// 현재 노드에 속한 모든 메쉬를 메쉬 개수만큼 순회 및 처리
 			for (unsigned int i = 0; i < node->mNumMeshes; i++)
 			{
-
+				// node->mMeshes[i] : 실제 메쉬의 인덱스 번호
+				// 메쉬 데이터는 scene->mMeshes 중앙 배열에 있음
+				aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+				// 두 번 건너뛰어 접근 : 노드 자체에는 정점,텍스쳐 좌표가 없음
+				// 찾아낸 aiMesh포이터를 processMesh로 전달
+				// 메쉬 데이터를 변환하여 Model의 meshes 배열에 추가
+				meshes.push_back(porcessMesh(mesh, scene));
+			}
+			// 현재 노드의 자식 노드들에 대한 재귀(자식 노드 개수만큼)
+			for (unsigned int i = 0; i < node->mNumChildren; i++)
+			{
+				processNode(node->mChildren[i], scene);	//mChildren : 자식 노드 배열
 			}
 		}
-
+		// Assimp가 읽어온 데이터 구조체(aiMesh) -> OpenGL 규격의 Mesh객체(vertices,indices,textrue)로 변환
 		Mesh porcessMesh(aiMesh* mesh, const aiScene* scene)
 		{
 

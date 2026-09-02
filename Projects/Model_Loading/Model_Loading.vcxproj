@@ -145,7 +145,8 @@
     <ClCompile Include="..\..\Commons\glad.c" />
     <ClCompile Include="..\..\Commons\stb_image.cpp" />
     <ClCompile Include="..\..\Commons\Texture.cpp" />
-    <ClCompile Include="MeshClass.cpp" />
+    <ClCompile Include="MeshClass.h" />
+    <ClCompile Include="ModelClass.cpp" />
     <ClCompile Include="Model_Loading_main.cpp" />
   </ItemGroup>
   <ItemGroup>

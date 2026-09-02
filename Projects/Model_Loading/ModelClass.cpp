@@ -12,7 +12,6 @@
 #include "MeshClass.h"
 
 using namespace std;
-
 // 텍스쳐 파일 로드용 함수
 unsigned  int TextureFromFile(const char* path, const std::string& direcroty);
 
@@ -20,7 +19,7 @@ class Model
 {
 	public:
 		vector<Mesh> meshes;
-		string direcroty;
+		string directory;
 
 		vector<Texture> loaded_texture;
 
@@ -54,7 +53,7 @@ class Model
 				return;
 			}
 			// 파일의 디렉토리 경로 추출 : 텍스쳐 로딩 시 필요(오브젝트 파일 내부에는 텍스쳐 이미지 경로가 아닌 파일 이름으로만 있는 경우가 많음)
-			direcroty = path.substr(0, path.find_last_not_of('/'));
+			directory = path.substr(0, path.find_last_not_of('/'));
 
 			processNode(scene->mRootNode, scene);
 			// 최상위 mRootNode를 넘겨주어 재귀방식으로 모든 메쉬를 하나씩 꺼내옴
@@ -71,7 +70,7 @@ class Model
 				// 두 번 건너뛰어 접근 : 노드 자체에는 정점,텍스쳐 좌표가 없음
 				// 찾아낸 aiMesh포이터를 processMesh로 전달
 				// 메쉬 데이터를 변환하여 Model의 meshes 배열에 추가
-				meshes.push_back(porcessMesh(mesh, scene));
+				meshes.push_back(processMesh(mesh, scene));
 			}
 			// 현재 노드의 자식 노드들에 대한 재귀(자식 노드 개수만큼)
 			for (unsigned int i = 0; i < node->mNumChildren; i++)
@@ -80,12 +79,57 @@ class Model
 			}
 		}
 		// Assimp가 읽어온 데이터 구조체(aiMesh) -> OpenGL 규격의 Mesh객체(vertices,indices,textrue)로 변환
-		Mesh porcessMesh(aiMesh* mesh, const aiScene* scene)
-		{
+		Mesh processMesh(aiMesh* mesh, const aiScene* scene)
+		{	
+			vector<Vertex> vertices;
+			vector<unsigned int> indices;
+			vector<Texture> textures;
 
+			for (unsigned int i=0; i < mesh->mNumVertices; i++)
+			{
+				Vertex vertex;
+
+				// 위치 
+				vertex.Position = glm::vec3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
+				// 법선
+				if (mesh->HasNormals())
+				{
+					vertex.Normal = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+				}
+				// 텍스쳐 좌표
+				if (mesh->mTextureCoords[0])
+				{
+					vertex.TexCoord = glm::vec2(mesh->mTextureCoords[i]->x, mesh->mTextureCoords[i]->y);
+				}
+				else
+					vertex.TexCoord = glm::vec2(0.0f, 0.0f);
+
+				vertices.push_back(vertex);
+			}
+
+			// 인덱스 데이터 추출(EBO에 들어갈 정보)
+			for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+			{
+				// aiFace : 하나의 면(폴리곤)
+				// loadModel에서 Triangulat 옵션 -> 모든 face는 삼각형
+				aiFace face = mesh->mFaces[i];  //메쉬를 구성하는 모든 '면'객체들의 배열
+
+				for (unsigned int j = 0; j < face.mNumIndices; j++) // 면을 이루는 인덱스 개수 만큼
+					indices.push_back(face.mIndices[j]);	// 정점 번호 배열
+			}
+			// aiMesh 안에는 자신이 사용하는 인덱스 번호만 있음 -> 이 번호로 scene->mMaterials배열로 가서 aiMaterial객체를 찾아옴
+			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+			// loadMaterialTextures 함수로 이미지(diffuse,specular)를 불ㄹ와 textures배열에 합침(insert)
+			vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+			textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+
+			vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+			textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+			// C++ Mesh 클래스 생성자로 넘겨 Mesh객체로 변환
+			return Mesh(vertices, indices, textures);
 		}
 
-		vector<Texture> loadMaterialTextrues(aiMaterial* material, aiTextureType type, string typeName)
+		vector<Texture> loadMaterialTextures(aiMaterial* material, aiTextureType type, string typeName)
 		{
 			
 		}

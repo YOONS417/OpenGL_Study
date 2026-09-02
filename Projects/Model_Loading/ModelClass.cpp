@@ -62,7 +62,10 @@ class Model
 		// loadModel에서 넘겨받은 부모-자식관계의 구조를 Root부터 끝까지 탐색, 3D 메쉬 데이터들을 꺼내옴
 		void processNode(aiNode* node, const aiScene* scene)
 		{
+			for (unsigned int i = 0; i < node->mNumMeshes; i++)
+			{
 
+			}
 		}
 
 		Mesh porcessMesh(aiMesh* mesh, const aiScene* scene)

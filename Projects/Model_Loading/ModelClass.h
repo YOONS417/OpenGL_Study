@@ -12,10 +12,12 @@
 #include <iostream>
 #include <vector>
 #include "MeshClass.h"
+#include "Texture.h"
+
 using namespace std;
 // 텍스쳐 파일 로드용 함수
 
-unsigned  int TextureFromFile(const char* path, const std::string& direcroty);
+//unsigned  int TextureFromFile(const char* path, const std::string& directory);
 
 class Model
 {
@@ -163,7 +165,7 @@ class Model
 				{
 					Texture texture;
 					// 이미지를 읽어 GPU 메모리에 올리고 텍스쳐 ID 반환
-					texture.id = TextureFromFile(str.C_Str(), this->directory);
+					texture.id = LoadTexture(str.C_Str(), this->directory);
 					texture.type = typeName;
 					texture.path = str.C_Str();
 
@@ -174,9 +176,4 @@ class Model
 			return textures;
 		}
 };
-
-unsigned  int TextureFromFile(const char* path, const std::string& direcroty)
-{
-
-}
 #endif

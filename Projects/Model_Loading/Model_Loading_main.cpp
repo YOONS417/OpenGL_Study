@@ -151,7 +151,7 @@ int main() {
     unsigned int SpecualrMap = LoadTexture("metaledge.png"); //specular image
     LightingCube_Shader.use();
     LightingCube_Shader.setInt("material.diffuse", 0);  //texture unit
-    LightingCube_Shader.setInt("material.specular", 1); //빛의 세기를 조절하는 가이드라인으로만 사용s
+    LightingCube_Shader.setInt("material.specular", 1); //빛의 세기를 조절하는 가이드라인으로만 사용
 
     // --Instruction-- 
     std::cout << "\n" << "=================Camera Control=================" << std::endl;

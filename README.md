@@ -135,7 +135,8 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | 프로젝트명 | 실행 결과 | 설명 |
 | :--- | :---: | :--- |
 | **09. Assimp** | Libraries폴더 참고 | Libraries폴더에 assimp폴더 추가 및 vcpkg,라이브러리 추가 |
-| **09-1. Mesh Class** |  |  |
+| **09-1. Mesh Class** |  | Vertex, Texture struct 설정, Mesh 생성자에게 정점, 인덱스, 텍스쳐 정도 전달, setupMesh 함수에서 버퍼 초기화 : offsetof으로 각 변수가 몇 바이트 떨어져 있는지 자동으로 계산, Draw함수로 텍스쳐 바바인딩 및 렌더링 |
+| **09-2. Model Class** |  |  |
 
 
 </div>

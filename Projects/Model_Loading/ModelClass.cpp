@@ -21,7 +21,8 @@ class Model
 		vector<Mesh> meshes;
 		string directory;
 
-		vector<Texture> loaded_texture;
+		vector<Texture> loaded_texture;  
+		// 로드한 모든 텍스쳐의 정보(ID,경로)를 보관하는 중앙 cache 역할
 
 		Model(string const& path)
 		{
@@ -126,12 +127,48 @@ class Model
 			vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
 			textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 			// C++ Mesh 클래스 생성자로 넘겨 Mesh객체로 변환
+			// 생성자가 실행되면서 내부의 setupMesh()가 작동해 VBO,EBO가 생성
 			return Mesh(vertices, indices, textures);
 		}
 
 		vector<Texture> loadMaterialTextures(aiMaterial* material, aiTextureType type, string typeName)
 		{
-			
+			vector<Texture> textures;
+			// 해당 타입의 텍스쳐가 Material에 몇 개 있는지 확인
+			for (unsigned int i = 0; i < material->GetTextureCount(type); i++) 
+			{
+				// material에 저장된 텍스쳐의 갯수 확인
+				aiString str;
+				// 텍스쳐 이미지 파일의 상대경로("~.png")를 str에 저장
+				material->GetTexture(type, i, &str);
+
+				// 이미 도르된 텍스쳐인지 검사 : Caching
+				// 모델은 Mesh파츠로 나뉘어 있지만, 동일한 텍스쳐 파일을 공유하는 경우가 많음
+				bool skip = false;
+				for (unsigned int j = 0; j < loaded_texture.size(); j++)
+				{
+					// 경로 문자열 비교(동일한 파일인지 검사)
+					if (strcmp(loaded_texture[j].path.data(), str.C_Str()) == 0)
+					{
+						textures.push_back(loaded_texture[j]);  //
+						skip = true;	// 중복은 스킵
+						break;
+					}
+				}
+				// cache에 없는 새로운 텍스쳐만 새로 로드
+				if (!skip)
+				{
+					Texture texture;
+					// 이미지를 읽어 GPU 메모리에 올리고 텍스쳐 ID 반환
+					texture.id = TextureFromFile(str.C_Str(), this->directory);
+					texture.type = typeName;
+					texture.path = str.C_Str();
+
+					textures.push_back(texture);
+					loaded_texture.push_back(texture);	// cache 리스트에 저장
+				}
+			}
+			return textures;
 		}
 
 };

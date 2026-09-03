@@ -1,3 +1,5 @@
+#ifndef MODEL_H
+#define MODEL_H
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -10,9 +12,9 @@
 #include <iostream>
 #include <vector>
 #include "MeshClass.h"
-
 using namespace std;
 // 텍스쳐 파일 로드용 함수
+
 unsigned  int TextureFromFile(const char* path, const std::string& direcroty);
 
 class Model
@@ -22,7 +24,7 @@ class Model
 		string directory;
 
 		vector<Texture> loaded_texture;  
-		// 로드한 모든 텍스쳐의 정보(ID,경로)를 보관하는 중앙 cache 역할
+		// 중복 로딩을 방지하기 위한 모든 텍스쳐의 정보(ID,경로)를 보관하는 중앙 cache 역할
 
 		Model(string const& path)
 		{
@@ -107,7 +109,6 @@ class Model
 
 				vertices.push_back(vertex);
 			}
-
 			// 인덱스 데이터 추출(EBO에 들어갈 정보)
 			for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 			{
@@ -133,7 +134,8 @@ class Model
 
 		vector<Texture> loadMaterialTextures(aiMaterial* material, aiTextureType type, string typeName)
 		{
-			vector<Texture> textures;
+			vector<Texture> textures; // 개별 Mesh 전용 리스트
+
 			// 해당 타입의 텍스쳐가 Material에 몇 개 있는지 확인
 			for (unsigned int i = 0; i < material->GetTextureCount(type); i++) 
 			{
@@ -144,13 +146,14 @@ class Model
 
 				// 이미 도르된 텍스쳐인지 검사 : Caching
 				// 모델은 Mesh파츠로 나뉘어 있지만, 동일한 텍스쳐 파일을 공유하는 경우가 많음
+				// 중복 검사를 거쳐 GPU메모리에 중복 생성, 메모리 낭비, 프레임 드랍 방지
 				bool skip = false;
 				for (unsigned int j = 0; j < loaded_texture.size(); j++)
 				{
 					// 경로 문자열 비교(동일한 파일인지 검사)
-					if (strcmp(loaded_texture[j].path.data(), str.C_Str()) == 0)
+					if (strcmp(loaded_texture[j].path.data(), str.C_Str()) == 0) // 동일한 파일이 있는 경우
 					{
-						textures.push_back(loaded_texture[j]);  //
+						textures.push_back(loaded_texture[j]);  // 이미 존재한 파일을 GPU에 올리지 않고, ID만 텍스쳐 목록(textures)에 전달
 						skip = true;	// 중복은 스킵
 						break;
 					}
@@ -164,11 +167,16 @@ class Model
 					texture.type = typeName;
 					texture.path = str.C_Str();
 
-					textures.push_back(texture);
-					loaded_texture.push_back(texture);	// cache 리스트에 저장
+					textures.push_back(texture);  // 현재 메쉬에게 이 ID를 사용하라고 전달
+					loaded_texture.push_back(texture);	// 새로운 텍스쳐를 cache 리스트에 저장
 				}
 			}
 			return textures;
 		}
-
 };
+
+unsigned  int TextureFromFile(const char* path, const std::string& direcroty)
+{
+
+}
+#endif

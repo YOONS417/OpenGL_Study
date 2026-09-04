@@ -3,16 +3,26 @@
 #include "Texture.h"
 #include "stb_image.h"
 
-unsigned int LoadTexture(const std::string& path, bool flip) {
+unsigned int LoadTexture(const std::string& path, const std::string& directory, bool flip) {
+	std::string fullpath;
+	if (directory.empty()) {
+		fullpath = path;
+	}
+	else {
+		if (directory.back() == '/' || directory.back() == '\\')
+			fullpath = directory + path;
+		else
+			fullpath = directory + '/' + path;
+	}
+
 	unsigned int TextureID;
 	glGenTextures(1, &TextureID);
 
-	stbi_set_flip_vertically_on_load(flip);  // 이미지 상하 반전 설정
+	stbi_set_flip_vertically_on_load(flip); // 이미지 상하 반전 설정
 
 	int width, height, nrComponents;
 	// CPU 메모리로 이미지 로드
-	unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrComponents, 0); 
-	
+	unsigned char* data = stbi_load(fullpath.c_str(), &width, &height, &nrComponents, 0);
 	if (data) {
 		GLenum format = GL_RGB;
 		if (nrComponents == 1) format = GL_RED;
@@ -31,12 +41,12 @@ unsigned int LoadTexture(const std::string& path, bool flip) {
 
 		stbi_image_free(data);
 
-		std::cout << "Texture successfully loaded at path : " << path << std::endl;
+		std::cout << "Texture successfully loaded at path : " << fullpath << std::endl;
+		std::cout << "Texture Image nrComponents : " << nrComponents << std::endl;
 	}               
 	else {
-		std::cout << "Texture failed to load at path : " << path << std::endl;
+		std::cout << "Texture failed to load at path : " << fullpath << std::endl;
 		stbi_image_free(data);
 	}
-
 	return TextureID;
 }

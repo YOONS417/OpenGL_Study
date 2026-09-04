@@ -13,7 +13,6 @@
 #include <vector>
 #include "MeshClass.h"
 #include "Texture.h"
-
 using namespace std;
 // 텍스쳐 파일 로드용 함수
 

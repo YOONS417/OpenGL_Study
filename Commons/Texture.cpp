@@ -3,7 +3,7 @@
 #include "Texture.h"
 #include "stb_image.h"
 
-unsigned int LoadTexture(const std::string& path, const std::string &directory, bool flip) {
+unsigned int LoadTexture(const std::string& path, const std::string& directory, bool flip) {
 	std::string fullpath;
 	if (directory.empty()) {
 		fullpath = path;
@@ -18,7 +18,7 @@ unsigned int LoadTexture(const std::string& path, const std::string &directory, 
 	unsigned int TextureID;
 	glGenTextures(1, &TextureID);
 
-	stbi_set_flip_vertically_on_load(flip);  // 이미지 상하 반전 설정
+	stbi_set_flip_vertically_on_load(flip); // 이미지 상하 반전 설정
 
 	int width, height, nrComponents;
 	// CPU 메모리로 이미지 로드

@@ -16,10 +16,10 @@
     <ClCompile Include="..\..\Commons\Texture.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ModelClass.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="MeshClass.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelClass.h">
       <Filter>헤더 파일</Filter>
     </ClCompile>
   </ItemGroup>

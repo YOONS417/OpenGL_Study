@@ -5,11 +5,11 @@
 
 unsigned int LoadTexture(const std::string& path, const std::string& directory, bool flip) {
 	std::string fullpath;
-	if (directory.empty()) {
-		fullpath = path;
+	if (directory.empty()) {	// directory가 빈 문자열("")인지 검사
+		fullpath = path;		// directory가 없음 -> path(~.png)만 사용
 	}
-	else {
-		if (directory.back() == '/' || directory.back() == '\\')
+	else {		// directory가 존재 -> dir + path 사용
+		if (directory.back() == '/' || directory.back() == '\\')  
 			fullpath = directory + path;
 		else
 			fullpath = directory + '/' + path;

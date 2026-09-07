@@ -56,104 +56,15 @@ int main() {
         std::cout << " Failed to initialze GLAD" << std::endl;
     }
     glEnable(GL_DEPTH_TEST);
+
+	// bulid & compile Shader program
     std::cout << "=================Linked Shaders=================" << std::endl;
-    Shader SunLight_Shader("Shaders/sunlight.vert", "Shaders/sunlight.frag");      // 광원
     Shader LightingCube_Shader("Shaders/cube.vert", "Shaders/MultipleLight.frag");   //Cube Shader
 
+    // load Models
+    
 
-    float cube_vert[] = {  // each point : 0 ~ 7
-        // Fornt surface      //법선  
-       -0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,  // left  bottom     = 0
-        0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f,  // right  bottom    = 1
-        0.5f,  0.5f,  0.5f,   0.0f, 0.0f, 1.0f,   1.0f, 1.0f,  // right  top       = 2
-       -0.5f,  0.5f,  0.5f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f,  // left  top        = 3
-         // Right surface
-        0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,   0.0f, 0.0f,  // left  bottom     = 1
-        0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,   1.0f, 0.0f,  // right  bottom    = 5
-        0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,  // right  top       = 6
-        0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,   0.0f, 1.0f,  // left  top        = 2
-        // Left surface
-       -0.5f, -0.5f, -0.5f,  -1.0f, 0.0f, 0.0f,   0.0f, 0.0f,  // left  bottom     = 4
-       -0.5f, -0.5f,  0.5f,  -1.0f, 0.0f, 0.0f,   1.0f, 0.0f,  // right  bottom    = 0
-       -0.5f,  0.5f,  0.5f,  -1.0f, 0.0f, 0.0f,   1.0f, 1.0f,  // right  top       = 3
-       -0.5f,  0.5f, -0.5f,  -1.0f, 0.0f, 0.0f,   0.0f, 1.0f,  // left  top        = 7
-        // Top surface   
-       -0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,  // left  bottom     = 3
-        0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,  // right  bottom    = 2
-        0.5f,  0.5f, -0.5f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f,  // right  top       = 6
-       -0.5f,  0.5f, -0.5f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,  // left  top        = 7
-        // Bottom surface
-       -0.5f, -0.5f,  0.5f,   0.0f,-1.0f, 0.0f,   0.0f, 0.0f,  // left  bottom     = 0
-        0.5f, -0.5f,  0.5f,   0.0f,-1.0f, 0.0f,   1.0f, 0.0f,  // right  bottom    = 1
-        0.5f, -0.5f, -0.5f,   0.0f,-1.0f, 0.0f,   1.0f, 1.0f,  // right  top       = 5
-       -0.5f, -0.5f, -0.5f,   0.0f,-1.0f, 0.0f,   0.0f, 1.0f,  // left  top        = 4
-        // Back surface
-       -0.5f, -0.5f, -0.5f,   0.0f, 0.0f,-1.0f,   0.0f, 0.0f,  // left  bottom     = 4
-        0.5f, -0.5f, -0.5f,   0.0f, 0.0f,-1.0f,   1.0f, 0.0f,  // right  bottom    = 5
-        0.5f,  0.5f, -0.5f,   0.0f, 0.0f,-1.0f,   1.0f, 1.0f,  // right  top       = 6
-       -0.5f,  0.5f, -0.5f,   0.0f, 0.0f,-1.0f,   0.0f, 1.0f   // left  top        = 7
-    };
-    unsigned int cube_indices[] = {  // indices : 정점 데이터 배열의 행 번호(0~23)
-        0, 1,  2,  0, 2, 3,       // Fornt surface
-        4, 5,  6,  4, 6, 7,       // Right surface
-        8, 9, 10,  8,10,11,       // Left surface  
-        12,13,14, 12,14,15,       // Top surface
-        16,17,18, 16,18,19,       // Bottom surface       
-        20,21,22, 20,22,23        //  Back surface
-    };
-
-    float terrain[] = {
-         -1.0f, -1.0f,  1.0f,   0.0f, 1.0f, 0.0f,
-          1.0f, -1.0f,  1.0f,   0.0f, 1.0f, 0.0f,
-          1.0f, -1.0f, -1.0f,   0.0f, 1.0f, 0.0f,
-         -1.0f, -1.0f, -1.0f,   0.0f, 1.0f, 0.0f
-    };
-    unsigned int terrain_indices[] = {
-        0, 3, 2,
-        0, 1, 2
-    };
-
-    unsigned int VBO, cubeVAO, EBO;
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-    glGenVertexArrays(1, &cubeVAO);
-
-    glBindVertexArray(cubeVAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(cube_vert), cube_vert, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    // 각 면의 볍선벡터
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    //texture
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
-
-    unsigned int sunVAO;
-    glGenVertexArrays(1, &sunVAO);
-    glBindVertexArray(sunVAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    // load texture & Lighting Maps
-    std::cout << "\n" << "=================Loaded Texture=================" << std::endl;
-    unsigned int DiffuseMap = LoadTexture("woodbox.png");
-    unsigned int SpecualrMap = LoadTexture("metaledge.png"); //specular image
-    LightingCube_Shader.use();
-    LightingCube_Shader.setInt("material.diffuse", 0);  //texture unit
-    LightingCube_Shader.setInt("material.specular", 1); //빛의 세기를 조절하는 가이드라인으로만 사용
-
+ 
     // --Instruction-- 
     std::cout << "\n" << "=================Camera Control=================" << std::endl;
     std::string key[] = { "KEY_UP", "KEY_DOWN", "KEY_RIGHT", "KEY_LEFT", "SPACE_BAR", "CONTROL" ,"M", "Scroll", "KEY_F", "KEY_W"};
@@ -162,17 +73,7 @@ int main() {
         std::cout << key[i] << " : " << move[i] << std::endl;
     }
     std::cout << "\n" << "Press esc to exit" << std::endl;
-    // Random Position Cubes with different angle
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<float> disX(-5.0f, 5.0f);
-    std::uniform_real_distribution<float> disY(-5.0f, 5.0f);
-    std::uniform_real_distribution<float> disZ(-5.0f, 5.0f);
-    const int Cube_count = 5;
-    std::vector<glm::vec3> randomPos;
-    for (int i = 0; i < Cube_count; i++) {
-        randomPos.push_back(glm::vec3(disX(gen), disY(gen), disZ(gen)));
-    }
+
 
     // --Render Loop-- 
     while (!glfwWindowShouldClose(window))
@@ -202,48 +103,15 @@ int main() {
         model = glm::rotate(model, RealTime * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
         LightingCube_Shader.setMat4("Model", model);
-        // Bind Texture
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, DiffuseMap);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, SpecualrMap);
+    
         // draw
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-        // ===========================Random Cube========================
-        glBindVertexArray(cubeVAO);
-        for (unsigned int i = 0; i < Cube_count; i++) {
-            model = glm::mat4(1.0f);
-            float angle = 20.0f * i;
-            model = glm::translate(model, randomPos[i]);
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-            // model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
-            LightingCube_Shader.setMat4("Model", model);
-            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-        }
-        // =============================Sun==============================
-        SunLight_Shader.use();
-        SunLight_Shader.setMat4("View", view);  // Vertex Shader로 전달  
-        SunLight_Shader.setMat4("Projection", projection);
-        //---Sun--- 
-        model = glm::mat4(1.0f);
-        glm::mat4 Sun = glm::translate(model, Pointlight_Pos);
-        Sun = glm::rotate(Sun, glm::radians(30.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        Sun = glm::rotate(Sun, RealTime * glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));  //자전축
-        Sun = glm::scale(Sun, glm::vec3(0.5f, 0.5f, 0.5f));
-        SunLight_Shader.setMat4("Model", Sun);
-        // draw
-        glBindVertexArray(sunVAO);
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-
+    
+   
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-    glDeleteVertexArrays(1, &cubeVAO);
-    glDeleteVertexArrays(1, &sunVAO);
-    glDeleteBuffers(1, &EBO);
-    glDeleteBuffers(1, &VBO);
-
     glfwTerminate();
     return 0;
 }

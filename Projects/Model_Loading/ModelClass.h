@@ -164,7 +164,7 @@ class Model
 				{
 					Texture texture;
 					// 이미지를 읽어 GPU 메모리에 올리고 텍스쳐 ID 반환
-					texture.id = LoadTexture(str.C_Str(), this->directory, true);
+					texture.id = LoadTexture(str.C_Str(), this->directory, true); // this->directory : Model객체가 갖고있는 디렉토리 경로
 					texture.type = typeName;
 					texture.path = str.C_Str();
 

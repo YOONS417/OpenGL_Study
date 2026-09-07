@@ -35,12 +35,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\sunlight.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\sunlight.vert">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Shaders\MultipleLight.frag">
       <Filter>Shaders</Filter>
     </None>

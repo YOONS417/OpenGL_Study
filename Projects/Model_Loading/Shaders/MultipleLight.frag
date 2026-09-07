@@ -6,8 +6,8 @@ in vec3 FragPos;
 in vec2 TextureCoord;
 
 struct Material {  //ambient를 유지 -> 오브제트 전체에 동일하게 적용
-	sampler2D diffuse;	 // Diffuse map, 0번 슬롯	 
-	sampler2D specular;  // Specular map, 1번 슬롯
+	sampler2D texture_diffuse1;	 // Diffuse map, 0번 슬롯	 
+	sampler2D texture_specular1;  // Specular map, 1번 슬롯
 	float shininess;	 // 64	
 };
 // Directional Light 

@@ -152,8 +152,6 @@
   <ItemGroup>
     <None Include="Shaders\model.vert" />
     <None Include="Shaders\MultipleLight.frag" />
-    <None Include="Shaders\sunlight.frag" />
-    <None Include="Shaders\sunlight.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Commons\Camera.h" />

@@ -57,7 +57,7 @@ class Model
 				return;
 			}
 			// 파일의 디렉토리 경로 추출 : 텍스쳐 로딩 시 필요(오브젝트 파일 내부에는 텍스쳐 이미지 경로가 아닌 파일 이름으로만 있는 경우가 많음)
-			directory = path.substr(0, path.find_last_not_of('/'));
+			directory = path.substr(0, path.find_last_of('/'));
 
 			processNode(scene->mRootNode, scene);
 			// 최상위 mRootNode를 넘겨주어 재귀방식으로 모든 메쉬를 하나씩 꺼내옴

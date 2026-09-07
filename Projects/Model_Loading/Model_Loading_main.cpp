@@ -14,6 +14,8 @@
 #include "stb_image.h"
 #include "Camera.h"
 #include "Texture.h"
+#include "MeshClass.h"
+#include "ModelClass.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -59,10 +61,12 @@ int main() {
 
 	// bulid & compile Shader program
     std::cout << "=================Linked Shaders=================" << std::endl;
-    Shader LightingCube_Shader("Shaders/cube.vert", "Shaders/MultipleLight.frag");   //Cube Shader
+    Shader model_shader("Shaders/model.vert", "Shaders/MultipleLight.frag");   //Cube Shader
+
 
     // load Models
-    
+    Model test_model("AssaultRifle_01.obj");
+
 
  
     // --Instruction-- 
@@ -89,26 +93,25 @@ int main() {
 
         // ====================Light Reflected Cube======================
         //tutorial_light(LightingCube_Shader, camera);
-        multiplelight(LightingCube_Shader, camera, isFlashlightOn);
+        multiplelight(model_shader, camera, isFlashlightOn);
 
         // view, projection 생성    
         glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)  
         glm::mat4 projection; // projection matrix : perspective 사용
         projection = glm::perspective(glm::radians(camera.CamFov()), (float)Screen_Width / (float)Screen_Height, 0.1f, 100.0f);
-        LightingCube_Shader.setMat4("View", view);  // Shader Class 사용, vertex shader로 전달
-        LightingCube_Shader.setMat4("Projection", projection);
-        //---cube---  
+        model_shader.setMat4("View", view);  // Shader Class 사용, vertex shader로 전달
+        model_shader.setMat4("Projection", projection);
+
+        //------  
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
         model = glm::rotate(model, RealTime * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
-        LightingCube_Shader.setMat4("Model", model);
-    
-        // draw
-        glBindVertexArray(cubeVAO);
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-    
-   
+        model_shader.setMat4("Model", model);
+
+		test_model.Draw(model_shader);  // Draw model
+      
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

@@ -64,7 +64,7 @@ int main() {
 
 
     // load Models
-    Model test_model("AssaultRifle_01.obj");
+    Model test_model("Models/backpack.obj");
 
 
  

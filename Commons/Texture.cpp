@@ -1,5 +1,6 @@
 #include <glad/glad.h>
 #include <iostream>
+#include <filesystem>
 #include "Texture.h"
 #include "stb_image.h"
 
@@ -9,10 +10,7 @@ unsigned int LoadTexture(const std::string& path, const std::string& directory, 
 		fullpath = path;		// directory가 없음 -> path(~.png)만 사용
 	}
 	else {		// directory가 존재 -> dir + path 사용
-		if (directory.back() == '/' || directory.back() == '\\')  
-			fullpath = directory + path;
-		else
-			fullpath = directory + '/' + path;
+		fullpath = (std::filesystem::path(directory) / path).string();
 	}
 
 	unsigned int TextureID;
@@ -29,6 +27,7 @@ unsigned int LoadTexture(const std::string& path, const std::string& directory, 
 		else if (nrComponents == 3) format = GL_RGB;
 		else if (nrComponents == 4) format = GL_RGBA;
 
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // 텍스쳐 데이터 정렬 설정(1바이트 단위)
 		// GPU 메모리(VRAM)로 정송 및 바인딩
 		glBindTexture(GL_TEXTURE_2D, TextureID);
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);

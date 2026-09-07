@@ -1,4 +1,3 @@
-
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -91,9 +90,7 @@ int main() {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);    //BG Color  
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // depth buffer 초기화
 
-        // ====================Light Reflected Cube======================
-        //tutorial_light(LightingCube_Shader, camera);
-        multiplelight(model_shader, camera, isFlashlightOn);
+        model_shader.use();
 
         // view, projection 생성    
         glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)  
@@ -102,11 +99,12 @@ int main() {
         model_shader.setMat4("View", view);  // Shader Class 사용, vertex shader로 전달
         model_shader.setMat4("Projection", projection);
 
-        //------  
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::rotate(model, RealTime * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
         model_shader.setMat4("Model", model);
+
+        multiplelight(model_shader, camera, isFlashlightOn);
 
 		test_model.Draw(model_shader);  // Draw model
       

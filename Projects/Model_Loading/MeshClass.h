@@ -1,3 +1,4 @@
+#pragma once
 #ifndef MESH_S
 #define MESH_H
 

@@ -165,7 +165,7 @@ class Model
 					Texture texture;
 					// 이미지를 읽어 GPU 메모리에 올리고 텍스쳐 ID 반환
 					texture.id = LoadTexture(str.C_Str(), this->directory, false); // this->directory : Model객체가 갖고있는 디렉토리 경로
-					texture.type = typeName;
+					texture.type = typeName;								// true : 중복으로 뒤집은 이미지가 다시 뒤집힘
 					texture.path = str.C_Str();
 
 					textures.push_back(texture);  // 현재 메쉬에게 이 ID를 사용하라고 전달

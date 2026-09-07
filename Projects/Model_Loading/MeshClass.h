@@ -70,7 +70,6 @@ class Mesh {
 			// 상태 복원
 			glBindVertexArray(0);
 			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
 	private:

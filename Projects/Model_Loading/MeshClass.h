@@ -43,7 +43,7 @@ class Mesh {
 			setupMesh();
 		}
 
-		void Draw(Shader& shader)
+		void Draw(Shader &shader)
 		{
 			unsigned int diffuse_nr = 1;	// 텍스쳐 타입의 개수
 			unsigned int specular_nr = 1;

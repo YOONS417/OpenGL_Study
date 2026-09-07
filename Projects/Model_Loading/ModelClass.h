@@ -32,7 +32,7 @@ class Model
 			loadModel(path);
 		}
 		// 반복해서 mesh들의 Draw함수를 호출
-		void Draw(Shader shader)
+		void Draw(Shader &shader)
 		{
 			for (unsigned int i = 0; i < meshes.size(); i++)
 				meshes[i].Draw(shader);
@@ -57,8 +57,13 @@ class Model
 				return;
 			}
 			// 파일의 디렉토리 경로 추출 : 텍스쳐 로딩 시 필요(오브젝트 파일 내부에는 텍스쳐 이미지 경로가 아닌 파일 이름으로만 있는 경우가 많음)
-			directory = path.substr(0, path.find_last_of('/'));
-
+			size_t lastSlash = path.find_last_of("/\\");
+			if (lastSlash != string::npos) {
+				directory = path.substr(0, lastSlash);
+			}
+			else {
+				directory = ""; // 현재 작업 디렉토리
+			}
 			processNode(scene->mRootNode, scene);
 			// 최상위 mRootNode를 넘겨주어 재귀방식으로 모든 메쉬를 하나씩 꺼내옴
 		}
@@ -101,9 +106,9 @@ class Model
 					vertex.Normal = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
 				}
 				// 텍스쳐 좌표
-				if (mesh->mTextureCoords[0])
+				if (mesh->mTextureCoords[0]) // 현재 메쉬에 UV텍스쳐 좌표가 존재하는지 검사
 				{
-					vertex.TexCoord = glm::vec2(mesh->mTextureCoords[i]->x, mesh->mTextureCoords[i]->y);
+					vertex.TexCoord = glm::vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
 				}
 				else
 					vertex.TexCoord = glm::vec2(0.0f, 0.0f);

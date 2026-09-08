@@ -59,15 +59,13 @@ int main() {
     glEnable(GL_DEPTH_TEST);
 
 	// bulid & compile Shader program
-    std::cout << "=================Linked Shaders=================" << std::endl;
+    std::cout << "==================Linked Shaders==================" << std::endl;
     Shader model_shader("Shaders/model.vert", "Shaders/MultipleLight.frag");   //Cube Shader
 
+    std::cout << "==================Linked Textures=================" << std::endl;
 
-    // load Models
     Model test_model("Models/backpack.obj");
 
-
- 
     // --Instruction-- 
     std::cout << "\n" << "=================Camera Control=================" << std::endl;
     std::string key[] = { "KEY_UP", "KEY_DOWN", "KEY_RIGHT", "KEY_LEFT", "SPACE_BAR", "CONTROL" ,"M", "Scroll", "KEY_F", "KEY_W"};
@@ -100,7 +98,7 @@ int main() {
         model_shader.setMat4("Projection", projection);
 
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::rotate(model, RealTime * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, RealTime * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
         model_shader.setMat4("Model", model);
 

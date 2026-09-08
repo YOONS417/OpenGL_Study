@@ -11,6 +11,7 @@
 
 using namespace std;
 
+//각 객체들만 모은 동적 배열
 //데이터 보관 : 정점, 인덱스, 텍스쳐
 //GPU 버퍼 관리 : VAO, VBO, EBO 생성 및 바인딩
 struct Vertex {
@@ -24,7 +25,7 @@ struct Texture {
 	string type;		// diffuse, specular등 타입
 	string path;		// 파일 경로(중복 로드 방지)
 };
-
+// 실질적으로 OpenGL GPU메모리에 접근할 수 있는 Mesh 객체	
 class Mesh {
 	public:
 		vector<Vertex> vertices;
@@ -42,8 +43,8 @@ class Mesh {
 
 			setupMesh();
 		}
-
-		void Draw(Shader &shader)
+		// Mesh를 그리기 위해 Shader에 텍스쳐 정보를 전달하고, VAO를 바인딩 후 glDrawElements() 호출
+		void Draw(Shader& shader)	
 		{
 			unsigned int diffuse_nr = 1;	// 텍스쳐 타입의 개수
 			unsigned int specular_nr = 1;
@@ -77,17 +78,17 @@ class Mesh {
 		unsigned int VBO, EBO;
 		void setupMesh()
 		{
-			glGenBuffers(1, &VBO);
+			glGenBuffers(1, &VBO);	//GPU에 버퍼 객체 ID를 생성
 			glGenBuffers(1, &EBO);
 			glGenVertexArrays(1, &VAO);
 
-			glBindVertexArray(VAO);
+			glBindVertexArray(VAO);  // 바인딩 후 이후 설정(아래)되는 버퍼 상태를 기록
 
-			// VBO : Vertex 구조체 배열을 GPU 메모리에 복사
-			glBindBuffer(GL_ARRAY_BUFFER, VBO);
+			// VBO : Vertex 구조체 배열을 GPU VBO메모리에 복사
+			glBindBuffer(GL_ARRAY_BUFFER, VBO);	
 			glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
-			// EBO : 인덱스 데이터 복사
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+			// EBO : 인덱스 데이터를 GPU EBO 메모리에 복사
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO); 
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
 			// 정점 위치
 			glEnableVertexAttribArray(0);
@@ -101,7 +102,7 @@ class Mesh {
 			glEnableVertexAttribArray(2);
 			glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoord));
 
-			glBindVertexArray(0);
+			glBindVertexArray(0);	// VAO 바인딩 해제
 		}
 }; 
 #endif

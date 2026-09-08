@@ -64,7 +64,7 @@ int main() {
 
     std::cout << "==================Linked Textures=================" << std::endl;
 
-    Model test_model("Models/backpack.obj");
+    Model test_model("Models/backpack.obj");   //3D Model Load(객체 생성)
 
     // --Instruction-- 
     std::cout << "\n" << "=================Camera Control=================" << std::endl;

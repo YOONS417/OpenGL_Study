@@ -248,7 +248,7 @@ void multiplelight(Shader& Multiplelight_Shader, const Camera& camera, bool isFl
         Multiplelight_Shader.setFloat("spotlight.constant", 1.0f); //Distance setting(100)
         Multiplelight_Shader.setFloat("spotlight.linear", 0.045f);
         Multiplelight_Shader.setFloat("spotlight.quadratic", 0.0075f);
-        Multiplelight_Shader.setFloat("spotlight.cutoff", glm::cos(glm::radians(6.0f))); //Spotlight의 반지름
-        Multiplelight_Shader.setFloat("spotlight.outercutoff", glm::cos(glm::radians(9.0f))); //Spotlight의 부드러운 경계
+        Multiplelight_Shader.setFloat("spotlight.cutoff", glm::cos(glm::radians(10.0f))); //Spotlight의 반지름
+        Multiplelight_Shader.setFloat("spotlight.outercutoff", glm::cos(glm::radians(15.0f))); //Spotlight의 부드러운 경계
     }
 }

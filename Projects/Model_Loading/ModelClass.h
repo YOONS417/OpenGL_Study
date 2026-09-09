@@ -15,7 +15,6 @@
 #include "MeshClass.h"
 
 using namespace std;
-// 텍스쳐 파일 로드용 함수
 
 class Model
 {
@@ -55,7 +54,8 @@ private:
 			cout << "ERROR::ASSIMP::" << importer.GetErrorString() << endl;
 			return;
 		}
-		// 파일의 디렉토리 경로 추출 : 텍스쳐 로딩 시 필요(오브젝트 파일 내부에는 텍스쳐 이미지 경로가 아닌 파일 이름으로만 있는 경우가 많음)
+		// 파일의 디렉토리 경로 추출 : 텍스쳐 로딩 시 필요
+		// (오브젝트 파일 내부에는 텍스쳐 이미지 경로가 아닌 파일 이름으로만 있는 경우가 많음)
 		size_t lastSlash = path.find_last_of("/\\");
 		if (lastSlash != string::npos) {
 			directory = path.substr(0, lastSlash);

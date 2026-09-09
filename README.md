@@ -139,7 +139,16 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | **09-2. Model Class** |  | loaded texture 중복 로딩을 방지하기 위한 모든 텍스쳐의 정보를 보관하는 중앙 cache 역할 / loadModel : importer 객체로 데이터 통일, aiScene으로 모델 전체 정보를 한곳에 저장한 최상위 데이터 포인터, processNode에서 최상위 mRootNode를 넘겨주며 모든 mesh를 꺼내옴,   |
 | **09-3. Load 3D Model** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/559867fa-ddec-4be5-add6-157cf49103e2" autoplay loop muted playsinline controls width="250"></video> | 3D Model Load |
 
+</div>
+</details>
+<details>
+<summary><b> Ch 10. Advanced OpenGL  </b></summary>   
+<div id="ch1-table" markdown="1">
+<br>
 
+| 프로젝트명 | 실행 결과 | 설명 |
+| :--- | :---: | :--- |
+| **10. Depth testing** |  |  |
 
 </div>
 </details>

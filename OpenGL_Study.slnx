@@ -9,7 +9,7 @@
   <Project Path="C++_Learning/ch_04/ch_04.vcxproj" Id="47690e54-ebd9-4226-9089-11ad97b979b2" />
   <Project Path="Projects/Camera/Camera.vcxproj" Id="4edc3b92-536b-4bc7-98f9-2dba05304713" />
   <Project Path="Projects/Coordinate_sys/Coordinate_sys.vcxproj" Id="451c755b-e168-40db-bc78-a0061be34120" />
-  <Project Path="Projects/depthtesting/depthtesting.vcxproj" Id="960330d1-05d9-4e4b-bafc-65b843a95e99" />
+  <Project Path="Projects/Depth_testing/Depth_testing.vcxproj" Id="f4f3f728-37e2-42a0-b13d-0f7e7096ab13" />
   <Project Path="Projects/Lighting/Lighting.vcxproj" Id="5b0718a7-fe08-4e7f-b555-ba455ec50348" />
   <Project Path="Projects/Model_Loading/Model_Loading.vcxproj" Id="29ffc47b-ec70-4fbb-9998-03e29e85f734" />
   <Project Path="Projects/Rectangle/Rectangle.vcxproj" Id="5056d862-6414-406a-b838-6aecdccd9617" />

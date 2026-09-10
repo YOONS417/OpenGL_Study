@@ -39,7 +39,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
-    GLFWwindow* window = glfwCreateWindow(Screen_Width, Screen_Height, "Project_Lighting", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(Screen_Width, Screen_Height, "Project_Depth_testing", NULL, NULL);
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -154,18 +154,8 @@ int main() {
     for (int i = 0; i < std::size(move); i++) {
         std::cout << key[i] << " : " << move[i] << std::endl;
     } 
-	std::cout << "\n" << "Press esc to exit" << std::endl;
-    // Random Position Cubes with different angle
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<float> disX(-5.0f, 5.0f);
-    std::uniform_real_distribution<float> disY(-5.0f, 5.0f);
-    std::uniform_real_distribution<float> disZ(-5.0f, 5.0f);
-    const int Cube_count = 5;
-    std::vector<glm::vec3> randomPos;
-    for (int i=0; i < Cube_count; i++) {
-        randomPos.push_back(glm::vec3(disX(gen), disY(gen), disZ(gen)));
-    }
+	std::cout << "\n" << "Press Esc to exit" << std::endl;
+
     
     // --Render Loop-- 
     while (!glfwWindowShouldClose(window))    
@@ -192,7 +182,6 @@ int main() {
         //---cube---  
         glm::mat4 model = glm::mat4(1.0f);     
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));  
-        model = glm::rotate(model, RealTime * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
         LightingCube_Shader.setMat4("Model", model);   
         // Bind Texture
@@ -203,17 +192,7 @@ int main() {
         // draw
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0); 
-        // ===========================Random Cube========================
-        glBindVertexArray(cubeVAO);
-        for (unsigned int i = 0; i < Cube_count; i++) {
-            model = glm::mat4(1.0f);
-            float angle = 20.0f * i;
-            model = glm::translate(model, randomPos[i]);
-            model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-           // model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
-            LightingCube_Shader.setMat4("Model", model);
-            glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-        } 
+
         // =============================Sun==============================
         SunLight_Shader.use();
         SunLight_Shader.setMat4("View", view);  // Vertex Shader로 전달  

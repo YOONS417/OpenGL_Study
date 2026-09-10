@@ -7,7 +7,7 @@
     <ClCompile Include="..\..\Commons\Camera.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Lighting_main.cpp">
+    <ClCompile Include="Depth_testing_main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Commons\stb_image.cpp">

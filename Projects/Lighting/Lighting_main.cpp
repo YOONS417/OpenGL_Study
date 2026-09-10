@@ -96,17 +96,7 @@ int main() {
         16,17,18, 16,18,19,       // Bottom surface       
         20,21,22, 20,22,23        //  Back surface
     };
-    float terrain[] = {
-         -1.0f, -1.0f,  1.0f,
-          1.0f, -1.0f,  1.0f,
-          1.0f, -1.0f, -1.0f,
-         -1.0f, -1.0f, -1.0f
-    };
-    unsigned int terrain_indices[] = {
-        0, 3, 2,
-        0, 1, 2
-    };
-
+ 
     unsigned int VBO, cubeVAO, EBO;
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);

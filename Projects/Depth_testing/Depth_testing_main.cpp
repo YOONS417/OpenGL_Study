@@ -27,12 +27,10 @@ float DeltaTime = 0.0f; //카메라 이동 하드웨어 제한 방지(고정된 
 float LastFrame = 0.0f;
 bool isMouseOn, isMpressed = false; // M키 설정
 bool isFlashlightOn, isFpressed = false; // F키 설정
-bool isWireframemodeOn, isWpressed = false;
+bool isWireframemodeOn, isWpressed = false;  // W키 설정
 
-glm::vec3 SunPos(10.0f, 0.0f, 0.0f); //Sun position
-glm::vec3 SunLightColor(1.0f, 1.0f, 1.0f);
 glm::vec3 Light_Direction(0.2f, -0.8f, 0.2f); // 평행광 방향(Directional Light)
-glm::vec3 Pointlight_Pos(7.0f, 0.0f, 0.0f);
+glm::vec3 Pointlight_Pos(7.0f, 0.0f, 0.0f);   // Lighting cube 위치
 
 int main() {
     glfwInit();
@@ -52,11 +50,12 @@ int main() {
         std::cout << " Failed to initialze GLAD" << std::endl;
     }
 
-    glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);   // 깊이 테스트 활성화
     
     std::cout << "=================Linked Shaders=================" << std::endl;
-    Shader SunLight_Shader("Shaders/sunlight.vert", "Shaders/sunlight.frag");      // 광원
-    Shader WoodBox_Shader("Shaders/cube.vert", "Shaders/MultipleLight.frag");   //Cube Shader
+    Shader PointLight_Shader("Shaders/pointlight.vert", "Shaders/pointlight.frag");      // 광원
+    Shader WoodBox_Shader("Shaders/woodbox.vert", "Shaders/MultipleLight.frag");   //Cube Shader
+    //Shader Terrain_Shader(("", ""));
 
     float cube_vert[] = {  // each point : 0 ~ 7
         // Fornt surface      //법선 
@@ -96,19 +95,19 @@ int main() {
         8, 9, 10,  8,10,11,       // Left surface  
         12,13,14, 12,14,15,       // Top surface
         16,17,18, 16,18,19,       // Bottom surface       
-        20,21,22, 20,22,23        //  Back surface
+        20,21,22, 20,22,23        // Back surface
     };
-    float terrain[] = {
-         -1.0f, -1.0f,  1.0f,
-          1.0f, -1.0f,  1.0f,
-          1.0f, -1.0f, -1.0f,
-         -1.0f, -1.0f, -1.0f
+    float terrain[] = {       //normal            //texcoord
+	   -1.0f, -1.0f,  1.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,  // left  bottom     = 0
+		1.0f, -1.0f,  1.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,  // right  bottom    = 1
+		1.0f, -1.0f, -1.0f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f,  // right  top       = 2
+	   -1.0f, -1.0f, -1.0f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f   // left  top        = 3
     };
     unsigned int terrain_indices[] = {
-        0, 3, 2,
-        0, 1, 2
+        0, 1, 2,
+        0, 3, 2
     };
-
+    // cube
     unsigned int VBO, cubeVAO, EBO;
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -122,15 +121,16 @@ int main() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    // 각 면의 볍선벡터
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    // 각 면의 법선벡터
     glEnableVertexAttribArray(1);
-    //texture
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    //texture   
     glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
+    // point light
     unsigned int sunVAO;
     glGenVertexArrays(1, &sunVAO);
     glBindVertexArray(sunVAO);
@@ -139,8 +139,31 @@ int main() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+
+    // Terrain 
+    unsigned int terrainVBO, terrainVAO, terrainEBO;
+	glGenBuffers(1, &terrainVBO);
+    glGenBuffers(1, &terrainEBO);
+    glGenVertexArrays(1, &terrainVAO);
+
+    glBindVertexArray(terrainVAO);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(terrain), terrain, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(terrain_indices), terrain_indices, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8*sizeof(float), (void*)(3 * sizeof(float)));
+
+    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
     // load texture & Lighting Maps
     std::cout << "\n" << "=================Loaded Texture=================" << std::endl;
@@ -169,7 +192,7 @@ int main() {
         // input
         processInput(window);
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);    //BG Color  
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // depth buffer 초기화
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // depth buffer 초기화 : 이전 프레임의 정보에 의해 다음 프레임의 깨짐 방지
 
         // ====================Uniform shader======================
         multiplelight(WoodBox_Shader, camera, isFlashlightOn);
@@ -196,16 +219,16 @@ int main() {
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     
         // =============================Sun==============================
-        SunLight_Shader.use();
-        SunLight_Shader.setMat4("View", view);  // Vertex Shader로 전달  
-        SunLight_Shader.setMat4("Projection", projection);
+        PointLight_Shader.use();
+        PointLight_Shader.setMat4("View", view);  // Vertex Shader로 전달  
+        PointLight_Shader.setMat4("Projection", projection);
         //---Sun--- 
         model = glm::mat4(1.0f);
         glm::mat4 Sun = glm::translate(model, Pointlight_Pos);
         Sun = glm::rotate(Sun, glm::radians(30.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         Sun = glm::rotate(Sun, RealTime * glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));  //자전축
         Sun = glm::scale(Sun, glm::vec3(0.5f, 0.5f, 0.5f));
-        SunLight_Shader.setMat4("Model", Sun);
+        PointLight_Shader.setMat4("Model", Sun);
         // draw
         glBindVertexArray(sunVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);

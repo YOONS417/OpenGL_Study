@@ -143,6 +143,7 @@
     <None Include="Shaders\MultipleLight.frag" />
     <None Include="Shaders\pointlight.frag" />
     <None Include="Shaders\pointlight.vert" />
+    <None Include="Terrain.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Commons\Camera.h" />

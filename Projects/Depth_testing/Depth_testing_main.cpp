@@ -55,7 +55,7 @@ int main() {
     std::cout << "=================Linked Shaders=================" << std::endl;
     Shader PointLight_Shader("Shaders/pointlight.vert", "Shaders/pointlight.frag");      // 광원
     Shader WoodBox_Shader("Shaders/woodbox.vert", "Shaders/MultipleLight.frag");   //Cube Shader
-    //Shader Terrain_Shader(("", ""));
+    Shader Terrain_Shader("Shaders/Terrain.vert", "Shaders/MultipleLight.frag");
 
     float cube_vert[] = {  // each point : 0 ~ 7
         // Fornt surface      //법선 
@@ -105,20 +105,20 @@ int main() {
     };
     unsigned int terrain_indices[] = {
         0, 1, 2,
-        0, 3, 2
+        0, 2, 3
     };
     // cube
-    unsigned int VBO, cubeVAO, EBO;
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
+    unsigned int cubeVBO, cubeVAO, cubeEBO;
+    glGenBuffers(1, &cubeVBO);
+    glGenBuffers(1, &cubeEBO);
     glGenVertexArrays(1, &cubeVAO);
 
-    glBindVertexArray(cubeVAO);
+    glBindVertexArray(cubeVAO); // VAO에 바인딩 시작
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, cubeVBO); //CPU 메로리에 있던 cube_vert를 GPU의 VBO메모리에 복사
     glBufferData(GL_ARRAY_BUFFER, sizeof(cube_vert), cube_vert, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeEBO); // VAO가 EBO를 기억아도록 바인딩
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
@@ -135,9 +135,8 @@ int main() {
     glGenVertexArrays(1, &sunVAO);
     glBindVertexArray(sunVAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(cube_indices), cube_indices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeEBO);
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -150,10 +149,10 @@ int main() {
 
     glBindVertexArray(terrainVAO);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, terrainVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(terrain), terrain, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, terrainEBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(terrain_indices), terrain_indices, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
@@ -167,11 +166,15 @@ int main() {
 
     // load texture & Lighting Maps
     std::cout << "\n" << "=================Loaded Texture=================" << std::endl;
-    unsigned int DiffuseMap = LoadTexture("woodbox.png");
-    unsigned int SpecualrMap = LoadTexture("metaledge.png"); //specular image
+    unsigned int Cube_DiffuseMap = LoadTexture("Cube/woodbox.png");
+    unsigned int Cube_SpecualrMap = LoadTexture("Cube/metaledge.png"); //specular image
     WoodBox_Shader.use();
     WoodBox_Shader.setInt("material.diffuse", 0);  //texture unit
     WoodBox_Shader.setInt("material.specular", 1); //빛의 세기를 조절하는 가이드라인으로만 사용s
+
+	unsigned int Terrain_DiffuseMap = LoadTexture("Terrain/Rock058_2K-PNG_Color.png");
+    Terrain_Shader.use();
+	Terrain_Shader.setInt("material.diffuse", 0);   // MultipleLight
 
     // --Instruction-- 
     std::cout << "\n" << "=================Camera Control=================" << std::endl;
@@ -194,8 +197,9 @@ int main() {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);    //BG Color  
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // depth buffer 초기화 : 이전 프레임의 정보에 의해 다음 프레임의 깨짐 방지
 
-        // ====================Uniform shader======================
+        // =============================Uniform shader==============================
         multiplelight(WoodBox_Shader, camera, isFlashlightOn);
+		multiplelight(Terrain_Shader, camera, isFlashlightOn);
 
         // view, projection 생성    
         glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)  
@@ -203,7 +207,8 @@ int main() {
         projection = glm::perspective(glm::radians(camera.CamFov()), (float)Screen_Width / (float)Screen_Height, 0.1f, 100.0f);
         WoodBox_Shader.setMat4("View", view);  // Shader Class 사용, vertex shader로 전달
         WoodBox_Shader.setMat4("Projection", projection);
-        //---cube---  
+
+        // =============================Wood Box==============================
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
         model = glm::rotate(model, RealTime * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -211,14 +216,13 @@ int main() {
         WoodBox_Shader.setMat4("Model", model);
         // Bind Texture
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, DiffuseMap);
+        glBindTexture(GL_TEXTURE_2D, Cube_DiffuseMap);
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, SpecualrMap);
+        glBindTexture(GL_TEXTURE_2D, Cube_SpecualrMap);
         // draw
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-    
-        // =============================Sun==============================
+        // =============================Point Light==============================
         PointLight_Shader.use();
         PointLight_Shader.setMat4("View", view);  // Vertex Shader로 전달  
         PointLight_Shader.setMat4("Projection", projection);
@@ -232,14 +236,31 @@ int main() {
         // draw
         glBindVertexArray(sunVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        // =============================Terrain==============================
+        Terrain_Shader.use();
+        Terrain_Shader.setMat4("View", view);
+        Terrain_Shader.setMat4("Projection", projection);
+        model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(20.0f, 1.0f, 20.0f));
+        Terrain_Shader.setMat4("Model", model);
+		// Bind Texture
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, Terrain_DiffuseMap);
 
+        // draw
+        glBindVertexArray(terrainVAO);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        // ==================================================================
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
     glDeleteVertexArrays(1, &cubeVAO);
     glDeleteVertexArrays(1, &sunVAO);
-    glDeleteBuffers(1, &EBO);
-    glDeleteBuffers(1, &VBO);
+	glDeleteVertexArrays(1, &terrainVAO);
+    glDeleteBuffers(1, &cubeEBO);
+    glDeleteBuffers(1, &cubeVBO);
+	glDeleteBuffers(1, &terrainEBO);
 
     glfwTerminate();
     return 0;

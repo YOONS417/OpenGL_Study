@@ -41,6 +41,9 @@
     <None Include="Shaders\woodbox.vert">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="Terrain.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Commons\Camera.h">

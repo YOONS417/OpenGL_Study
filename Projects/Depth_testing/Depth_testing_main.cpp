@@ -163,18 +163,20 @@ int main() {
 
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-
+     
     // load texture & Lighting Maps
-    std::cout << "\n" << "=================Loaded Texture=================" << std::endl;
+    std::cout << "=================Loaded Texture=================" << std::endl;
     unsigned int Cube_DiffuseMap = LoadTexture("Cube/woodbox.png");
     unsigned int Cube_SpecualrMap = LoadTexture("Cube/metaledge.png"); //specular image
     WoodBox_Shader.use();
-    WoodBox_Shader.setInt("material.diffuse", 0);  //texture unit
-    WoodBox_Shader.setInt("material.specular", 1); //빛의 세기를 조절하는 가이드라인으로만 사용s
+    WoodBox_Shader.setInt("material.texture_diffuse1", 0);  //texture unit
+    WoodBox_Shader.setInt("material.texture_specular1", 1); //빛의 세기를 조절하는 가이드라인으로만 사용s
 
 	unsigned int Terrain_DiffuseMap = LoadTexture("Terrain/Rock058_2K-PNG_Color.png");
+	unsigned int Terrain_SpecularMap = LoadTexture("Terrain/Rock058_2K-PNG_Roughness.png");
     Terrain_Shader.use();
-	Terrain_Shader.setInt("material.diffuse", 0);   // MultipleLight
+	Terrain_Shader.setInt("material.texture_diffuse1", 0);  // 독립적인 shader이므로 0번부터 다시 사용 가능
+	Terrain_Shader.setInt("material.texture_specular1", 1);
 
     // --Instruction-- 
     std::cout << "\n" << "=================Camera Control=================" << std::endl;
@@ -207,12 +209,21 @@ int main() {
         projection = glm::perspective(glm::radians(camera.CamFov()), (float)Screen_Width / (float)Screen_Height, 0.1f, 100.0f);
         WoodBox_Shader.setMat4("View", view);  // Shader Class 사용, vertex shader로 전달
         WoodBox_Shader.setMat4("Projection", projection);
-
-        // =============================Wood Box==============================
+        // =============================Wood Box============================== | front
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, RealTime * glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 2.0f, 0.0f));
         model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+        WoodBox_Shader.setMat4("Model", model);
+        // Bind Texture
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, Cube_DiffuseMap);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, Cube_SpecualrMap);
+        // draw
+        glBindVertexArray(cubeVAO);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        // ===================================================================== | back
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
         WoodBox_Shader.setMat4("Model", model);
         // Bind Texture
         glActiveTexture(GL_TEXTURE0);
@@ -226,7 +237,6 @@ int main() {
         PointLight_Shader.use();
         PointLight_Shader.setMat4("View", view);  // Vertex Shader로 전달  
         PointLight_Shader.setMat4("Projection", projection);
-        //---Sun--- 
         model = glm::mat4(1.0f);
         glm::mat4 Sun = glm::translate(model, Pointlight_Pos);
         Sun = glm::rotate(Sun, glm::radians(30.0f), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -242,12 +252,13 @@ int main() {
         Terrain_Shader.setMat4("Projection", projection);
         model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(20.0f, 1.0f, 20.0f));
+		model = glm::scale(model, glm::vec3(50.0f, 1.0f, 50.0f));
         Terrain_Shader.setMat4("Model", model);
 		// Bind Texture
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, Terrain_DiffuseMap);
-
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, Terrain_SpecularMap);
         // draw
         glBindVertexArray(terrainVAO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

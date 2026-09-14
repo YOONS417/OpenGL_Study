@@ -148,7 +148,7 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 
 | 프로젝트명 | 실행 결과 | 설명 |
 | :--- | :---: | :--- |
-| **10. Depth testing** | ![Depth off](./images/10_Depth.png) | fragment의 깊이 값(Z)을 테스트, depth buffer에 통과된 값으로 수정, 실패된 fragment는 폐기 : glEnable(GL_DEPTH_TEST) |
+| **10. Depth testing** | ![Testing](./images/10_Depth.png) | fragment의 깊이 값(Z)을 테스트, depth buffer에 통과된 값으로 수정, 실패된 fragment는 폐기 : glEnable(GL_DEPTH_TEST) |
 
 </div>
 </details>

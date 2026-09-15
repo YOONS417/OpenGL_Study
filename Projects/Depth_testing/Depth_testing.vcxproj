@@ -136,9 +136,10 @@
     <ClCompile Include="..\..\Commons\glad.c" />
     <ClCompile Include="..\..\Commons\stb_image.cpp" />
     <ClCompile Include="..\..\Commons\Texture.cpp" />
-    <ClCompile Include="Depth_testing_main.cpp" />
+    <ClCompile Include="Depth_Stencil_main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="depthbuffer.frag" />
     <None Include="Shaders\MultipleLight.frag" />
     <None Include="Shaders\woodbox.vert" />
     <None Include="Shaders\pointlight.frag" />

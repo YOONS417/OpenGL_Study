@@ -38,7 +38,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(Screen_Width, Screen_Height, "Project_Lighting", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(Screen_Width, Screen_Height, "Project_Depth&Stencil", NULL, NULL);
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -51,7 +51,7 @@ int main() {
     }
 
 	glEnable(GL_DEPTH_TEST);   // 깊이 테스트 활성화
-    
+
     std::cout << "=================Linked Shaders=================" << std::endl;
     Shader PointLight_Shader("Shaders/pointlight.vert", "Shaders/pointlight.frag");      // 광원
     Shader WoodBox_Shader("Shaders/woodbox.vert", "Shaders/MultipleLight.frag");   //Cube Shader

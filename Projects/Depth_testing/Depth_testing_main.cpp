@@ -51,11 +51,12 @@ int main() {
     }
 
 	glEnable(GL_DEPTH_TEST);   // 깊이 테스트 활성화
+	glEnable(GL_STENCIL_TEST); // 스텐실 테스트 활성화
 
     std::cout << "=================Linked Shaders=================" << std::endl;
-    Shader PointLight_Shader("Shaders/pointlight.vert", "Shaders/pointlight.frag");      // 광원
-    Shader WoodBox_Shader("Shaders/woodbox.vert", "Shaders/MultipleLight.frag");   //Cube Shader
-    Shader Terrain_Shader("Shaders/Terrain.vert", "Shaders/MultipleLight.frag");
+    Shader PointLight_Shader("Shaders/pointlight.vert", "Shaders/pointlight.frag");// 광원
+    Shader WoodBox_Shader("Shaders/woodbox.vert", "Shaders/MultipleLight.frag");   // Cube Shader
+    Shader Terrain_Shader("Shaders/Terrain.vert", "Shaders/Terrain.frag");         // Terrain Shader 
 
     float cube_vert[] = {  // each point : 0 ~ 7
         // Fornt surface      //법선 
@@ -185,7 +186,7 @@ int main() {
     for (int i = 0; i < std::size(move); i++) {
         std::cout << key[i] << " : " << move[i] << std::endl;
     }
-    std::cout << "\n" << "Press esc to exit" << std::endl;
+    std::cout << "\n" << "Press Esc to exit" << std::endl;
 
     // --Render Loop-- 
     while (!glfwWindowShouldClose(window))
@@ -197,7 +198,12 @@ int main() {
         // input
         processInput(window);
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);    //BG Color  
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // depth buffer 초기화 : 이전 프레임의 정보에 의해 다음 프레임의 깨짐 방지
+
+        // depth buffer 초기화 : 이전 프레임의 정보에 의해 다음 프레임의 깨짐 방지
+		// depth buffer 초기화 : 카메라에서 가까운 물체가 먼 물체를 가리는지 판단
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);  
+
+        glStencilMask(0x00);
 
         // =============================Uniform shader==============================
         multiplelight(WoodBox_Shader, camera, isFlashlightOn);
@@ -205,8 +211,12 @@ int main() {
 
         // view, projection 생성    
         glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)  
-        glm::mat4 projection; // projection matrix : perspective 사용
-        projection = glm::perspective(glm::radians(camera.CamFov()), (float)Screen_Width / (float)Screen_Height, 0.1f, 100.0f);
+        glm::mat4 projection; // projection matrix : perspective 사용        
+        float near = 0.1f;
+        float far = 100.0f;
+        // near가 0에 너무 가까우면 depth buffer의 정밀도가 떨어짐
+        // far가 너무 멀면 이세한 z차이를 구분 X(Z-fighting 발생)
+        projection = glm::perspective(glm::radians(camera.CamFov()), (float)Screen_Width / (float)Screen_Height, near, far);
         WoodBox_Shader.setMat4("View", view);  // Shader Class 사용, vertex shader로 전달
         WoodBox_Shader.setMat4("Projection", projection);
         // =============================Wood Box============================== | front

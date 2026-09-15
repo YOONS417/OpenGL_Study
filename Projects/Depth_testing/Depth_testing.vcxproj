@@ -24,6 +24,7 @@
     <ProjectGuid>{f4f3f728-37e2-42a0-b13d-0f7e7096ab13}</ProjectGuid>
     <RootNamespace>Depth_testing</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Depth_testing</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -136,11 +137,12 @@
     <ClCompile Include="..\..\Commons\glad.c" />
     <ClCompile Include="..\..\Commons\stb_image.cpp" />
     <ClCompile Include="..\..\Commons\Texture.cpp" />
-    <ClCompile Include="Depth_Stencil_main.cpp" />
+    <ClCompile Include="Depth_testing_main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="depthbuffer.frag" />
+    <None Include="Shaders\depthbuffer.frag" />
     <None Include="Shaders\MultipleLight.frag" />
+    <None Include="Shaders\Terrain.frag" />
     <None Include="Shaders\woodbox.vert" />
     <None Include="Shaders\pointlight.frag" />
     <None Include="Shaders\pointlight.vert" />

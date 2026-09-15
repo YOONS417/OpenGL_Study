@@ -140,13 +140,12 @@
     <ClCompile Include="Depth_testing_main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\depthbuffer.frag" />
     <None Include="Shaders\MultipleLight.frag" />
     <None Include="Shaders\Terrain.frag" />
+    <None Include="Shaders\Terrain.vert" />
     <None Include="Shaders\woodbox.vert" />
     <None Include="Shaders\pointlight.frag" />
     <None Include="Shaders\pointlight.vert" />
-    <None Include="Terrain.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Commons\Camera.h" />

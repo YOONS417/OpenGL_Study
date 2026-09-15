@@ -199,8 +199,7 @@ int main() {
         processInput(window);
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);    //BG Color  
 
-        // depth buffer 초기화 : 이전 프레임의 정보에 의해 다음 프레임의 깨짐 방지
-		// depth buffer 초기화 : 카메라에서 가까운 물체가 먼 물체를 가리는지 판단
+        // depth buffer 초기화 : 카메라에서 가까운 물체가 먼 물체를 가리는지 판단(이전 프레임의 정보에 의해 다음 프레임의 깨짐 방지)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);  
 
         glStencilMask(0x00);

@@ -6,10 +6,15 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <Windows.h>
 #include "ShaderClass.h"
 #include "stb_image.h"
 #include "Camera.h"
 #include "Texture.h"
+
+extern "C" {
+    _declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+}
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -23,11 +28,11 @@ const unsigned int Screen_Height = 900;
 
 Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));   //카메라 생성, 위치:(0,0,10)
 
-float DeltaTime = 0.0f; //카메라 이동 하드웨어 제한 방지(고정된 속도)
-float LastFrame = 0.0f;
+float DeltaTime = 0.0f , LastFrame = 0.0f; //카메라 이동 하드웨어 제한 방지(고정된 속도)
 bool isMouseOn, isMpressed = false; // M키 설정
 bool isFlashlightOn, isFpressed = false; // F키 설정
 bool isWireframemodeOn, isWpressed = false;  // W키 설정
+float NearPlane = 0.1f, FarPlane = 100.0f; // near, far plane
 
 glm::vec3 Light_Direction(0.2f, -0.8f, 0.2f); // 평행광 방향(Directional Light)
 glm::vec3 Pointlight_Pos(7.0f, 0.0f, 0.0f);   // Lighting cube 위치
@@ -46,13 +51,18 @@ int main() {
     }
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {std::cout << "GPU Vendor: "   << glGetString(GL_VENDOR)   << std::endl;
         std::cout << " Failed to initialze GLAD" << std::endl;
     }
-
+	// Depth & Stencil Test
 	glEnable(GL_DEPTH_TEST);   // 깊이 테스트 활성화
+	glDepthFunc(GL_LESS);      // fragment의 깊이 값이 저장된 값보다 작을 경우만 통과
 	glEnable(GL_STENCIL_TEST); // 스텐실 테스트 활성화
+	glStencilFunc(GL_NOTEQUAL, 1, 0xFF); // 0xFF : 8bit mask, 255(11111111)
+    // 같지 않을 때 테스트를 통과, 비교의 기중이 되는 숫자, 비교 전 값에 AND연산을 취할 마스크
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); // stencil test 통과 시 stencil buffer에 1로 변경
 
+    std::cout << "Current linkedGPU Vendor: " << glGetString(GL_VENDOR) << std::endl;
     std::cout << "=================Linked Shaders=================" << std::endl;
     Shader PointLight_Shader("Shaders/pointlight.vert", "Shaders/pointlight.frag");// 광원
     Shader WoodBox_Shader("Shaders/woodbox.vert", "Shaders/MultipleLight.frag");   // Cube Shader
@@ -199,10 +209,19 @@ int main() {
         processInput(window);
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);    //BG Color  
 
-        // depth buffer 초기화 : 카메라에서 가까운 물체가 먼 물체를 가리는지 판단(이전 프레임의 정보에 의해 다음 프레임의 깨짐 방지)
+        //Fragment -> Stencil -> Depth
+		// stencil test를 통과한 fragment만 depth test를 진행 | 통과하지 못한 fragment는 버려지고 depth test연산 자체를 실행하지 않음
+        // Stencil buffer 초기화 : 이전 프레임에세 남은 스텐실 값이 다음 프레임에 잔성처럼 영향 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);  
 
-        glStencilMask(0x00);
+        // 물체의 외곽선 그리기
+        /*오브젝트를 그리기 전에 stencil 함수를 GL_ALWAYS로 설정하고 오브젝트의 fragment가 렌더링될때마다 stencil buffer를 1로 수정합니다.
+        오브젝트를 렌더링합니다.
+        stencil 작성과 depth testing을 비활성화합니다.
+        각 오브젝트들을 약간 확대합니다.
+        하나의 (외곽선) 컬러를 출력하는 별도의 fragment shader를 사용합니다.
+        오브젝트를 다시 그리지만 stencil 값이 1과 같지 않은 fragment들만 그립니다.
+        다시 stencil 작성과 depth testing을 활성화합니다.*/
 
         // =============================Uniform shader==============================
         multiplelight(WoodBox_Shader, camera, isFlashlightOn);
@@ -211,16 +230,14 @@ int main() {
         // view, projection 생성    
         glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)  
         glm::mat4 projection; // projection matrix : perspective 사용        
-        float near = 0.1f;
-        float far = 100.0f;
         // near가 0에 너무 가까우면 depth buffer의 정밀도가 떨어짐
         // far가 너무 멀면 이세한 z차이를 구분 X(Z-fighting 발생)
-        projection = glm::perspective(glm::radians(camera.CamFov()), (float)Screen_Width / (float)Screen_Height, near, far);
+        projection = glm::perspective(glm::radians(camera.CamFov()), (float)Screen_Width / (float)Screen_Height, NearPlane, FarPlane);
         WoodBox_Shader.setMat4("View", view);  // Shader Class 사용, vertex shader로 전달
         WoodBox_Shader.setMat4("Projection", projection);
         // =============================Wood Box============================== | front
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 2.0f, 0.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
         WoodBox_Shader.setMat4("Model", model);
         // Bind Texture

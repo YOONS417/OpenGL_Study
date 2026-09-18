@@ -51,7 +51,6 @@ int main() {
     }
 
 	glEnable(GL_DEPTH_TEST);   // 깊이 테스트 활성화
-	glEnable(GL_STENCIL_TEST); // 스텐실 테스트 활성화
 
     std::cout << "=================Linked Shaders=================" << std::endl;
     Shader PointLight_Shader("Shaders/pointlight.vert", "Shaders/pointlight.frag");// 광원
@@ -200,7 +199,7 @@ int main() {
         glClearColor(0.2f, 0.2f, 0.2f, 1.0f);    //BG Color  
 
         // depth buffer 초기화 : 카메라에서 가까운 물체가 먼 물체를 가리는지 판단(이전 프레임의 정보에 의해 다음 프레임의 깨짐 방지)
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);  
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );  
 
         glStencilMask(0x00);
 

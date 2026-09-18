@@ -9,12 +9,17 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <Windows.h>
 #include "ShaderClass.h"
 #include "stb_image.h"
 #include "Camera.h"
 #include "Texture.h"
 #include "MeshClass.h"
 #include "ModelClass.h"
+
+extern "C" {
+    _declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+}
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
@@ -58,6 +63,7 @@ int main() {
     }
     glEnable(GL_DEPTH_TEST);
 
+    std::cout << "Current linkedGPU Vendor: " << glGetString(GL_VENDOR) << std::endl;
 	// bulid & compile Shader program
     std::cout << "==================Linked Shaders==================" << std::endl;
     Shader model_shader("Shaders/model.vert", "Shaders/MultipleLight.frag");   //Cube Shader

@@ -47,6 +47,7 @@
     <None Include="Shaders\Terrain.vert">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="outline.frag" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Commons\Camera.h">

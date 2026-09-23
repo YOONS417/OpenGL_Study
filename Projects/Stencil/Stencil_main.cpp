@@ -58,15 +58,15 @@ int main() {
 	glEnable(GL_DEPTH_TEST);   // 깊이 테스트 활성화
 	glDepthFunc(GL_LESS);      // fragment의 깊이 값이 저장된 값보다 작을 경우만 통과
 	glEnable(GL_STENCIL_TEST); // 스텐실 테스트 활성화
-	glStencilFunc(GL_NOTEQUAL, 1, 0xFF); // 0xFF : 8bit mask, 255(11111111)
     // 같지 않을 때 테스트를 통과, 비교의 기중이 되는 숫자, 비교 전 값에 AND연산을 취할 마스크
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); // stencil test 통과 시 stencil buffer에 1로 변경
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); // 기본 Stencil 연산 정의 : stencil test 통과 시 stencil buffer에 1로 변경
 
     std::cout << "Current linkedGPU Vendor: " << glGetString(GL_VENDOR) << std::endl;
     std::cout << "=================Linked Shaders=================" << std::endl;
     Shader PointLight_Shader("Shaders/pointlight.vert", "Shaders/pointlight.frag");// 광원
     Shader WoodBox_Shader("Shaders/woodbox.vert", "Shaders/MultipleLight.frag");   // Cube Shader
     Shader Terrain_Shader("Shaders/Terrain.vert", "Shaders/Terrain.frag");         // Terrain Shader 
+    Shader Outline_Shader("shaders/outline.vert", "Shaders/outline.frag");         // outline Shader
 
     float cube_vert[] = {  // each point : 0 ~ 7
         // Fornt surface      //법선 
@@ -236,21 +236,25 @@ int main() {
         WoodBox_Shader.setMat4("View", view);  // Shader Class 사용, vertex shader로 전달
         WoodBox_Shader.setMat4("Projection", projection);
         // =============================Wood Box============================== | front
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 1.0f, 0.0f));
-        model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
-        WoodBox_Shader.setMat4("Model", model);
+        glEnable(GL_DEPTH_TEST);
+        glStencilFunc(GL_ALWAYS, 1, 0xFF); // 0xFF : 8bit mask, 255(11111111)
+        glStencilMask(0xFF);  // buffer 쓰기 열기
+        glm::mat4 box_model = glm::mat4(1.0f);
+        box_model = glm::translate(box_model, glm::vec3(0.0f, 1.0f, 0.0f));
+        box_model = glm::scale(box_model, glm::vec3(2.0f, 2.0f, 2.0f));
+        WoodBox_Shader.setMat4("Model", box_model);
         // Bind Texture
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, Cube_DiffuseMap);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, Cube_SpecualrMap);
         // draw
+		glStencilFunc(GL_ALWAYS, 1, 0xFF); // 스텐실 버퍼를 1로 설정 | draw전에 사용 | 상자 두개 모두 적용
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         // ===================================================================== | back
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -5.0f));
-        WoodBox_Shader.setMat4("Model", model);
+        glm::mat4 box_model2 = glm::translate(box_model, glm::vec3(0.0f, 0.0f, -5.0f));
+        WoodBox_Shader.setMat4("Model", box_model2);
         // Bind Texture
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, Cube_DiffuseMap);
@@ -259,12 +263,39 @@ int main() {
         // draw
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+        // =============================Out Line==============================
+        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);  // 1이 아닌 영역(테두리)만 통과
+        glStencilMask(0x00);    // 외곽선을 그리는 동안 stencil buffer 보호
+        glDisable(GL_DEPTH_TEST);   // depth를 꺼서 terrain,poinlight에 외곽선이 묻힘 방지
+
+        float outline_scale = 1.02f;
+        Outline_Shader.use();
+        Outline_Shader.setMat4("View", view);
+        Outline_Shader.setMat4("Projection", projection);
+        // --box1 outline--
+        glm::mat4 model1_outline = glm::scale(box_model, glm::vec3(outline_scale));
+        Outline_Shader.setMat4("Model", model1_outline);
+        glBindVertexArray(cubeVAO);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+        // --box2 outline--
+        glm::mat4 model2_outline = glm::scale(box_model2, glm::vec3(outline_scale));
+        Outline_Shader.setMat4("Model", model2_outline);
+        glBindVertexArray(cubeVAO);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+        glStencilMask(0xFF);
+        glStencilFunc(GL_ALWAYS, 0, 0xFF);
+        glEnable(GL_DEPTH_TEST);
+
+
         // =============================Point Light==============================
+        glStencilMask(0x00);    // pointlight,terrain은 스텐실 버퍼에 저장하지 않도록 잠금
         PointLight_Shader.use();
         PointLight_Shader.setMat4("View", view);  // Vertex Shader로 전달  
         PointLight_Shader.setMat4("Projection", projection);
-        model = glm::mat4(1.0f);
-        glm::mat4 Sun = glm::translate(model, Pointlight_Pos);
+        glm::mat4 pointligh_model = glm::mat4(1.0f);
+        glm::mat4 Sun = glm::translate(pointligh_model, Pointlight_Pos);
         Sun = glm::rotate(Sun, glm::radians(30.0f), glm::vec3(0.0f, 0.0f, 1.0f));
         Sun = glm::rotate(Sun, RealTime * glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));  //자전축
         Sun = glm::scale(Sun, glm::vec3(0.5f, 0.5f, 0.5f));
@@ -276,10 +307,10 @@ int main() {
         Terrain_Shader.use();
         Terrain_Shader.setMat4("View", view);
         Terrain_Shader.setMat4("Projection", projection);
-        model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(50.0f, 1.0f, 50.0f));
-        Terrain_Shader.setMat4("Model", model);
+        glm::mat4 terrain_model = glm::mat4(1.0f);
+        terrain_model = glm::translate(terrain_model, glm::vec3(0.0f, -1.0f, 0.0f));
+        terrain_model = glm::scale(terrain_model, glm::vec3(50.0f, 1.0f, 50.0f));
+        Terrain_Shader.setMat4("Model", terrain_model);
 		// Bind Texture
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, Terrain_DiffuseMap);

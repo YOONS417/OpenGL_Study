@@ -142,6 +142,8 @@
   <ItemGroup>
     <None Include="outline.frag" />
     <None Include="Shaders\MultipleLight.frag" />
+    <None Include="Shaders\outline.frag" />
+    <None Include="Shaders\outline.vert" />
     <None Include="Shaders\Terrain.frag" />
     <None Include="Shaders\Terrain.vert" />
     <None Include="Shaders\woodbox.vert" />

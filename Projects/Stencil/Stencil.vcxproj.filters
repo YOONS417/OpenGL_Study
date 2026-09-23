@@ -48,6 +48,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="outline.frag" />
+    <None Include="Shaders\outline.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\outline.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Commons\Camera.h">

@@ -198,63 +198,77 @@ int main() {
     }
     std::cout << "\n" << "Press Esc to exit" << std::endl;
 
+    /* 물체의 외곽선 그리기
+        1. 오브젝트를 그리기 전에 stencil 함수를 GL_ALWAYS로 설정, 오브젝트의 fragment가 렌더링될때마다 stencil buffer를 1로 수정.
+        2. 오브젝트를 렌더링
+        3. stencil 작성과 depth testing을 비활성화.
+        4. 각 오브젝트들을 약간 확대..
+        5. 하나의 (외곽선)컬러를 출력하는 별도의 fragment shader를 사용.
+        6. 오브젝트를 다시 그리지만 stencil 값이 1과 같지 않은 fragment들만 그리기.
+        7. 다시 stencil 작성과 depth testing을 활성화.*/
+
     // --Render Loop-- 
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(window))  
     {
         float CurrentTime = (float)glfwGetTime();
         DeltaTime = CurrentTime - LastFrame;    // 현재 프레임과 마지막 프레임 사이의 시간
         LastFrame = CurrentTime;
         float RealTime = (float)glfwGetTime();
-        // input
-        processInput(window);
-        glClearColor(0.2f, 0.2f, 0.2f, 1.0f);    //BG Color  
+        
+        processInput(window);   // input
+        glClearColor(0.3f, 0.3f, 0.3f, 1.0f);    //BG Color  
 
-        //Fragment -> Stencil -> Depth
+        // Fragment -> Stencil -> Depth
 		// stencil test를 통과한 fragment만 depth test를 진행 | 통과하지 못한 fragment는 버려지고 depth test연산 자체를 실행하지 않음
         // Stencil buffer 초기화 : 이전 프레임에세 남은 스텐실 값이 다음 프레임에 잔성처럼 영향 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);  
-
-        // 물체의 외곽선 그리기
-        /*오브젝트를 그리기 전에 stencil 함수를 GL_ALWAYS로 설정하고 오브젝트의 fragment가 렌더링될때마다 stencil buffer를 1로 수정합니다.
-        오브젝트를 렌더링합니다.
-        stencil 작성과 depth testing을 비활성화합니다.
-        각 오브젝트들을 약간 확대합니다.
-        하나의 (외곽선) 컬러를 출력하는 별도의 fragment shader를 사용합니다.
-        오브젝트를 다시 그리지만 stencil 값이 1과 같지 않은 fragment들만 그립니다.
-        다시 stencil 작성과 depth testing을 활성화합니다.*/
 
         // =============================Uniform shader==============================
         multiplelight(WoodBox_Shader, camera, isFlashlightOn);
 		multiplelight(Terrain_Shader, camera, isFlashlightOn);
 
         // view, projection 생성    
+        // projection matrix : perspective 사용        
         glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)  
-        glm::mat4 projection; // projection matrix : perspective 사용        
+        glm::mat4 projection = glm::perspective(glm::radians(camera.CamFov()), (float)Screen_Width / (float)Screen_Height, NearPlane, FarPlane);
         // near가 0에 너무 가까우면 depth buffer의 정밀도가 떨어짐
-        // far가 너무 멀면 이세한 z차이를 구분 X(Z-fighting 발생)
-        projection = glm::perspective(glm::radians(camera.CamFov()), (float)Screen_Width / (float)Screen_Height, NearPlane, FarPlane);
-        WoodBox_Shader.setMat4("View", view);  // Shader Class 사용, vertex shader로 전달
-        WoodBox_Shader.setMat4("Projection", projection);
-        // =============================Wood Box============================== | front
+        // far가 너무 멀면 이세한 z차이를 구분 못함(Z-fighting 발생)
+
+        // =============================Terrain==============================
         glEnable(GL_DEPTH_TEST);
-        glStencilFunc(GL_ALWAYS, 1, 0xFF); // 0xFF : 8bit mask, 255(11111111)
-        glStencilMask(0xFF);  // buffer 쓰기 열기
-        glm::mat4 box_model = glm::mat4(1.0f);
-        box_model = glm::translate(box_model, glm::vec3(0.0f, 1.0f, 0.0f));
-        box_model = glm::scale(box_model, glm::vec3(2.0f, 2.0f, 2.0f));
-        WoodBox_Shader.setMat4("Model", box_model);
+        glStencilMask(0x00);
+
+        Terrain_Shader.use();
+        Terrain_Shader.setMat4("View", view);
+        Terrain_Shader.setMat4("Projection", projection);
+        glm::mat4 terrain_model = glm::mat4(1.0f);
+        terrain_model = glm::translate(terrain_model, glm::vec3(0.0f, -1.0f, 0.0f));
+        terrain_model = glm::scale(terrain_model, glm::vec3(50.0f, 1.0f, 50.0f));
+        Terrain_Shader.setMat4("Model", terrain_model);
         // Bind Texture
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, Cube_DiffuseMap);
+        glBindTexture(GL_TEXTURE_2D, Terrain_DiffuseMap);
         glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, Cube_SpecualrMap);
+        glBindTexture(GL_TEXTURE_2D, Terrain_SpecularMap);
         // draw
-		glStencilFunc(GL_ALWAYS, 1, 0xFF); // 스텐실 버퍼를 1로 설정 | draw전에 사용 | 상자 두개 모두 적용
-        glBindVertexArray(cubeVAO);
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-        // ===================================================================== | back
-        glm::mat4 box_model2 = glm::translate(box_model, glm::vec3(0.0f, 0.0f, -5.0f));
-        WoodBox_Shader.setMat4("Model", box_model2);
+        glBindVertexArray(terrainVAO);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        
+        // =============================Wood Box============================== 
+        glEnable(GL_DEPTH_TEST);
+        glStencilMask(0xFF);  // buffer 쓰기 열기
+        // 상자가 그려지는 픽셀의 스텐실 값을 1로 기록
+        glStencilFunc(GL_ALWAYS, 1, 0xFF); // 0xFF : 8bit mask, 255(11111111)
+
+        WoodBox_Shader.use();
+        WoodBox_Shader.setMat4("View", view);
+        WoodBox_Shader.setMat4("Projection", projection);
+
+        glm::mat4 box_model = glm::mat4(1.0f);
+        glm::vec3 box_scale = glm::vec3(2.0f, 2.0f, 2.0f);  
+        box_model = glm::scale(box_model, box_scale );
+        WoodBox_Shader.setMat4("Model", box_model);
+       
         // Bind Texture
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, Cube_DiffuseMap);
@@ -266,28 +280,25 @@ int main() {
 
         // =============================Out Line==============================
         glStencilFunc(GL_NOTEQUAL, 1, 0xFF);  // 1이 아닌 영역(테두리)만 통과
-        glStencilMask(0x00);    // 외곽선을 그리는 동안 stencil buffer 보호
+        glStencilMask(0x00);        // 외곽선을 그리는 동안 stencil buffer 보호
         glDisable(GL_DEPTH_TEST);   // depth를 꺼서 terrain,poinlight에 외곽선이 묻힘 방지
 
-        float outline_scale = 1.02f;
+        float outline_scale = 1.05;
         Outline_Shader.use();
         Outline_Shader.setMat4("View", view);
         Outline_Shader.setMat4("Projection", projection);
-        // --box1 outline--
-        glm::mat4 model1_outline = glm::scale(box_model, glm::vec3(outline_scale));
-        Outline_Shader.setMat4("Model", model1_outline);
-        glBindVertexArray(cubeVAO);
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
         // --box2 outline--
-        glm::mat4 model2_outline = glm::scale(box_model2, glm::vec3(outline_scale));
-        Outline_Shader.setMat4("Model", model2_outline);
+        glm::mat4 model1_outline = glm::mat4(1.0f);
+        model1_outline = glm::scale(model1_outline, box_scale * outline_scale);
+        Outline_Shader.setMat4("Model", model1_outline);
+
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
         glStencilMask(0xFF);
         glStencilFunc(GL_ALWAYS, 0, 0xFF);
         glEnable(GL_DEPTH_TEST);
-
 
         // =============================Point Light==============================
         glStencilMask(0x00);    // pointlight,terrain은 스텐실 버퍼에 저장하지 않도록 잠금
@@ -303,23 +314,7 @@ int main() {
         // draw
         glBindVertexArray(sunVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-        // =============================Terrain==============================
-        Terrain_Shader.use();
-        Terrain_Shader.setMat4("View", view);
-        Terrain_Shader.setMat4("Projection", projection);
-        glm::mat4 terrain_model = glm::mat4(1.0f);
-        terrain_model = glm::translate(terrain_model, glm::vec3(0.0f, -1.0f, 0.0f));
-        terrain_model = glm::scale(terrain_model, glm::vec3(50.0f, 1.0f, 50.0f));
-        Terrain_Shader.setMat4("Model", terrain_model);
-		// Bind Texture
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, Terrain_DiffuseMap);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, Terrain_SpecularMap);
-        // draw
-        glBindVertexArray(terrainVAO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        // ==================================================================
+        
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

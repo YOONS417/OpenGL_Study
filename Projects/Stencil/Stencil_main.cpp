@@ -36,6 +36,7 @@ float NearPlane = 0.1f, FarPlane = 100.0f; // near, far plane
 
 glm::vec3 Light_Direction(0.2f, -0.8f, 0.2f); // 평행광 방향(Directional Light)
 glm::vec3 Pointlight_Pos(7.0f, 0.0f, 0.0f);   // Lighting cube 위치
+glm::vec3 Terrain_Pos(0.0f, -5.0f, 0.0f);
 
 int main() {
     glfwInit();
@@ -242,7 +243,7 @@ int main() {
         Terrain_Shader.setMat4("View", view);
         Terrain_Shader.setMat4("Projection", projection);
         glm::mat4 terrain_model = glm::mat4(1.0f);
-        terrain_model = glm::translate(terrain_model, glm::vec3(0.0f, 0.0f, 0.0f));
+        terrain_model = glm::translate(terrain_model, Terrain_Pos);
         terrain_model = glm::scale(terrain_model, glm::vec3(50.0f, 1.0f, 50.0f));
         Terrain_Shader.setMat4("Model", terrain_model);
         // Bind Texture

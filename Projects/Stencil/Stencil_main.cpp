@@ -259,6 +259,7 @@ int main() {
         glEnable(GL_DEPTH_TEST);
         glStencilMask(0xFF);  // buffer 쓰기 열기
         // 상자가 그려지는 픽셀의 스텐실 값을 1로 기록
+        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
         glStencilFunc(GL_ALWAYS, 1, 0xFF); // 0xFF : 8bit mask, 255(11111111)
 
         WoodBox_Shader.use();
@@ -266,8 +267,8 @@ int main() {
         WoodBox_Shader.setMat4("Projection", projection);
 
         glm::mat4 box_model = glm::mat4(1.0f);
-        glm::vec3 box_scale = glm::vec3(2.0f, 2.0f, 2.0f);  
-        box_model = glm::scale(box_model, box_scale );
+        glm::vec3 box_scale = glm::vec3(2.0f, 2.0f, 2.0f);
+        box_model = glm::scale(box_model, box_scale);
         WoodBox_Shader.setMat4("Model", box_model);
        
         // Bind Texture
@@ -287,12 +288,13 @@ int main() {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_FRONT);
 
-        float outline_scale = 1.05;
         Outline_Shader.use();
         Outline_Shader.setMat4("View", view);
         Outline_Shader.setMat4("Projection", projection);
 
         // --box1 outline--
+        float outline_scale = 1.05;
+
         glm::mat4 model1_outline = glm::mat4(1.0f);
         model1_outline = glm::scale(model1_outline, box_scale * outline_scale);
         Outline_Shader.setMat4("Model", model1_outline);
@@ -300,8 +302,11 @@ int main() {
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
+        glDisable(GL_CULL_FACE);
+
         glStencilMask(0xFF);
         glStencilFunc(GL_ALWAYS, 0, 0xFF);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
         glEnable(GL_DEPTH_TEST);
 
 

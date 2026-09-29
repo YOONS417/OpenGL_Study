@@ -69,44 +69,44 @@ int main() {
     Shader Outline_Shader("shaders/outline.vert", "Shaders/outline.frag");         // outline Shader
 
     float cube_vert[] = {  // each point : 0 ~ 7
-        // Fornt surface      //법선 
-       -0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,  // left  bottom     = 0
-        0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f,  // right  bottom    = 1
-        0.5f,  0.5f,  0.5f,   0.0f, 0.0f, 1.0f,   1.0f, 1.0f,  // right  top       = 2
-       -0.5f,  0.5f,  0.5f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f,  // left  top        = 3
+        // Fornt surface      //법선                                                   index
+       -0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,  // left  bottom     = 0  0
+        0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f,  // right  bottom    = 1  1   
+        0.5f,  0.5f,  0.5f,   0.0f, 0.0f, 1.0f,   1.0f, 1.0f,  // right  top       = 2  2
+       -0.5f,  0.5f,  0.5f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f,  // left  top        = 3  3
         // Right surface
-        0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,   0.0f, 0.0f,  // left  bottom     = 1
-        0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,   1.0f, 0.0f,  // right  bottom    = 5
-        0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,  // right  top       = 6
-        0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,   0.0f, 1.0f,  // left  top        = 2
+        0.5f, -0.5f,  0.5f,   1.0f, 0.0f, 0.0f,   0.0f, 0.0f,  // left  bottom     = 1  4
+        0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,   1.0f, 0.0f,  // right  bottom    = 5  5
+        0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,  // right  top       = 6  6
+        0.5f,  0.5f,  0.5f,   1.0f, 0.0f, 0.0f,   0.0f, 1.0f,  // left  top        = 2  7
         // Left surface
-       -0.5f, -0.5f, -0.5f,  -1.0f, 0.0f, 0.0f,   0.0f, 0.0f,  // left  bottom     = 4
-       -0.5f, -0.5f,  0.5f,  -1.0f, 0.0f, 0.0f,   1.0f, 0.0f,  // right  bottom    = 0
-       -0.5f,  0.5f,  0.5f,  -1.0f, 0.0f, 0.0f,   1.0f, 1.0f,  // right  top       = 3
-       -0.5f,  0.5f, -0.5f,  -1.0f, 0.0f, 0.0f,   0.0f, 1.0f,  // left  top        = 7
+       -0.5f, -0.5f, -0.5f,  -1.0f, 0.0f, 0.0f,   0.0f, 0.0f,  // left  bottom     = 4  8
+       -0.5f, -0.5f,  0.5f,  -1.0f, 0.0f, 0.0f,   1.0f, 0.0f,  // right  bottom    = 0  9
+       -0.5f,  0.5f,  0.5f,  -1.0f, 0.0f, 0.0f,   1.0f, 1.0f,  // right  top       = 3  10
+       -0.5f,  0.5f, -0.5f,  -1.0f, 0.0f, 0.0f,   0.0f, 1.0f,  // left  top        = 7  11
        // Top surface   
-       -0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,  // left  bottom     = 3
-        0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,  // right  bottom    = 2
-        0.5f,  0.5f, -0.5f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f,  // right  top       = 6
-       -0.5f,  0.5f, -0.5f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,  // left  top        = 7
+       -0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,  // left  bottom     = 3  12
+        0.5f,  0.5f,  0.5f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,  // right  bottom    = 2  13
+        0.5f,  0.5f, -0.5f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f,  // right  top       = 6  14
+       -0.5f,  0.5f, -0.5f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,  // left  top        = 7  15
        // Bottom surface
-       -0.5f, -0.5f,  0.5f,   0.0f,-1.0f, 0.0f,   0.0f, 0.0f,  // left  bottom     = 0
-        0.5f, -0.5f,  0.5f,   0.0f,-1.0f, 0.0f,   1.0f, 0.0f,  // right  bottom    = 1
-        0.5f, -0.5f, -0.5f,   0.0f,-1.0f, 0.0f,   1.0f, 1.0f,  // right  top       = 5
-       -0.5f, -0.5f, -0.5f,   0.0f,-1.0f, 0.0f,   0.0f, 1.0f,  // left  top        = 4
-       // Back surface
-       -0.5f, -0.5f, -0.5f,   0.0f, 0.0f,-1.0f,   0.0f, 0.0f,  // left  bottom     = 4
-        0.5f, -0.5f, -0.5f,   0.0f, 0.0f,-1.0f,   1.0f, 0.0f,  // right  bottom    = 5
-        0.5f,  0.5f, -0.5f,   0.0f, 0.0f,-1.0f,   1.0f, 1.0f,  // right  top       = 6
-       -0.5f,  0.5f, -0.5f,   0.0f, 0.0f,-1.0f,   0.0f, 1.0f   // left  top        = 7
+       -0.5f, -0.5f,  0.5f,   0.0f,-1.0f, 0.0f,   0.0f, 0.0f,  // left  bottom     = 0  16
+        0.5f, -0.5f,  0.5f,   0.0f,-1.0f, 0.0f,   1.0f, 0.0f,  // right  bottom    = 1  17
+        0.5f, -0.5f, -0.5f,   0.0f,-1.0f, 0.0f,   1.0f, 1.0f,  // right  top       = 5  18
+       -0.5f, -0.5f, -0.5f,   0.0f,-1.0f, 0.0f,   0.0f, 1.0f,  // left  top        = 4  19
+       // Back surface  
+       -0.5f, -0.5f, -0.5f,   0.0f, 0.0f,-1.0f,   0.0f, 0.0f,  // left  bottom     = 4  20
+        0.5f, -0.5f, -0.5f,   0.0f, 0.0f,-1.0f,   1.0f, 0.0f,  // right  bottom    = 5  21
+        0.5f,  0.5f, -0.5f,   0.0f, 0.0f,-1.0f,   1.0f, 1.0f,  // right  top       = 6  22
+       -0.5f,  0.5f, -0.5f,   0.0f, 0.0f,-1.0f,   0.0f, 1.0f   // left  top        = 7  23
     };
     unsigned int cube_indices[] = {  // indices : 정점 데이터 배열의 행 번호(0~23)
-        0, 1,  2,  0, 2, 3,       // Fornt surface
-        4, 5,  6,  4, 6, 7,       // Right surface
-        8, 9, 10,  8,10,11,       // Left surface  
-        12,13,14, 12,14,15,       // Top surface
-        16,17,18, 16,18,19,       // Bottom surface       
-        20,21,22, 20,22,23        // Back surface
+         0, 1, 2,  0, 2, 3,       // Fornt surface
+         4, 5, 6,  4, 6, 7,       // Right surface
+         8, 9,10,  8,10,11,       // Left surface  
+        12,13,14, 14,15,12,       // Top surface
+        19,18,17, 16,19,17,       // Bottom surface       
+        20,23,21, 21,23,22        // Back surface
     };
     float terrain[] = {       //normal            //texcoord
 	   -1.0f, -1.0f,  1.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,  // left  bottom     = 0
@@ -242,7 +242,7 @@ int main() {
         Terrain_Shader.setMat4("View", view);
         Terrain_Shader.setMat4("Projection", projection);
         glm::mat4 terrain_model = glm::mat4(1.0f);
-        terrain_model = glm::translate(terrain_model, glm::vec3(0.0f, -1.0f, 0.0f));
+        terrain_model = glm::translate(terrain_model, glm::vec3(0.0f, 0.0f, 0.0f));
         terrain_model = glm::scale(terrain_model, glm::vec3(50.0f, 1.0f, 50.0f));
         Terrain_Shader.setMat4("Model", terrain_model);
         // Bind Texture
@@ -283,12 +283,16 @@ int main() {
         glStencilMask(0x00);        // 외곽선을 그리는 동안 stencil buffer 보호
         glDisable(GL_DEPTH_TEST);   // depth를 꺼서 terrain,poinlight에 외곽선이 묻힘 방지
 
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
+        glFrontFace(GL_CW);
+
         float outline_scale = 1.05;
         Outline_Shader.use();
         Outline_Shader.setMat4("View", view);
         Outline_Shader.setMat4("Projection", projection);
 
-        // --box2 outline--
+        // --box1 outline--
         glm::mat4 model1_outline = glm::mat4(1.0f);
         model1_outline = glm::scale(model1_outline, box_scale * outline_scale);
         Outline_Shader.setMat4("Model", model1_outline);
@@ -299,6 +303,7 @@ int main() {
         glStencilMask(0xFF);
         glStencilFunc(GL_ALWAYS, 0, 0xFF);
         glEnable(GL_DEPTH_TEST);
+
 
         // =============================Point Light==============================
         glStencilMask(0x00);    // pointlight,terrain은 스텐실 버퍼에 저장하지 않도록 잠금

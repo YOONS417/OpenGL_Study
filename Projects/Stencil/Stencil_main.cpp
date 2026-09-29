@@ -286,7 +286,6 @@ int main() {
 
         glEnable(GL_CULL_FACE);
         glCullFace(GL_FRONT);
-        glFrontFace(GL_CW);
 
         float outline_scale = 1.05;
         Outline_Shader.use();

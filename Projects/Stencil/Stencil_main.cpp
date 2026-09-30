@@ -26,7 +26,7 @@ void multiplelight(Shader& Multiplelight_Shader, const Camera& camera, bool isFl
 const unsigned int Screen_Width = 1200;
 const unsigned int Screen_Height = 900;
 
-Camera camera(glm::vec3(0.0f, .0f, 10.0f));   //카메라 생성, 위치:(0,0,10)
+Camera camera(glm::vec3(0.0f, .0f, 5.0f));   //카메라 생성, 위치:(0,0,10)
 
 float DeltaTime = 0.0f , LastFrame = 0.0f; //카메라 이동 하드웨어 제한 방지(고정된 속도)
 bool isMouseOn, isMpressed = false; // M키 설정
@@ -268,7 +268,7 @@ int main() {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
         glStencilMask(0xFF);  // buffer 쓰기 허용
-        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); // depth + stencil 테스트를 모두 통과한 픽셀의 스텐실 값을 새 갑으로 교체
+        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); // depth + stencil 테스트를 모두 통과한 픽셀의 스텐실 값을 새 값으로 교체
         glStencilFunc(GL_ALWAYS, 1, 0xFF); // 스텐실 테스트를 항상 통과, 기록할 기준값을 1로 지정
 
         WoodBox_Shader.use();

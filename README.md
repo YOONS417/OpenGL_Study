@@ -149,6 +149,27 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | 프로젝트명 | 실행 결과 | 설명 |
 | :--- | :---: | :--- |
 | **10. Depth testing** | ![Testing](./images/10_Depth.png) | fragment의 깊이 값(Z)을 테스트, depth buffer에 통과된 값으로 수정, 실패된 fragment는 폐기 : glEnable(GL_DEPTH_TEST) |
+| **11. Stencil testing** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/16f0dc73-abb2-4223-aa05-1013579fb3ba" autoplay loop muted playsinline controls width="250"></video> | 루프 초기에 이전 프레임의 잔상 (스텐실 1)을 0으로 초기화, 나무 상자를 제외한 나머지 오브젝트에서 스텐실을 비활성화(0x00)하여 오염 방지, 상자에서 glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE)로 depth + stencil를 모두 통과한 픽셀의 스텐실 값을 새 값으로 교체, outline에서 glStencilFunc(GL_NOTEQUAL, 1, 0xFF)을 주어 스텐실 값이 1이 아닌 영역(테두리)만 통과 -> 상자 내부는 버림, pointlight에서는 스텐실 연산을 변경하지 않음 |
+| **11. Stencil testing** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/f4ccdc5e-2db6-44dd-b2a2-f41f4193661a" autoplay loop muted playsinline controls width="250"></video> | 오브젝트 정점의 인덱스를 counter-clockwise방향으로 설정하여 view(camera)에서 상자의 보이지 않는 부분을 그리지 않아 GPU의 부하를 줄여 렌더링 성능을 최적화, 덕분에 texture,lighting등 복잡한 fragment shader연산이 실행되지 않음 |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </div>
 </details>

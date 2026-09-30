@@ -26,7 +26,7 @@ void multiplelight(Shader& Multiplelight_Shader, const Camera& camera, bool isFl
 const unsigned int Screen_Width = 1200;
 const unsigned int Screen_Height = 900;
 
-Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));   //카메라 생성, 위치:(0,0,10)
+Camera camera(glm::vec3(0.0f, .0f, 10.0f));   //카메라 생성, 위치:(0,0,10)
 
 float DeltaTime = 0.0f , LastFrame = 0.0f; //카메라 이동 하드웨어 제한 방지(고정된 속도)
 bool isMouseOn, isMpressed = false; // M키 설정
@@ -36,7 +36,7 @@ float NearPlane = 0.1f, FarPlane = 100.0f; // near, far plane
 
 glm::vec3 Light_Direction(0.2f, -0.8f, 0.2f); // 평행광 방향(Directional Light)
 glm::vec3 Pointlight_Pos(7.0f, 0.0f, 0.0f);   // Lighting cube 위치
-glm::vec3 Terrain_Pos(0.0f, -5.0f, 0.0f);
+glm::vec3 Terrain_Pos(0.0f, -5.0f, 0.0f);     // Terrain 위치  
 
 int main() {
     glfwInit();
@@ -59,8 +59,10 @@ int main() {
 	glEnable(GL_DEPTH_TEST);   // 깊이 테스트 활성화
 	glDepthFunc(GL_LESS);      // fragment의 깊이 값이 저장된 값보다 작을 경우만 통과
 	glEnable(GL_STENCIL_TEST); // 스텐실 테스트 활성화
-    // 같지 않을 때 테스트를 통과, 비교의 기중이 되는 숫자, 비교 전 값에 AND연산을 취할 마스크
+    // 같지 않을 때 테스트를 통과, 비교의 기준이 되는 숫자, 비교 전 값에 AND연산을 취할 마스크
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); // 기본 Stencil 연산 정의 : stencil test 통과 시 stencil buffer에 1로 변경
+    glEnable(GL_CULL_FACE);    // Face culling 활성화
+    glCullFace(GL_BACK);       // 기본 컬링 모드 
 
     std::cout << "Current linkedGPU Vendor: " << glGetString(GL_VENDOR) << std::endl;
     std::cout << "=================Linked Shaders=================" << std::endl;
@@ -143,9 +145,9 @@ int main() {
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
     // point light
-    unsigned int sunVAO;
-    glGenVertexArrays(1, &sunVAO);
-    glBindVertexArray(sunVAO);
+    unsigned int pointlightVAO;
+    glGenVertexArrays(1, &pointlightVAO);
+    glBindVertexArray(pointlightVAO);
 
     glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeEBO);
@@ -217,11 +219,13 @@ int main() {
         float RealTime = (float)glfwGetTime();
         
         processInput(window);   // input
-        glClearColor(0.3f, 0.3f, 0.3f, 1.0f);    //BG Color  
+        glClearColor(0.3f, 0.3f, 0.3f, 1.0f);    //BG Color
 
         // Fragment -> Stencil -> Depth
 		// stencil test를 통과한 fragment만 depth test를 진행 | 통과하지 못한 fragment는 버려지고 depth test연산 자체를 실행하지 않음
         // Stencil buffer 초기화 : 이전 프레임에세 남은 스텐실 값이 다음 프레임에 잔성처럼 영향 
+        // 마지막 pointlight에서 스텐실를 잠근 채 루프가 끝난것을 다시 열어 0으로 초기화
+        glStencilMask(0xFF);   // 안하면 잔상(스텐실 : 1)이 남아 다음 프레임에 영향
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);  
 
         // =============================Uniform shader==============================
@@ -236,10 +240,11 @@ int main() {
         // far가 너무 멀면 이세한 z차이를 구분 못함(Z-fighting 발생)
 
         // =============================Terrain==============================
+        // 깊이 비교를 정상 수행, 스텐실버퍼에는 아무것도 기록하지 않음
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
-        glStencilMask(0x00);
+        glStencilMask(0x00);       // stencil 차단 : 지형이 스텐실버퍼를 오염시키지 않음
 
         Terrain_Shader.use();
         Terrain_Shader.setMat4("View", view);
@@ -258,13 +263,13 @@ int main() {
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         
         // =============================Wood Box============================== 
+        // 깊이 테스트 + 상자가 그려지는 픽셀의 스텐실 버퍼에 값 1을 기록
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
-        glStencilMask(0xFF);  // buffer 쓰기 열기
-        // 상자가 그려지는 픽셀의 스텐실 값을 1로 기록
-        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-        glStencilFunc(GL_ALWAYS, 1, 0xFF); // 0xFF : 8bit mask, 255(11111111)
+        glStencilMask(0xFF);  // buffer 쓰기 허용
+        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); // depth + stencil 테스트를 모두 통과한 픽셀의 스텐실 값을 새 갑으로 교체
+        glStencilFunc(GL_ALWAYS, 1, 0xFF); // 스텐실 테스트를 항상 통과, 기록할 기준값을 1로 지정
 
         WoodBox_Shader.use();
         WoodBox_Shader.setMat4("View", view);
@@ -285,19 +290,19 @@ int main() {
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
         // =============================Out Line==============================
-        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);  // 1이 아닌 영역(테두리)만 통과
-        glStencilMask(0x00);        // 외곽선을 그리는 동안 stencil buffer 보호
-        glDisable(GL_DEPTH_TEST);   // depth를 꺼서 terrain,poinlight에 외곽선이 묻힘 방지
-
+        // 본체가 그려진 영역(스텐실 1)을 제외한 테두리 부분만 외곽선 색 출력
+        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);  // 스텐실 값이 1이 아닌 영역(테두리)만 통과 -> 상자 본체 영역은 버려짐
+        glStencilMask(0x00);        // 외곽선을 그리는 동안 스텐실 버퍼 보호
+        glEnable(GL_DEPTH_TEST);   // depth를 꺼서 terrain,poinlight에 외곽선이 묻힘 방지
         glEnable(GL_CULL_FACE);
-        glCullFace(GL_FRONT);
+        glCullFace(GL_BACK);
 
         Outline_Shader.use();
         Outline_Shader.setMat4("View", view);
         Outline_Shader.setMat4("Projection", projection);
 
         // --box1 outline--
-        float outline_scale = 1.05;
+        float outline_scale = 1.07f;
 
         glm::mat4 model1_outline = glm::mat4(1.0f);
         model1_outline = glm::scale(model1_outline, box_scale * outline_scale);
@@ -306,17 +311,14 @@ int main() {
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
-        glStencilMask(0xFF);
-        glStencilFunc(GL_ALWAYS, 0, 0xFF);
-        glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-        glEnable(GL_DEPTH_TEST);
-
-
         // =============================Point Light==============================
-        glDisable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
+        glStencilMask(0xFF);                    // 스텐실 버퍼 쓰기 허용
+        glStencilFunc(GL_ALWAYS, 0, 0xFF);      // 통과 기준 복구
+        glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP); // 스텐실 연산 변경 안 함
+        glEnable(GL_DEPTH_TEST);                // Depth를 다시 활성화
+        glDisable(GL_CULL_FACE);                // culling 비활성화
+        glStencilMask(0x00);          // pointlight,terrain은 스텐실 버퍼에 저장하지 않도록 잠금
 
-        glStencilMask(0x00);    // pointlight,terrain은 스텐실 버퍼에 저장하지 않도록 잠금
         PointLight_Shader.use();
         PointLight_Shader.setMat4("View", view);  // Vertex Shader로 전달  
         PointLight_Shader.setMat4("Projection", projection);
@@ -327,14 +329,14 @@ int main() {
         Sun = glm::scale(Sun, glm::vec3(0.5f, 0.5f, 0.5f));
         PointLight_Shader.setMat4("Model", Sun);
         // draw
-        glBindVertexArray(sunVAO);
+        glBindVertexArray(pointlightVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
         
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
     glDeleteVertexArrays(1, &cubeVAO);
-    glDeleteVertexArrays(1, &sunVAO);
+    glDeleteVertexArrays(1, &pointlightVAO);
 	glDeleteVertexArrays(1, &terrainVAO);
     glDeleteBuffers(1, &cubeEBO);
     glDeleteBuffers(1, &cubeVBO);

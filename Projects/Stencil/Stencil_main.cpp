@@ -52,7 +52,7 @@ int main() {
     }
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {std::cout << "GPU Vendor: "   << glGetString(GL_VENDOR)   << std::endl;
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {std::cout << "GPU Vendor: "  << glGetString(GL_VENDOR) << std::endl;
         std::cout << " Failed to initialze GLAD" << std::endl;
     }
 	// Depth & Stencil Test
@@ -64,7 +64,7 @@ int main() {
     glEnable(GL_CULL_FACE);    // Face culling 활성화
     glCullFace(GL_BACK);       // 기본 컬링 모드 
 
-    std::cout << "Current linkedGPU Vendor: " << glGetString(GL_VENDOR) << std::endl;
+    std::cout << "Current linked GPU Vendor: "  << glGetString(GL_VENDOR) << "\n" <<std::endl;
     std::cout << "=================Linked Shaders=================" << std::endl;
     Shader PointLight_Shader("Shaders/pointlight.vert", "Shaders/pointlight.frag");// 광원
     Shader WoodBox_Shader("Shaders/woodbox.vert", "Shaders/MultipleLight.frag");   // Cube Shader
@@ -276,8 +276,8 @@ int main() {
         WoodBox_Shader.setMat4("Projection", projection);
 
         glm::mat4 box_model = glm::mat4(1.0f);
-        glm::vec3 box_scale = glm::vec3(2.0f, 2.0f, 2.0f);
-        box_model = glm::scale(box_model, box_scale);
+        // --box2--
+        box_model = glm::scale(box_model, glm::vec3(2.0f, 2.0f, 2.0f));
         WoodBox_Shader.setMat4("Model", box_model);
        
         // Bind Texture
@@ -286,6 +286,13 @@ int main() {
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, Cube_SpecualrMap);
         // draw
+        glBindVertexArray(cubeVAO);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+        // --box2--
+        glm::mat4 box_model2 = glm::translate(box_model, glm::vec3(0.0f, 0.0f, -3.0f));
+        WoodBox_Shader.setMat4("Model", box_model2);
+
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
@@ -301,12 +308,17 @@ int main() {
         Outline_Shader.setMat4("View", view);
         Outline_Shader.setMat4("Projection", projection);
 
-        // --box1 outline--
         float outline_scale = 1.07f;
+        // --box1 outline--
+        glm::mat4 box1_outline = glm::scale(box_model, glm::vec3(outline_scale));
+        Outline_Shader.setMat4("Model", box1_outline);
 
-        glm::mat4 model1_outline = glm::mat4(1.0f);
-        model1_outline = glm::scale(model1_outline, box_scale * outline_scale);
-        Outline_Shader.setMat4("Model", model1_outline);
+        glBindVertexArray(cubeVAO);
+        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+        // -- box2 outline
+        glm::mat4 box2_outline = glm::scale(box_model2, glm::vec3(outline_scale));
+        Outline_Shader.setMat4("Model", box2_outline);
 
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
@@ -411,6 +423,10 @@ void processInput(GLFWwindow* window)
     }
     if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
         camera.Rotate_Cam();
+    }
+
+    if (glfwGetKey(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
+
     }
 }
 

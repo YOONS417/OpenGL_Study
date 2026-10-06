@@ -33,11 +33,12 @@ bool isMouseOn, isMpressed = false; // M키 설정
 bool isFlashlightOn, isFpressed = false; // F키 설정
 bool isWireframemodeOn, isWpressed = false;  // W키 설정
 float NearPlane = 0.1f, FarPlane = 100.0f; // near, far plane
+const int Grass_count = 30;     // grass 개수
 
 glm::vec3 Light_Direction(0.2f, -0.8f, 0.2f); // 평행광 방향(Directional Light)
 glm::vec3 Pointlight_Pos(7.0f, 0.0f, 0.0f);   // Lighting cube 위치
 glm::vec3 Terrain_Pos(0.0f, -5.0f, 0.0f);     // Terrain 위치  
-glm::vec3 Terrain_Scale(30.0f, 1.0f, 30.0f);  // Terrain Scale
+glm::vec3 Terrain_Scale(20.0f, 1.0f, 20.0f);  // Terrain Scale
 
 int main() {
     glfwInit();
@@ -123,10 +124,17 @@ int main() {
         0, 1, 2,
         0, 2, 3
     };
+    float grass[] = {
+        -0.5f, -0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,  // left  bottom     = 0   0
+         0.5f, -0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f,  // right  bottom    = 1   1   
+         0.5f,  0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 1.0f,  // right  top       = 2   2
+        -0.5f,  0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f   // left  top        = 3   3
+    };
 	unsigned int grass_indices[] = {
 		0, 1, 2,
 		0, 2, 3
 	};
+
     // cube
     unsigned int cubeVBO, cubeVAO, cubeEBO;
     glGenBuffers(1, &cubeVBO);
@@ -185,23 +193,24 @@ int main() {
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
     // Grass
-    unsigned  int grassVAO;
+    unsigned  int grassVBO, grassVAO, grassEBO;
+	glGenBuffers(1, &grassVBO);
+	glGenBuffers(1, &grassEBO);
     glGenVertexArrays(1, &grassVAO);
+
 	glBindVertexArray(grassVAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeEBO);
+    glBindBuffer(GL_ARRAY_BUFFER, grassVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(grass), grass, GL_STATIC_DRAW);
 
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, grassEBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(grass_indices), grass_indices, GL_STATIC_DRAW);
+	// vertex position
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-
+	// texture coordinate
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-
-    glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-
-    glBindVertexArray(0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
     // load texture & Lighting Maps
     std::cout << "=================Loaded Texture=================" << std::endl;
@@ -219,7 +228,7 @@ int main() {
 
 	unsigned  int Grass_DiffuseMap = LoadTexture("grass.png");
     Grass_Shader.use();
-    Grass_Shader.setInt("material.texture_diffuse1", 0);    
+    Grass_Shader.setInt("texture_diffuse", 0);
 
     // --Instruction-- 
     std::cout << "\n" << "=================Camera Control=================" << std::endl;
@@ -233,11 +242,10 @@ int main() {
     // Random Position Cubes for Grass
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_real_distribution<float> disX(-Terrain_Scale.x, Terrain_Scale.x);
-    float disY = Terrain_Pos.y;
-    std::uniform_real_distribution<float> disZ(-Terrain_Scale.z, Terrain_Scale.z);
-	std::uniform_real_distribution<float> disAngle(0.0f, 360.0f);
-    const int Grass_count = 5;
+    std::uniform_real_distribution<float> disX(-Terrain_Scale.x/2.0f, Terrain_Scale.x/2.0f);
+	float disY = Terrain_Pos.y;     // y = -5.0f
+    std::uniform_real_distribution<float> disZ(-Terrain_Scale.z/2.0f, Terrain_Scale.z/2.0f);
+	//std::uniform_real_distribution<float> disAngle(0.0f, 360.0f);
     std::vector<glm::vec3> randomPos;
     for (int i = 0; i < Grass_count; i++) {
         randomPos.push_back(glm::vec3(disX(gen), disY, disZ(gen)));
@@ -293,9 +301,10 @@ int main() {
         // draw
         glBindVertexArray(terrainVAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        // =============================Grass==============================
+        // ==============================Grass==============================
 		glEnable(GL_DEPTH_TEST);
 		glDisable(GL_CULL_FACE);
+        glStencilMask(0x00);
 
         Grass_Shader.use();
 		Grass_Shader.setMat4("View", view);
@@ -304,17 +313,24 @@ int main() {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, Grass_DiffuseMap);
 
-        glBindVertexArray(grassVAO);
+		// draw random position & X-shape grass
+        glBindVertexArray(grassVAO); 
         for (unsigned int i = 0; i < Grass_count; i++) {
             glm::mat4 grass_model = glm::mat4(1.0f);
 			float angle = 20.0f * i;
-            grass_model = glm::scale(grass_model, glm::vec3(2.0f, 2.0f, 2.0f));
             grass_model = glm::translate(grass_model, randomPos[i]);
             grass_model = glm::rotate(grass_model, glm::radians(angle), glm::vec3(0.0f, 1.0f, 0.0f));
+            grass_model = glm::scale(grass_model, glm::vec3(2.0f, 2.0f, 1.0f));
             Grass_Shader.setMat4("Model", grass_model);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        }
 
+			glm::mat4 grass_model2 = glm::mat4(1.0f);
+			grass_model2 = glm::translate(grass_model2, randomPos[i]);
+			grass_model2 = glm::rotate(grass_model2, glm::radians(angle + 90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			grass_model2 = glm::scale(grass_model2, glm::vec3(2.0f, 2.0f, 1.0f));
+			Grass_Shader.setMat4("Model", grass_model2 );
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        }
         // =============================Wood Box============================== 
         // 깊이 테스트 + 상자가 그려지는 픽셀의 스텐실 버퍼에 값 1을 기록
         glEnable(GL_DEPTH_TEST);

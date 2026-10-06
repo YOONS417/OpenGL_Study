@@ -27,14 +27,20 @@ unsigned int LoadTexture(const std::string& path, const std::string& directory, 
 		else if (nrComponents == 3) format = GL_RGB;   // RGB 채널만 있는 경우
 		else if (nrComponents == 4) format = GL_RGBA;  // 알파 채널이 있는 경우
 
+		glBindTexture(GL_TEXTURE_2D, TextureID);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // 텍스쳐 데이터 정렬 설정(1바이트 단위)
 		// GPU 메모리(VRAM)로 정송 및 바인딩
-		glBindTexture(GL_TEXTURE_2D, TextureID);
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		// 텍스쳐 옵선 설정(repeat & filter) 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		if (nrComponents == 4) {
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		}
+		else {
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		}
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 

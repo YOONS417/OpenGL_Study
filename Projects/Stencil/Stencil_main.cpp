@@ -69,7 +69,7 @@ int main() {
     Shader PointLight_Shader("Shaders/pointlight.vert", "Shaders/pointlight.frag");// 광원
     Shader WoodBox_Shader("Shaders/woodbox.vert", "Shaders/MultipleLight.frag");   // Cube Shader
     Shader Terrain_Shader("Shaders/Terrain.vert", "Shaders/Terrain.frag");         // Terrain Shader 
-    Shader Outline_Shader("shaders/outline.vert", "Shaders/outline.frag");         // outline Shader
+    Shader Outline_Shader("Shaders/outline.vert", "Shaders/outline.frag");         // outline Shader
 
     float cube_vert[] = {  // each point : 0 ~ 7
         // Fornt surface      //법선                                                   index
@@ -177,7 +177,7 @@ int main() {
 
     glEnableVertexAttribArray(2);
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-     
+
     // load texture & Lighting Maps
     std::cout << "=================Loaded Texture=================" << std::endl;
     unsigned int Cube_DiffuseMap = LoadTexture("Cube/woodbox.png");
@@ -194,8 +194,8 @@ int main() {
 
     // --Instruction-- 
     std::cout << "\n" << "=================Camera Control=================" << std::endl;
-    std::string key[] = { "KEY_UP", "KEY_DOWN", "KEY_RIGHT", "KEY_LEFT", "SPACE_BAR", "CONTROL" ,"M", "Scroll" };
-    std::string move[] = { "Forword", "Back", "Right", "Left", "Up" , "Down" ,"Mouse Camera On/Off", "Zoom in/out" };
+    std::string key[] = { "KEY_UP", "KEY_DOWN", "KEY_RIGHT", "KEY_LEFT", "SPACE_BAR", "CONTROL" ,"M", "F", "Scroll" };
+    std::string move[] = { "Forword", "Back", "Right", "Left", "Up" , "Down" ,"Mouse Camera On/Off", "Flashlight" "Zoom in/out" };
     for (int i = 0; i < std::size(move); i++) {
         std::cout << key[i] << " : " << move[i] << std::endl;
     }

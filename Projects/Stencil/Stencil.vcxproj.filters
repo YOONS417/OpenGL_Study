@@ -47,11 +47,10 @@
     <None Include="Shaders\Terrain.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="outline.frag" />
-    <None Include="Shaders\outline.frag">
+    <None Include="Shaders\outline.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\outline.vert">
+    <None Include="Shaders\outline.frag">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

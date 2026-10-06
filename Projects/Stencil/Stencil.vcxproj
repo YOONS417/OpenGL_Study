@@ -140,7 +140,6 @@
     <ClCompile Include="Stencil_main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="outline.frag" />
     <None Include="Shaders\MultipleLight.frag" />
     <None Include="Shaders\outline.frag" />
     <None Include="Shaders\outline.vert" />

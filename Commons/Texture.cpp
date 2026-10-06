@@ -22,10 +22,10 @@ unsigned int LoadTexture(const std::string& path, const std::string& directory, 
 	// CPU 메모리로 이미지 로드
 	unsigned char* data = stbi_load(fullpath.c_str(), &width, &height, &nrComponents, 0);
 	if (data) {
-		GLenum format = GL_RGB;
-		if (nrComponents == 1) format = GL_RED;
-		else if (nrComponents == 3) format = GL_RGB;
-		else if (nrComponents == 4) format = GL_RGBA;
+		GLenum format = GL_RGB;						   // 기본값은 RGB	
+		if (nrComponents == 1) format = GL_RED;		   // 흑백 이미지인 경우
+		else if (nrComponents == 3) format = GL_RGB;   // RGB 채널만 있는 경우
+		else if (nrComponents == 4) format = GL_RGBA;  // 알파 채널이 있는 경우
 
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // 텍스쳐 데이터 정렬 설정(1바이트 단위)
 		// GPU 메모리(VRAM)로 정송 및 바인딩

@@ -12,6 +12,7 @@
 #include "stb_image.h"
 #include "Camera.h"
 #include "Texture.h"
+#include "sdf"
 
 extern "C" {
     _declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
@@ -317,6 +318,9 @@ int main() {
         // Stencil buffer 초기화 : 이전 프레임에세 남은 스텐실 값이 다음 프레임에 잔성처럼 영향 
         // 마지막 pointlight에서 스텐실를 잠근 채 루프가 끝난것을 다시 열어 0으로 초기화
         glStencilMask(0xFF);   // 안하면 잔상(스텐실 : 1)이 남아 다음 프레임에 영향
+        glDepthMask(GL_TRUE);      // 투명 오브젝트를 다 그린 후 depth buffer 기록 허용
+        // glDepthMask가 FALSE로 잠긴 채 초기 설정에서 glClear를 호출해도 
+        // 깊이 버퍼가 1.0으로 초기화되지 않고 이전 프레임의 깊이 값이 그대로 남음
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);  
 
         // =============================Uniform shader==============================
@@ -487,9 +491,8 @@ int main() {
             Windows_Shader.setMat4("Model", window_model);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         }
-
-		glDepthMask(GL_TRUE);      // 투명 오브젝트를 다 그린 후 depth buffer 기록 허용
-		glDisable(GL_BLEND);       // Blending 비활성화)
+        glDepthMask(GL_TRUE);
+        glDisable(GL_BLEND);       // Blending 비활성화)
         
         glfwSwapBuffers(window);
         glfwPollEvents();

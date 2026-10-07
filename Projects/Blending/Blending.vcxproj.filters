@@ -41,9 +41,6 @@
     <None Include="Shaders\MultipleLight.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\Terrain.frag">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Shaders\Terrain.vert">
       <Filter>Shaders</Filter>
     </None>
@@ -57,6 +54,10 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\grass.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="window.vert" />
+    <None Include="window.frag">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

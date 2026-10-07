@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <map>
 #include <random>
 #include <cmath>
 #include <glm/glm.hpp>
@@ -34,6 +35,7 @@ bool isFlashlightOn, isFpressed = false; // F키 설정
 bool isWireframemodeOn, isWpressed = false;  // W키 설정
 float NearPlane = 0.1f, FarPlane = 100.0f; // near, far plane
 const int Grass_count = 30;     // grass 개수
+const int Window_count = 5;     // window 개수
 
 glm::vec3 Light_Direction(0.2f, -0.8f, 0.2f); // 평행광 방향(Directional Light)
 glm::vec3 Pointlight_Pos(7.0f, 0.0f, 0.0f);   // Lighting cube 위치
@@ -65,15 +67,18 @@ int main() {
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); // 기본 Stencil 연산 정의 : stencil test 통과 시 stencil buffer에 1로 변경
     glEnable(GL_CULL_FACE);    // Face culling 활성화
     glCullFace(GL_BACK);       // 기본 컬링 모드 
+	
 
     std::cout << "Current linked GPU Vendor: "  << glGetString(GL_VENDOR) << "\n" <<std::endl;
     std::cout << "=================Linked Shaders=================" << std::endl;
     Shader PointLight_Shader("Shaders/pointlight.vert", "Shaders/pointlight.frag");// 광원
     Shader WoodBox_Shader("Shaders/woodbox.vert", "Shaders/MultipleLight.frag");   // Cube Shader
-    Shader Terrain_Shader("Shaders/Terrain.vert", "Shaders/Terrain.frag");         // Terrain Shader 
+    Shader Terrain_Shader("Shaders/Terrain.vert", "Shaders/MultipleLight.frag");   // Terrain Shader 
     Shader Outline_Shader("Shaders/outline.vert", "Shaders/outline.frag");         // outline Shader
-    Shader Grass_Shader("Shaders/grass.vert", "Shaders/grass.frag");
-
+    Shader Grass_Shader("Shaders/grass.vert", "Shaders/grass.frag");               // grass Shader
+	Shader Windows_Shader("Shaders/grass.vert", "Shaders/window.frag");            // grass Shader와 같은 shader를 사용하지만,
+                                                                                   // 다른 texture를 사용하기 때문에 shader를 따로 생성
+     
     float cube_vert[] = {  // each point : 0 ~ 7
         // Fornt surface      //법선                                                   index
        -0.5f, -0.5f,  0.5f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,  // left  bottom     = 0   0
@@ -131,6 +136,16 @@ int main() {
         -0.5f,  0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f   // left  top        = 3   3
     };
 	unsigned int grass_indices[] = {
+		0, 1, 2,
+		0, 2, 3
+	};
+    float windows[] = {
+       -0.5f, -0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,  // left  bottom     = 0   0
+         0.5f, -0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f,  // right  bottom    = 1   1   
+         0.5f,  0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 1.0f,  // right  top       = 2   2
+        -0.5f,  0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f   // left  top        = 3   3
+    };
+	unsigned int window_indices[] = {
 		0, 1, 2,
 		0, 2, 3
 	};
@@ -212,6 +227,26 @@ int main() {
     glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
+    //window
+    unsigned int windowVAO, windowVBO, windowEBO;
+    glGenBuffers(1, &windowVBO);
+	glGenBuffers(1, &windowEBO);
+    glGenVertexArrays(1, &windowVAO);
+
+	glBindVertexArray(windowVAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, windowVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(windows), windows, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, windowEBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(window_indices), window_indices, GL_STATIC_DRAW);
+
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+
     // load texture & Lighting Maps
     std::cout << "=================Loaded Texture=================" << std::endl;
     unsigned int Cube_DiffuseMap = LoadTexture("Cube/woodbox.png");
@@ -230,6 +265,10 @@ int main() {
     Grass_Shader.use();
     Grass_Shader.setInt("texture_diffuse", 0);
 
+	unsigned int Windows_DiffuseMap = LoadTexture("window.png");
+    Windows_Shader.use();
+    Windows_Shader.setInt("texture_diffuse", 0);
+
     // --Instruction-- 
     std::cout << "\n" << "=================Camera Control=================" << std::endl;
     std::string key[] = { "KEY_UP", "KEY_DOWN", "KEY_RIGHT", "KEY_LEFT", "SPACE_BAR", "CONTROL" ,"M", "F", "Scroll" };
@@ -246,10 +285,21 @@ int main() {
 	float disY = Terrain_Pos.y;     // y = -5.0f
     std::uniform_real_distribution<float> disZ(-Terrain_Scale.z/2.0f, Terrain_Scale.z/2.0f);
 	//std::uniform_real_distribution<float> disAngle(0.0f, 360.0f);
-    std::vector<glm::vec3> randomPos;
+    std::vector<glm::vec3> randomPos, windowPos;
     for (int i = 0; i < Grass_count; i++) {
         randomPos.push_back(glm::vec3(disX(gen), disY, disZ(gen)));
     }
+    for (int i = 0; i < Window_count; i++) {
+        windowPos.push_back(glm::vec3(disX(gen), 0, disZ(gen)/2.0f));
+    }
+
+    //카메라와의 거리를 계산 -> map에 저장(key:거리, value:windowPos)
+    std::map<float, glm::vec3> sortedWindows;
+    for (unsigned int i = 0; i < windowPos.size(); i++) {
+        float distance = glm::length(camera.CamPosition - windowPos[i]);
+		sortedWindows[distance] = windowPos[i];     // 오름차순으로 정렬
+    }
+
 
     // --Render Loop-- 
     while (!glfwWindowShouldClose(window))  
@@ -344,8 +394,8 @@ int main() {
         WoodBox_Shader.setMat4("View", view);
         WoodBox_Shader.setMat4("Projection", projection);
 
-        glm::mat4 box_model = glm::mat4(1.0f);
         // --box1--
+        glm::mat4 box_model = glm::mat4(1.0f);
         box_model = glm::scale(box_model, glm::vec3(2.0f, 2.0f, 2.0f));
         WoodBox_Shader.setMat4("Model", box_model);
        
@@ -364,7 +414,6 @@ int main() {
 
         glBindVertexArray(cubeVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-
         // =============================Out Line==============================
         // 본체가 그려진 영역(스텐실 1)을 제외한 테두리 부분만 외곽선 색 출력
         glStencilFunc(GL_NOTEQUAL, 1, 0xFF);  // 스텐실 값이 1이 아닌 영역(테두리)만 통과 -> 상자 본체 영역은 버려짐
@@ -412,6 +461,35 @@ int main() {
         // draw
         glBindVertexArray(pointlightVAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+        // =============================Windows============================== 
+		// 모든 불투명 오브젝트를 그린 후, 투명 오브젝트를 그리기
+		// 투명 오브젝트는 거리순으로 정렬 후, 먼 것부터 그려야함
+        glEnable(GL_BLEND);        // Blending 활성화
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // 기본 Blending 모드)
+        glEnable(GL_DEPTH_TEST);
+		glDepthMask(GL_FALSE);     // 투명 오브젝트를 그리는 동안 depth buffer에 기록하지 않음; 
+		glDisable(GL_CULL_FACE);   // 창문 뒷면도 보이도록 culling 비활성화
+        glStencilMask(0x00);
+
+        Windows_Shader.use();
+        Windows_Shader.setMat4("View", view);
+        Windows_Shader.setMat4("Projection", projection);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, Windows_DiffuseMap);
+
+        glBindVertexArray(windowVAO);
+        for (std::map<float, glm::vec3>::reverse_iterator it = sortedWindows.rbegin(); it != sortedWindows.rend(); ++it) {
+            glm::mat4 window_model = glm::mat4(1.0f);
+            window_model = glm::translate(window_model, it->second);
+			window_model = glm::scale(window_model, glm::vec3(4.0f, 4.0f, 1.0f));
+            Windows_Shader.setMat4("Model", window_model);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        }
+
+		glDepthMask(GL_TRUE);      // 투명 오브젝트를 다 그린 후 depth buffer 기록 허용
+		glDisable(GL_BLEND);       // Blending 비활성화)
         
         glfwSwapBuffers(window);
         glfwPollEvents();

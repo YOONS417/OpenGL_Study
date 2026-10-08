@@ -4,8 +4,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-extern const unsigned int Screen_Width;
-extern const unsigned int Screen_Height;
+extern unsigned int Screen_Width;
+extern unsigned int Screen_Height;
 
 class Camera {
 public:

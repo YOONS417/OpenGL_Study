@@ -8,8 +8,8 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void proccessInput(GLFWwindow* window);
 
-const unsigned int Screen_Wdith = 1000;
-const unsigned int Screen_Height = 800;
+unsigned int Screen_Width = 1000;
+unsigned int Screen_Height = 800;
  
 
 int main() {
@@ -18,7 +18,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(Screen_Wdith, Screen_Height, "Project_Triangle", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(Screen_Width, Screen_Height, "Project_Triangle", NULL, NULL);
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -158,7 +158,11 @@ int main() {
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
+    if (width == 0 || height == 0)
+        return;
     glViewport(0, 0, width, height);
+    Screen_Width = width;
+    Screen_Height = height;
 }
 
 void proccessInput(GLFWwindow* window)

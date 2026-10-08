@@ -10,8 +10,8 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
-const unsigned int Screen_Width = 1200;
-const unsigned int Screen_Height = 900;
+unsigned int Screen_Width = 1200;
+unsigned int Screen_Height = 900;
 
 
 int main() {
@@ -242,7 +242,11 @@ int main() {
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
+    if (width == 0 || height == 0)
+        return;
     glViewport(0, 0, width, height);
+    Screen_Width = width;
+    Screen_Height = height;
 }
 
 void processInput(GLFWwindow* window)

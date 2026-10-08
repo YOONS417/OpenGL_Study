@@ -13,8 +13,8 @@ void processInput(GLFWwindow* window);
 void mouse_Callback(GLFWwindow* window, double xPos,double yPos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
-const unsigned int Screen_Width = 1200;
-const unsigned int Screen_Height = 900;
+unsigned int Screen_Width = 1200;
+unsigned int Screen_Height = 900;
 
 Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));   //카메라 생성, 위치:(0,0,10)
 
@@ -258,7 +258,11 @@ int main() {
  
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
+    if (width == 0 || height == 0)
+        return;
     glViewport(0, 0, width, height);
+    Screen_Width = width;
+    Screen_Height = height;
 }
 
 void processInput(GLFWwindow* window)

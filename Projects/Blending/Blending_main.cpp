@@ -12,7 +12,6 @@
 #include "stb_image.h"
 #include "Camera.h"
 #include "Texture.h"
-#include "sdf"
 
 extern "C" {
     _declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
@@ -25,8 +24,8 @@ void scroll_Callback(GLFWwindow* window, double xoffset, double yoffset);
 void tutorial_light(Shader& LightingCube_Shader, const Camera& camera);
 void multiplelight(Shader& Multiplelight_Shader, const Camera& camera, bool isFlashlightOn);
 
-const unsigned int Screen_Width = 1200;
-const unsigned int Screen_Height = 900;
+unsigned int Screen_Width = 1200;
+unsigned int Screen_Height = 900;
 
 Camera camera(glm::vec3(0.0f, 0.0f, 10.0f));   //카메라 생성, 위치:(0,0,10)
 
@@ -49,7 +48,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_COMPAT_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(Screen_Width, Screen_Height, "Project_Depth&Stencil", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(Screen_Width, Screen_Height, "Project_Blending", NULL, NULL);
     if (window == NULL) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -317,8 +316,8 @@ int main() {
 		// stencil test를 통과한 fragment만 depth test를 진행 | 통과하지 못한 fragment는 버려지고 depth test연산 자체를 실행하지 않음
         // Stencil buffer 초기화 : 이전 프레임에세 남은 스텐실 값이 다음 프레임에 잔성처럼 영향 
         // 마지막 pointlight에서 스텐실를 잠근 채 루프가 끝난것을 다시 열어 0으로 초기화
-        glStencilMask(0xFF);   // 안하면 잔상(스텐실 : 1)이 남아 다음 프레임에 영향
-        glDepthMask(GL_TRUE);      // 투명 오브젝트를 다 그린 후 depth buffer 기록 허용
+        glStencilMask(0xFF);     // 안하면 잔상(스텐실 : 1)이 남아 다음 프레임에 영향 -> 0
+        glDepthMask(GL_TRUE);    // 투명 오브젝트를 다 그린 후 depth buffer 기록 허용
         // glDepthMask가 FALSE로 잠긴 채 초기 설정에서 glClear를 호출해도 
         // 깊이 버퍼가 1.0으로 초기화되지 않고 이전 프레임의 깊이 값이 그대로 남음
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);  
@@ -338,7 +337,7 @@ int main() {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
-        glStencilMask(0x00);       // stencil 차단 : 지형이 스텐실버퍼를 오염시키지 않음
+        glStencilMask(0x00);      // stencil 차단 : 지형이 스텐실버퍼를 오염시키지 않음 -> 0
 
         Terrain_Shader.use();
         Terrain_Shader.setMat4("View", view);
@@ -357,8 +356,8 @@ int main() {
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         // ==============================Grass==============================
 		glEnable(GL_DEPTH_TEST);
-		glDisable(GL_CULL_FACE);
-        glStencilMask(0x00);
+		glDisable(GL_CULL_FACE);    // 뒤쪽에서도 볼 수 있게 cull 비활성화
+		glStencilMask(0x00);        // stencil 차단, 스텐실 버퍼에 기록하지 않음 : 0 
 
         Grass_Shader.use();
 		Grass_Shader.setMat4("View", view);
@@ -386,7 +385,7 @@ int main() {
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         }
         // =============================Wood Box============================== 
-        // 깊이 테스트 + 상자가 그려지는 픽셀의 스텐실 버퍼에 값 1을 기록
+        // 깊이 테스트까지 통과한 상자 픽셀에 1을 기록, 상자가 보이는 픽셀은 0 → 1
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
@@ -446,7 +445,6 @@ int main() {
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
         // =============================Point Light==============================
-        glStencilMask(0xFF);                    // 스텐실 버퍼 쓰기 허용
         glStencilFunc(GL_ALWAYS, 0, 0xFF);      // 통과 기준 복구
         glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP); // 스텐실 연산 변경 안 함
         glEnable(GL_DEPTH_TEST);                // Depth를 다시 활성화
@@ -510,7 +508,12 @@ int main() {
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
+    if (width == 0 || height == 0)
+        return;
     glViewport(0, 0, width, height);
+
+    Screen_Width = width;
+    Screen_Height = height;
 }
 
 void processInput(GLFWwindow* window)

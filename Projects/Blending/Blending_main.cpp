@@ -12,8 +12,8 @@
 #include "stb_image.h"
 #include "Camera.h"
 #include "Texture.h"
-
-extern "C" {
+// 외장그래픽 사용
+extern "C" {        
     _declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
 }
 
@@ -508,11 +508,10 @@ int main() {
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-    if (width == 0 || height == 0)
+    if (width == 0 || height == 0)      // 창 크기가 0이 되었을 때, projection에서 0으로 나눔 방지
         return;
     glViewport(0, 0, width, height);
-
-    Screen_Width = width;
+	Screen_Width = width;               // 변경된 창의 크기를 전역변수에 저장 
     Screen_Height = height;
 }
 

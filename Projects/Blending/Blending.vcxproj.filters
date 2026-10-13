@@ -56,8 +56,7 @@
     <None Include="Shaders\grass.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="window.vert" />
-    <None Include="window.frag">
+    <None Include="Shaders\window.frag">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

@@ -145,7 +145,8 @@
     <None Include="Shaders\MultipleLight.frag" />
     <None Include="Shaders\outline.frag" />
     <None Include="Shaders\outline.vert" />
-    <None Include="Shaders\Terrain.vert" />
+    <None Include="Shaders\screenquad.frag" />
+    <None Include="Shaders\screenquad.vert" />
     <None Include="Shaders\window.frag" />
     <None Include="Shaders\woodbox.vert" />
     <None Include="Shaders\pointlight.frag" />
@@ -153,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Commons\Camera.h" />
+    <ClInclude Include="..\..\Commons\MeshClass.h" />
     <ClInclude Include="..\..\Commons\Texture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

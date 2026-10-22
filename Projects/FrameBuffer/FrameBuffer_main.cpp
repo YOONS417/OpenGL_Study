@@ -34,8 +34,8 @@ bool isMouseOn, isMpressed = false; // M키 설정
 bool isFlashlightOn, isFpressed = false; // F키 설정
 bool isWireframemodeOn, isWpressed = false;  // W키 설정
 float NearPlane = 0.1f, FarPlane = 100.0f; // near, far plane
-const int Grass_count = 30;     // grass 개수
-const int Window_count = 5;     // window 개수
+const int Grass_count = 40;     // grass 개수
+const int Window_count = 4;     // window 개수
 
 glm::vec3 Light_Direction(0.2f, -0.8f, 0.2f); // 평행광 방향(Directional Light)
 glm::vec3 Pointlight_Pos(7.0f, 0.0f, 0.0f);   // Lighting cube 위치
@@ -68,16 +68,16 @@ int main() {
     glEnable(GL_CULL_FACE);    // Face culling 활성화
     glCullFace(GL_BACK);       // 기본 컬링 모드 
 	
-
     std::cout << "Current linked GPU Vendor: "  << glGetString(GL_VENDOR) << "\n" <<std::endl;
     std::cout << "=================Linked Shaders=================" << std::endl;
 	Shader PointLight_Shader("Shaders/pointlight.vert", "Shaders/pointlight.frag");// Point Light Shader 
     Shader WoodBox_Shader("Shaders/woodbox.vert", "Shaders/MultipleLight.frag");   // Cube Shader
-    Shader Terrain_Shader("Shaders/Terrain.vert", "Shaders/MultipleLight.frag");   // Terrain Shader 
+	Shader Terrain_Shader("Shaders/woodbox.vert", "Shaders/MultipleLight.frag");   // Terrain Shader, Box와 같은 shader를 사용하지만, 다른 texture를 사용하기 때문에 shader를 따로 생성
     Shader Outline_Shader("Shaders/outline.vert", "Shaders/outline.frag");         // outline Shader
     Shader Grass_Shader("Shaders/grass.vert", "Shaders/grass.frag");               // grass Shader
 	Shader Windows_Shader("Shaders/grass.vert", "Shaders/window.frag"); // grass Shader와 같은 shader를 사용하지만, 다른 texture를 사용하기 때문에 shader를 따로 생성
-              
+
+	// 화면 출력(pass 2)를 위한 간단한 quad shader
 	Shader ScreenQuad_Shader("Shaders/screenquad.vert", "Shaders/screenquad.frag"); // screen quad shader
      
     float cube_vert[] = {  // each point : 0 ~ 7
@@ -151,10 +151,10 @@ int main() {
 		0, 2, 3
 	};
     float screenquad[] = {
-        -0.5f, -0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,  // left  bottom     = 0   0
-         0.5f, -0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f,  // right  bottom    = 1   1   
-         0.5f,  0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 1.0f,  // right  top       = 2   2
-        -0.5f,  0.5f,  0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 1.0f   // left  top        = 3   3
+        -0.5f, -0.5f,  0.0f,   0.0f, 0.0f,  // left  bottom     = 0   0
+         0.5f, -0.5f,  0.0f,   1.0f, 0.0f,  // right  bottom    = 1   1   
+         0.5f,  0.5f,  0.0f,   1.0f, 1.0f,  // right  top       = 2   2
+        -0.5f,  0.5f,  0.0f,   0.0f, 1.0f   // left  top        = 3   3
     };
     unsigned int screenquad_indices[] = {
         0, 1, 2,
@@ -273,13 +273,10 @@ int main() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(screenquad_indices), screenquad_indices, GL_STATIC_DRAW);
     // position
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     // texture coordinate
     glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-
-
-
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
     /* Framebuffer 생성 과정
     * VAO/VBO/EBO , Testure 로드
@@ -293,16 +290,29 @@ int main() {
     glGenFramebuffers(1, &FBO);
     glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 
+	// color texture attachment 생성
+    unsigned int texturebuffer;
+	glGenTextures(1, &texturebuffer);
+	glBindTexture(GL_TEXTURE_2D, texturebuffer);
+	// 텍스처의 크기를 스크린 크기, 텍스쳐이 data 파라미터를 NULL로 초기화 : 메모리만 할당하고 실제 데이터는 없음
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Screen_Width, Screen_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// 텍스쳐를 첨부할 target : GL_FRAMEBUFFER, 첨부할attachment의 유형 : GL_COLOR_ATTACHMENT0, 첨부하기 원하는 텍스처의 유형 : GL_TEXTURE_2D, 실제 텍스처 ID : texturebuffer, mipmap level : 0
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texturebuffer, 0);  // FBO에 color texture buffer를 결합
 
+	// Depth & Stencil Renderbuffer 생성
+    unsigned int RBO;
+	glGenRenderbuffers(1, &RBO);
+    glBindRenderbuffer(GL_RENDERBUFFER, RBO);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, Screen_Width, Screen_Height);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, RBO);
 
+	// error check : FBO가 제대로 생성되었는지 확인
+    if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+        std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is no complete" << std::endl;
+	glBindFramebuffer(GL_FRAMEBUFFER, 0); // FBO 바인딩 해제
 
-
-
-
-
-
-    // if(glCheckFramebufferStatus(GL_FRAMEBUFFER) = GL_FRAMEBUFFER_COMPLETE)
-    //    FBO is complete
     // load texture & Lighting Maps
     std::cout << "=================Loaded Texture=================" << std::endl;
     unsigned int Cube_DiffuseMap = LoadTexture("Cube/woodbox.png");
@@ -325,6 +335,9 @@ int main() {
     Windows_Shader.use();
     Windows_Shader.setInt("texture_diffuse", 0);
 
+    //ScreenQuad_Shader.use();
+	//ScreenQuad_Shader.setInt("screenTexture", 0); 
+
     // --Instruction-- 
     std::cout << "\n" << "=================Camera Control=================" << std::endl;
     std::string key[] = { "KEY_UP", "KEY_DOWN", "KEY_RIGHT", "KEY_LEFT", "SPACE_BAR", "CONTROL" ,"M", "F", "Scroll" };
@@ -346,7 +359,7 @@ int main() {
         randomPos.push_back(glm::vec3(disX(gen), disY, disZ(gen)));
     }
     for (int i = 0; i < Window_count; i++) {
-        windowPos.push_back(glm::vec3(disX(gen), 0, disZ(gen)/2.0f));
+        windowPos.push_back(glm::vec3(disX(gen)*1.1f, 0, disZ(gen)));
     }
 
     //카메라와의 거리를 계산 -> map에 저장(key:거리, value:windowPos)
@@ -365,6 +378,10 @@ int main() {
         float RealTime = (float)glfwGetTime();
         
         processInput(window);   // input
+
+		glBindFramebuffer(GL_FRAMEBUFFER, FBO);  // Custom Framebuffer 바인딩
+		glViewport(0, 0, Screen_Width, Screen_Height); // FBO의 크기와 동일하게 viewport 설정)
+
         glClearColor(0.3f, 0.3f, 0.3f, 1.0f);    //BG Color
 
         // Fragment -> Stencil -> Depth
@@ -380,9 +397,7 @@ int main() {
         // =============================Uniform shader==============================
         multiplelight(WoodBox_Shader, camera, isFlashlightOn);
 		multiplelight(Terrain_Shader, camera, isFlashlightOn);
-
-        // view, projection 생성    
-        // projection matrix : perspective 사용        
+        
         glm::mat4 view = camera.ViewMatrix();  // View matrix(Dynamic Camera)  
         glm::mat4 projection = glm::perspective(glm::radians(camera.CamFov()), (float)Screen_Width / (float)Screen_Height, NearPlane, FarPlane);
         // near가 0에 너무 가까우면 depth buffer의 정밀도가 떨어짐
@@ -540,7 +555,7 @@ int main() {
         for (std::map<float, glm::vec3>::reverse_iterator it = sortedWindows.rbegin(); it != sortedWindows.rend(); ++it) {
             glm::mat4 window_model = glm::mat4(1.0f);
             window_model = glm::translate(window_model, it->second);
-			window_model = glm::scale(window_model, glm::vec3(4.0f, 4.0f, 1.0f));
+			window_model = glm::scale(window_model, glm::vec3(5.0f, 5.0f, 1.0f));
             Windows_Shader.setMat4("Model", window_model);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         }
@@ -550,6 +565,9 @@ int main() {
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+    glDeleteFramebuffers(1, &FBO);
+    glDeleteFramebuffers(1, &texturebuffer);
+    glDeleteFramebuffers(1, &RBO);
     glDeleteVertexArrays(1, &cubeVAO);
     glDeleteVertexArrays(1, &pointlightVAO);
 	glDeleteVertexArrays(1, &terrainVAO);

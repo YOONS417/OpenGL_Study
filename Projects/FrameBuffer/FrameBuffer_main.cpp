@@ -151,10 +151,10 @@ int main() {
 		0, 2, 3
 	};
     float screenquad[] = {
-        -0.5f, -0.5f,  0.0f,   0.0f, 0.0f,  // left  bottom     = 0   0
-         0.5f, -0.5f,  0.0f,   1.0f, 0.0f,  // right  bottom    = 1   1   
-         0.5f,  0.5f,  0.0f,   1.0f, 1.0f,  // right  top       = 2   2
-        -0.5f,  0.5f,  0.0f,   0.0f, 1.0f   // left  top        = 3   3
+        -1.0f, -1.0f,  0.0f,   0.0f, 0.0f,  // left  bottom     = 0   0
+         1.0f, -1.0f,  0.0f,   1.0f, 0.0f,  // right  bottom    = 1   1   
+         1.0f,  1.0f,  0.0f,   1.0f, 1.0f,  // right  top       = 2   2
+        -1.0f,  1.0f,  0.0f,   0.0f, 1.0f   // left  top        = 3   3
     };
     unsigned int screenquad_indices[] = {
         0, 1, 2,
@@ -285,7 +285,7 @@ int main() {
     3. 깊이/스텐실을 처리할 Renderbuffer(RBO) 생성
     4. 텍스처와 RBO를 Framebuffer에 결합(glFramebufferTexture2D / glFramebufferRenderbuffer) */
 
-    // initalize FBO, suctom framebuffer 생성
+    // initalize FBO, custom framebuffer 생성
     unsigned int FBO;
     glGenFramebuffers(1, &FBO);
     glBindFramebuffer(GL_FRAMEBUFFER, FBO);
@@ -310,7 +310,7 @@ int main() {
 
 	// error check : FBO가 제대로 생성되었는지 확인
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is no complete" << std::endl;
+        std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete" << std::endl;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0); // FBO 바인딩 해제
 
     // load texture & Lighting Maps
@@ -334,9 +334,6 @@ int main() {
 	unsigned int Windows_DiffuseMap = LoadTexture("window.png");
     Windows_Shader.use();
     Windows_Shader.setInt("texture_diffuse", 0);
-
-    //ScreenQuad_Shader.use();
-	//ScreenQuad_Shader.setInt("screenTexture", 0); 
 
     // --Instruction-- 
     std::cout << "\n" << "=================Camera Control=================" << std::endl;
@@ -379,6 +376,7 @@ int main() {
         
         processInput(window);   // input
 
+		// ===============================Pass 1 : Render to Custom Framebuffer=================================
 		glBindFramebuffer(GL_FRAMEBUFFER, FBO);  // Custom Framebuffer 바인딩
 		glViewport(0, 0, Screen_Width, Screen_Height); // FBO의 크기와 동일하게 viewport 설정)
 
@@ -393,6 +391,13 @@ int main() {
         // glDepthMask가 FALSE로 잠긴 채 초기 설정에서 glClear를 호출해도 
         // 깊이 버퍼가 1.0으로 초기화되지 않고 이전 프레임의 깊이 값이 그대로 남음
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);  
+
+        glEnable(GL_DEPTH_TEST);   // 깊이 테스트 활성화
+        glDepthFunc(GL_LESS);      // fragment의 깊이 값이 저장된 값보다 작을 경우만 통과
+        glEnable(GL_STENCIL_TEST);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); // 기본 Stencil 연산 정의 : stencil test 통과 시 stencil buffer에 1로 변경
+        glEnable(GL_CULL_FACE);    // Face culling 활성화
+        glCullFace(GL_BACK);
 
         // =============================Uniform shader==============================
         multiplelight(WoodBox_Shader, camera, isFlashlightOn);
@@ -559,15 +564,31 @@ int main() {
             Windows_Shader.setMat4("Model", window_model);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         }
+
         glDepthMask(GL_TRUE);
         glDisable(GL_BLEND);       // Blending 비활성화)
+
+		// ============================= Pass 2 : FBO 텍스쳐를 화면에 출력==============================
+		glBindFramebuffer(GL_FRAMEBUFFER, 0); // Default Framebuffer 바인딩 : 기본화면으로 복귀
+		glViewport(0, 0, Screen_Width, Screen_Height); // Default Framebuffer의 크기와 동일하게 viewport 설정)
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT); // 화면 버퍼 초기화
+
+		ScreenQuad_Shader.use();
+        ScreenQuad_Shader.setInt("screenTexture", 0);
+        glBindVertexArray(screenquadVAO);
+		glDisable(GL_DEPTH_TEST);   // 화면 출력용 screenquad이므로 depth test 비활성화
+        glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texturebuffer);    // FBO의 color texture를 화면에 출력
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        
         
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
     glDeleteFramebuffers(1, &FBO);
-    glDeleteFramebuffers(1, &texturebuffer);
-    glDeleteFramebuffers(1, &RBO);
+    glDeleteTextures(1, &texturebuffer);
+    glDeleteRenderbuffers(1, &RBO);
     glDeleteVertexArrays(1, &cubeVAO);
     glDeleteVertexArrays(1, &pointlightVAO);
 	glDeleteVertexArrays(1, &terrainVAO);

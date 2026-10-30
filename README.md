@@ -1,4 +1,4 @@
-# 🎮 OpenGL Rendering Project
+# 🎮 OpenGL Rendering PipeLine
 
 C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프로젝트 및 학습.
 외부 설정 없이 바로 빌드하여 실행할 수 있도록 정적 라이브러리 구조로 설계.
@@ -151,23 +151,8 @@ C++와 OpenGL을 사용하여 그래픽스 렌더링의 기초를 다지는 프�
 | **10. Depth testing** | ![Testing](./images/10_Depth.png) | fragment의 깊이 값(Z)을 테스트, depth buffer에 통과된 값으로 수정, 실패된 fragment는 폐기 : glEnable(GL_DEPTH_TEST) |
 | **11. Stencil testing** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/16f0dc73-abb2-4223-aa05-1013579fb3ba" autoplay loop muted playsinline controls width="250"></video> | 루프 초기에 이전 프레임의 잔상 (스텐실 1)을 0으로 초기화, 나무 상자를 제외한 나머지 오브젝트에서 스텐실을 비활성화(0x00)하여 오염 방지, 상자에서 glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE)로 depth + stencil를 모두 통과한 픽셀의 스텐실 값을 새 값으로 교체, outline에서 glStencilFunc(GL_NOTEQUAL, 1, 0xFF)을 주어 스텐실 값이 1이 아닌 영역(테두리)만 통과 -> 상자 내부는 버림, pointlight에서는 스텐실 연산을 변경하지 않음 |
 | **12. Face culling** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/f4ccdc5e-2db6-44dd-b2a2-f41f4193661a" autoplay loop muted playsinline controls width="250"></video> | 오브젝트 정점의 인덱스를 counter-clockwise방향으로 설정하여 view(camera)에서 상자의 보이지 않는 부분을 그리지 않아 GPU의 부하를 줄여 렌더링 성능을 최적화, 덕분에 texture,lighting등 복잡한 fragment shader연산이 실행되지 않음 |
-| **13. Blending** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/f4392b6c-9710-4584-8c51-05a23c5bc8c7" autoplay loop muted playsinline controls width="250"></video> |  |
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+| **13. Blending** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/f4392b6c-9710-4584-8c51-05a23c5bc8c7" autoplay loop muted playsinline controls width="250"></video> |  shader에서 텍스쳐의 알파값이 일정 기준 미만이면 해당 픽셀을 페기함, 픽셀을 버리는 것은 반 투면 이미지를 렌더링할 수 있는 유연성이 없어 이미지를 서로 다른 투명도로 Blending함, 깊이 테스트는 픽셀이 투명성을 가지는지 상관하지 않고 계산하므로 투명 오브젝트를 그리는 동안 깊이를 활성화를 하지만 buffer에 기록하지 않음, 투명 오브젝트 뒤에 오브젝트를 표시하려면 가장 먼 오브젝트를 먼저 그린 후 투명 오브젝트를 그려야 함 |
+| **14. Frame Buffer** | <video src="https://github.com/user-attachments/assets/https://github.com/user-attachments/assets/079851c4-d05d-41ac-a549-fce4145b9a2d" autoplay loop muted playsinline controls width="250"></video> |  | 
 
 
 

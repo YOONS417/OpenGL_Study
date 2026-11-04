@@ -1,4 +1,4 @@
-#include <glad/glad.h>
+    #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <map>
@@ -278,7 +278,7 @@ int main() {
     }
     std::cout << "\n" << "Press Esc to exit" << std::endl;
 
-    // Random Position Cubes for Grass
+    // Random Position Grass & Window
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<float> disX(-Terrain_Scale.x/2.0f, Terrain_Scale.x/2.0f);

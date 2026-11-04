@@ -75,10 +75,9 @@ int main() {
 	Shader Terrain_Shader("Shaders/woodbox.vert", "Shaders/MultipleLight.frag");   // Terrain Shader, Box와 같은 shader를 사용하지만, 다른 texture를 사용하기 때문에 shader를 따로 생성
     Shader Outline_Shader("Shaders/outline.vert", "Shaders/outline.frag");         // outline Shader
     Shader Grass_Shader("Shaders/grass.vert", "Shaders/grass.frag");               // grass Shader
-	Shader Windows_Shader("Shaders/grass.vert", "Shaders/window.frag"); // grass Shader와 같은 shader를 사용하지만, 다른 texture를 사용하기 때문에 shader를 따로 생성
-
+	Shader Windows_Shader("Shaders/grass.vert", "Shaders/window.frag");            // grass Shader와 같은 shader를 사용하지만, 다른 texture를 사용하기 때문에 shader를 따로 생성
 	// 화면 출력(pass 2)를 위한 간단한 quad shader
-	Shader ScreenQuad_Shader("Shaders/screenquad.vert", "Shaders/screenquad.frag"); // screen quad shader
+	Shader ScreenQuad_Shader("Shaders/screenquad.vert", "Shaders/grayscale.frag"); // screen quad shader
      
     float cube_vert[] = {  // each point : 0 ~ 7
         // Fornt surface      //법선                                                   index
@@ -291,15 +290,15 @@ int main() {
     glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 
 	// color texture attachment 생성
-    unsigned int texturebuffer;
-	glGenTextures(1, &texturebuffer);
-	glBindTexture(GL_TEXTURE_2D, texturebuffer);
+    unsigned int textureColorBuffer;
+	glGenTextures(1, &textureColorBuffer);
+	glBindTexture(GL_TEXTURE_2D, textureColorBuffer);
 	// 텍스처의 크기를 스크린 크기, 텍스쳐이 data 파라미터를 NULL로 초기화 : 메모리만 할당하고 실제 데이터는 없음
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Screen_Width, Screen_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	// 텍스쳐를 첨부할 target : GL_FRAMEBUFFER, 첨부할attachment의 유형 : GL_COLOR_ATTACHMENT0, 첨부하기 원하는 텍스처의 유형 : GL_TEXTURE_2D, 실제 텍스처 ID : texturebuffer, mipmap level : 0
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texturebuffer, 0);  // FBO에 color texture buffer를 결합
+	// 텍스쳐를 첨부할 target : GL_FRAMEBUFFER, 첨부할attachment의 유형 : GL_COLOR_ATTACHMENT0, 첨부하기 원하는 텍스처의 유형 : GL_TEXTURE_2D, 실제 텍스처 ID : textureColorBuffer, mipmap level : 0
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureColorBuffer, 0);  // FBO에 color texture buffer를 결합
 
 	// Depth & Stencil Renderbuffer 생성
     unsigned int RBO;
@@ -337,8 +336,8 @@ int main() {
 
     // --Instruction-- 
     std::cout << "\n" << "=================Camera Control=================" << std::endl;
-    std::string key[] = { "KEY_UP", "KEY_DOWN", "KEY_RIGHT", "KEY_LEFT", "SPACE_BAR", "CONTROL" ,"M", "F", "Scroll" };
-    std::string move[] = { "Forword", "Back", "Right", "Left", "Up" , "Down" ,"Mouse Camera On/Off", "Flashlight", "Zoom in/out" };
+    std::string key[] = { "KEY_UP", "KEY_DOWN", "KEY_RIGHT", "KEY_LEFT", "SPACE_BAR", "CONTROL" ,"M", "F", "W", "Scroll" };
+    std::string move[] = { "Forword", "Back", "Right", "Left", "Up" , "Down" ,"Mouse Camera On/Off", "Flashlight","Wireframe Mode", "Zoom in/out" };
     for (int i = 0; i < std::size(move); i++) {
         std::cout << key[i] << " : " << move[i] << std::endl;
     }
@@ -379,25 +378,11 @@ int main() {
 		// ===============================Pass 1 : Render to Custom Framebuffer=================================
 		glBindFramebuffer(GL_FRAMEBUFFER, FBO);  // Custom Framebuffer 바인딩
 		glViewport(0, 0, Screen_Width, Screen_Height); // FBO의 크기와 동일하게 viewport 설정)
-
         glClearColor(0.3f, 0.3f, 0.3f, 1.0f);    //BG Color
 
-        // Fragment -> Stencil -> Depth
-		// stencil test를 통과한 fragment만 depth test를 진행 | 통과하지 못한 fragment는 버려지고 depth test연산 자체를 실행하지 않음
-        // Stencil buffer 초기화 : 이전 프레임에세 남은 스텐실 값이 다음 프레임에 잔성처럼 영향 
-        // 마지막 pointlight에서 스텐실를 잠근 채 루프가 끝난것을 다시 열어 0으로 초기화
         glStencilMask(0xFF);     // 안하면 잔상(스텐실 : 1)이 남아 다음 프레임에 영향 -> 0
         glDepthMask(GL_TRUE);    // 투명 오브젝트를 다 그린 후 depth buffer 기록 허용
-        // glDepthMask가 FALSE로 잠긴 채 초기 설정에서 glClear를 호출해도 
-        // 깊이 버퍼가 1.0으로 초기화되지 않고 이전 프레임의 깊이 값이 그대로 남음
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);  
-
-        glEnable(GL_DEPTH_TEST);   // 깊이 테스트 활성화
-        glDepthFunc(GL_LESS);      // fragment의 깊이 값이 저장된 값보다 작을 경우만 통과
-        glEnable(GL_STENCIL_TEST);
-        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); // 기본 Stencil 연산 정의 : stencil test 통과 시 stencil buffer에 1로 변경
-        glEnable(GL_CULL_FACE);    // Face culling 활성화
-        glCullFace(GL_BACK);
 
         // =============================Uniform shader==============================
         multiplelight(WoodBox_Shader, camera, isFlashlightOn);
@@ -566,7 +551,7 @@ int main() {
         }
 
         glDepthMask(GL_TRUE);
-        glDisable(GL_BLEND);       // Blending 비활성화)
+        glDisable(GL_BLEND); 
 
 		// ============================= Pass 2 : FBO 텍스쳐를 화면에 출력==============================
 		glBindFramebuffer(GL_FRAMEBUFFER, 0); // Default Framebuffer 바인딩 : 기본화면으로 복귀
@@ -574,20 +559,19 @@ int main() {
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT); // 화면 버퍼 초기화
 
-		ScreenQuad_Shader.use();
+        ScreenQuad_Shader.use();
         ScreenQuad_Shader.setInt("screenTexture", 0);
         glBindVertexArray(screenquadVAO);
-		glDisable(GL_DEPTH_TEST);   // 화면 출력용 screenquad이므로 depth test 비활성화
-        glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texturebuffer);    // FBO의 color texture를 화면에 출력
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        
+		glDisable(GL_DEPTH_TEST);       // 2D 화면에 출력할 때 depth test는 필요 없음
+        glActiveTexture(GL_TEXTURE0);   // Pass 1 에서 완성된 FBO texture를 바인딩
+		glBindTexture(GL_TEXTURE_2D, textureColorBuffer);    
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); // 화면에 출력
         
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
     glDeleteFramebuffers(1, &FBO);
-    glDeleteTextures(1, &texturebuffer);
+    glDeleteTextures(1, &textureColorBuffer);
     glDeleteRenderbuffers(1, &RBO);
     glDeleteVertexArrays(1, &cubeVAO);
     glDeleteVertexArrays(1, &pointlightVAO);

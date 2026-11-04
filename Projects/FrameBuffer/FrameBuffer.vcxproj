@@ -140,8 +140,10 @@
     <ClCompile Include="FrameBuffer_main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="inversion.frag" />
     <None Include="Shaders\grass.frag" />
     <None Include="Shaders\grass.vert" />
+    <None Include="Shaders\grayscale.frag" />
     <None Include="Shaders\MultipleLight.frag" />
     <None Include="Shaders\outline.frag" />
     <None Include="Shaders\outline.vert" />

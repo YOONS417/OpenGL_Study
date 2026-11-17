@@ -10,6 +10,7 @@
   <Project Path="Projects/Blending/Blending.vcxproj" Id="6be1fd2f-f62c-44c4-9afd-aa4289b8f471" />
   <Project Path="Projects/Camera/Camera.vcxproj" Id="4edc3b92-536b-4bc7-98f9-2dba05304713" />
   <Project Path="Projects/Coordinate_sys/Coordinate_sys.vcxproj" Id="451c755b-e168-40db-bc78-a0061be34120" />
+  <Project Path="Projects/Cubemaps/Cubemaps.vcxproj" Id="30e0b4c4-f0f0-41f4-9a4f-07281c0dfc6c" />
   <Project Path="Projects/Depth_testing/Depth_testing.vcxproj" Id="f4f3f728-37e2-42a0-b13d-0f7e7096ab13" />
   <Project Path="Projects/FrameBuffer/FrameBuffer.vcxproj" Id="7f0886ca-3ccd-40ac-9581-21e696caaf3d" />
   <Project Path="Projects/Lighting/Lighting.vcxproj" Id="5b0718a7-fe08-4e7f-b555-ba455ec50348" />

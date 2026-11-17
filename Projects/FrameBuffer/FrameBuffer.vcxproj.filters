@@ -62,10 +62,19 @@
     <None Include="Shaders\screenquad.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="inversion.frag">
+    <None Include="Shaders\grayscale.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\grayscale.frag">
+    <None Include="Shaders\sharpen_kernel.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\inversion.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\blur.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\edge_detection.frag">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

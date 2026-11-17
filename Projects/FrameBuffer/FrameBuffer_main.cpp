@@ -77,7 +77,7 @@ int main() {
     Shader Grass_Shader("Shaders/grass.vert", "Shaders/grass.frag");               // grass Shader
 	Shader Windows_Shader("Shaders/grass.vert", "Shaders/window.frag");            // grass Shader와 같은 shader를 사용하지만, 다른 texture를 사용하기 때문에 shader를 따로 생성
 	// 화면 출력(pass 2)를 위한 간단한 quad shader
-	Shader ScreenQuad_Shader("Shaders/screenquad.vert", "Shaders/grayscale.frag"); // screen quad shader
+	Shader ScreenQuad_Shader("Shaders/screenquad.vert", "Shaders/edge_detection.frag"); // screen quad shader
      
     float cube_vert[] = {  // each point : 0 ~ 7
         // Fornt surface      //법선                                                   index
@@ -561,6 +561,8 @@ int main() {
 
         ScreenQuad_Shader.use();
         ScreenQuad_Shader.setInt("screenTexture", 0);
+        ScreenQuad_Shader.setFloat("xoffset", 1.0f / (float)Screen_Width);
+        ScreenQuad_Shader.setFloat("yoffset", 1.0f / (float)Screen_Height);
         glBindVertexArray(screenquadVAO);
 		glDisable(GL_DEPTH_TEST);       // 2D 화면에 출력할 때 depth test는 필요 없음
         glActiveTexture(GL_TEXTURE0);   // Pass 1 에서 완성된 FBO texture를 바인딩
